@@ -1,0 +1,36 @@
+.tile-piece{
+    width:32px;
+    height:32px;
+    border: 1px dashed blue;
+}
+
+.canvas-container{
+    display: inline;
+}
+
+.canvas-group #tileset-container{
+    width:200px;
+    height:500px;
+    position: absolute;
+    right:0;
+}
+
+
+#canvas-container{
+    float:left !important;
+}
+
+.transparent-background{
+    /*
+    background-color: #FEFEFE;
+    background-image: -webkit-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB), -webkit-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB);
+    background-image: -moz-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB), -moz-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB);
+    background-image: -o-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB), -o-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB);
+    background-image: -ms-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB), -ms-linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB);
+    background-image: linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB), linear-gradient(45deg, #CBCBCB 25%, transparent 25%, transparent 75%, #CBCBCB 75%, #CBCBCB);
+    -webkit-background-size:15px 15px;
+    -moz-background-size:15px 15px;
+    background-size:15px 15px;
+    background-position:0 0, 7px 7px;*/
+    background-color: black;
+}

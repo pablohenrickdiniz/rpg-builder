@@ -1,0 +1,20 @@
+requirejs.config({
+    "paths":{
+        "jquery":"../bower_components/jquery/dist/jquery.min",
+        "CE":"../core/Graphics/CanvasEngine",
+        "CanvasLayer":"../core/Graphics/CanvasLayer",
+        "PropsParser":"../custom/PropsParser",
+        "ImageSet":"../core/Graphics/ImageSet",
+        "RL":"../core/Resources/ResourcesLoader",
+        "ImageLoader":"../core/Resources/ImageLoader",
+        "FrameSync":'../core/Graphics/FrameSync',
+        "React":'../bower_components/react/react',
+        "bootstrap":'../bower_components/bootstrap/dist/js/bootstrap'
+    },
+    "shim":{
+        "bootstrap":{
+            deps:["jquery"]
+        }
+
+    }
+});

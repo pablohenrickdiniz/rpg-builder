@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Camadas</title>
+    <script type="text/javascript" src="../../../bower_components/requirejs/require.js"></script>
+    <script type="text/javascript">
+        require(['../paths'],function(){
+            require(['CE','RL','FrameSync'],function(CE,RL,FrameSync){
+                var Engine = CE.createEngine({
+                    container:"#canvas-container",
+                    width:500,
+                    height:500
+                });
+
+                var map = {
+                    map:[],
+                    tile_w:32,
+                    tile_h:32
+                };
+
+
+
+
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="canvas-container"></div>
+</body>
+</html>
