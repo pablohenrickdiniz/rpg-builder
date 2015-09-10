@@ -11,8 +11,8 @@
             require(['CE','RL','bootstrap','jquery'],function(CE,RL,boot,$){
                 var GameEngine = CE.createEngine({
                     container:"#canvas-container",
-                    width:800,
-                    height:800
+                    width:'100%',
+                    height:700
                 });
 
                 var layer1 = GameEngine.createLayer({
@@ -24,13 +24,13 @@
 
                 var TilesetEngine = CE.createEngine({
                     container:"#tileset-grid",
-                    width:200,
-                    height:30
+                    width:'100%',
+                    height:665
                 });
 
 
-
-
+                var image_layer = TilesetEngine.createLayer({zIndex:0,name:'imagemTileset'});
+                var grid_layer = TilesetEngine.createLayer({zIndex:1,name:'grade'});
 
 
                 var map = {
@@ -39,6 +39,44 @@
                     tile_h:32
                 };
 
+                var sw = 32;
+                var sh = 32;
+
+                var img = null;
+
+                $("#tileset").change(function(){
+                    var url = $(this).val();
+                    RL.loadImage(url,function(tmp){
+                        TilesetEngine.clearAllLayers();
+                        img = tmp;
+
+                        image_layer.set({
+                            width:img.width,
+                            height:img.height
+                        });
+                        grid_layer.set({
+                            width:img.width,
+                            height:img.height
+                        });
+                        image_layer.drawImage(img,0,0);
+                        grid_layer.drawGrid(0,0,sw,sh,img.width,img.height);
+                    });
+                });
+
+                $("#plus").click(function(){
+                    sw++;
+                    sh++;
+                    grid_layer.clear();
+                    grid_layer.drawGrid(0,0,sw,sh,img.width,img.height);
+                });
+
+                $("#minus").click(function(){
+                    sw--;
+                    sh--;
+                    grid_layer.clear();
+                    grid_layer.drawGrid(0,0,sw,sh,img.width,img.height);
+                });
+
             });
         });
     </script>
@@ -46,16 +84,29 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div id="canvas-container">
 
             </div>
         </div>
-        <div class="col-md-4">
-            <div id="tileset-grid">
-
+            <div class="col-md-5">
+                    <div class="col-md-12">
+                        <select name="" id="tileset" class="form-control">
+                            <option value="../core/Graphics/Tilesets/tile_custom01.png">A</option>
+                            <option value="../core/Graphics/Tilesets/tilea2.png">B</option>
+                            <option value="">C</option>
+                            <option value="">D</option>
+                            <option value="">E</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="tileset-grid"></div>
+                        <div class="col-md-12">
+                            <button class="btn btn-default" id="plus">+</button>
+                            <button class="btn btn-default" id="minus">-</button>
+                        </div>
+                    </div>
             </div>
-        </div>
     </div>
 </div>
 </body>

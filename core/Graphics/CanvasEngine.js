@@ -30,8 +30,14 @@ define(['jquery','CanvasLayer','PropsParser'],function($,CanvasLayer,Parser){
                 width:self.width,
                 height:self.height,
                 position:'relative',
-                overflow:'hidden'
+                overflow:'scroll'
             }).addClass('transparent-background');
+        });
+    };
+
+    CanvasEngine.prototype.clearAllLayers = function(){
+        this.layers.forEach(function(layer){
+            layer.clear();
         });
     };
 

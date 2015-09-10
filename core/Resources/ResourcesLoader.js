@@ -6,7 +6,7 @@ define(['ImageSet','ImageLoader'],function(ImageSet,ImageLoader){
         },
         materials:null,
         maps:[],
-        _loadImage:function(url,callback){
+        loadImage:function(url,callback){
             var img = document.createElement('img');
             img.src = url;
             img.onload = function(){
@@ -31,7 +31,7 @@ define(['ImageSet','ImageLoader'],function(ImageSet,ImageLoader){
                 callback(self.maps[id]);
             }
         },
-        _loadMaterials:function(callback){
+        loadMaterials:function(callback){
             var self = this;
             if(self.materials == null){
                 $.ajax({
@@ -54,7 +54,7 @@ define(['ImageSet','ImageLoader'],function(ImageSet,ImageLoader){
                 var image_sets = [];
                 var tile_w = data.tile_w;
                 var tile_h = data.tile_h;
-                self._loadMaterials(function(materials){
+                self.loadMaterials(function(materials){
                     var images = [];
                     for(var x = 0; x < map.length;x++){
                         for(var y = 0; y < map[x].length;y++){

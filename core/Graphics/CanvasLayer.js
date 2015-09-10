@@ -7,6 +7,7 @@ define(['jquery','PropsParser'],function($,Parser){
         self.width = Parser.parseNumber(options.width,400);
         self.height = Parser.parseNumber(options.height,400);
         self.savedStates = [];
+        self.name = options.name == undefined?'':options.name;
 
         self.element = null;
         $(window).resize(function(){
@@ -50,6 +51,9 @@ define(['jquery','PropsParser'],function($,Parser){
             $(self.element).addClass('canvas-layer');
             $(self.element).attr('width',self.width);
             $(self.element).attr('height',self.height);
+            if(self.name != ''){
+                $(self.element).attr('data-name',self.name);
+            }
         }
         return self.element;
     };
@@ -59,6 +63,7 @@ define(['jquery','PropsParser'],function($,Parser){
         self.zIndex = Parser.parseInt(options.zIndex,self.zIndex);
         var width = Parser.parseNumber(options.width,self.width);
         var height = Parser.parseNumber(options.height,self.height);
+        self.name = options.name == undefined?self.name:options.name;
         self.resize(width,height);
         $(self.getElement()).css({
             zIndex:self.zIndex
@@ -95,6 +100,17 @@ define(['jquery','PropsParser'],function($,Parser){
         return self.context;
     };
 
+    CanvasLayer.prototype.drawGrid = function(x,y,sw,sh,w,h){
+        var self = this;
+        var context = self.getContext();
+        context.strokeStyle = 'black';
+        for(var i = x ;i <= w/sw;i++){
+            for(var j = y; j <= h/sh;j++){
+                context.strokeRect(i*sw,j*sh,sw,sh);
+            }
+        }
+    };
+
 
     CanvasLayer.prototype.destroy = function(){
         var self = this;
@@ -104,13 +120,24 @@ define(['jquery','PropsParser'],function($,Parser){
         }
     };
 
+    CanvasLayer.prototype.drawImage = function(){
+        var context = this.getContext();
+        context.drawImage.apply(context,arguments);
+    };
+
     CanvasLayer.prototype.drawImageSet = function(p){
         var context = this.getContext();
         context.drawImage(p.image, p.sx, p.sy, p.sWidth, p.sHeight, p.x, p.y, p.width, p.height);
     };
 
-    CanvasLayer.prototype.clearRect = function(x,y,width,height){
-        this.getContext().clearRect(x,y,width,height);
+    CanvasLayer.prototype.clear = function(){
+        var self = this;
+        self.getContext().clearRect(0,0,self.width,self.height);
+    };
+
+    CanvasLayer.prototype.clearRect = function(){
+        var context = this.getContext();
+        context.clearRect.apply(context,arguments);
     };
 
     return CanvasLayer;

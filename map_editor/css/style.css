@@ -32,5 +32,10 @@
     -moz-background-size:15px 15px;
     background-size:15px 15px;
     background-position:0 0, 7px 7px;*/
-    background-color: black;
+    background-color: white;
+    border: 1px solid #EEE;
+}
+
+select{
+    border-radius: 0 !important;
 }
