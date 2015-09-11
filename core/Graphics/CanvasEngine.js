@@ -1,4 +1,4 @@
-define(['jquery','CanvasLayer','PropsParser'],function($,CanvasLayer,Parser){
+define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Parser,$){
     var CanvasEngine = function(options){
         var self = this;
         self.initialize(options);

@@ -1,6 +1,6 @@
 requirejs.config({
+    "urlArgs": "bust=" + (new Date()).getTime(),
     "paths":{
-        "jquery":"../bower_components/jquery/dist/jquery.min",
         "CE":"../core/Graphics/CanvasEngine",
         "CanvasLayer":"../core/Graphics/CanvasLayer",
         "PropsParser":"../custom/PropsParser",
@@ -9,12 +9,18 @@ requirejs.config({
         "ImageLoader":"../core/Resources/ImageLoader",
         "FrameSync":'../core/Graphics/FrameSync',
         "React":'../bower_components/react/react',
-        "bootstrap":'../bower_components/bootstrap/dist/js/bootstrap'
+        "bootstrap":'../bower_components/bootstrap/dist/js/bootstrap',
+        "jquery":"../bower_components/jquery/dist/jquery.min",
+        "Jquery-Conflict":'src/jquery-conflict',
+        "InputNumber":"../bower_components/ReactElements/build/InputNumber",
+        "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin"
     },
     "shim":{
         "bootstrap":{
             deps:["jquery"]
+        },
+        "InputNumber":{
+            deps:["SetIntervalMixin"]
         }
-
     }
 });

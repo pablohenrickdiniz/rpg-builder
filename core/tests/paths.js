@@ -1,6 +1,6 @@
 requirejs.config({
     "paths":{
-        "jquery":"../../../bower_components/jquery/dist/jquery.min",
+        "Jquery":"../../../bower_components/jquery/dist/jquery.min",
         "CE":"../../Graphics/CanvasEngine",
         "CanvasLayer":"../../Graphics/CanvasLayer",
         "PropsParser":"../../../custom/PropsParser",

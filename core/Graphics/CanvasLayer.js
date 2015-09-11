@@ -1,4 +1,4 @@
-define(['jquery','PropsParser'],function($,Parser){
+define(['Jquery-Conflict','PropsParser'],function($,Parser){
     var CanvasLayer = function(options,canvas){
         var self = this;
         self.context = null;

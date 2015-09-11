@@ -1,10 +1,13 @@
-define(['jquery'],function($){
+define(['Jquery-Conflict'],function($){
     return {
         parseNumber:function(number,defaultValue){
             if(number == undefined || isNaN(number)){
                 return defaultValue;
             }
             return number;
+        },
+        parseFloat:function(number,defaultValue){
+            return parseFloat(this.parseNumber(number,defaultValue));
         },
         parseInt:function(number,defaultValue){
             return parseInt(this.parseNumber(number,defaultValue));
@@ -18,6 +21,15 @@ define(['jquery'],function($){
         isPercentage:function(number){
             var exp = /^[0-9]+(\.[0-9]+)?%$/;
             return exp.test(number);
+        },
+        parseInterval:function(value,min,max){
+            if(value < min){
+                value = min;
+            }
+            if(value > max){
+                value = max;
+            }
+            return value;
         }
     };
 });
