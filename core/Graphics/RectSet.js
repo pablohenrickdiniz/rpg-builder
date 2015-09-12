@@ -7,6 +7,7 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.y = 0;
         self.fillStyle = Color.create({alpha:0}).toRGBA();
         self.strokeStyle = Color.create({alpha:1}).toRGBA();
+        self.lineDash = [5,5];
         self.set(options);
         return self;
     };
@@ -17,6 +18,7 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.height =  Parser.parseNumber(options.height,self.height);
         self.x =  Parser.parseNumber(options.x,self.x);
         self.y =  Parser.parseNumber(options.y,self.y);
+        self.lineDash = Parser.parseArray(options.lineDash,self.lineDash);
         self.fillStyle = Color.isColor(options.fillStyle)?options.fillStyle:self.fillStyle;
         self.strokeStyle = Color.isColor(options.strokeStyle)?options.strokeStyle:self.strokeStyle;
         return self;

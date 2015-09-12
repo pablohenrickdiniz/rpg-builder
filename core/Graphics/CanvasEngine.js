@@ -1,8 +1,14 @@
 define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Parser,$){
     var CanvasEngine = function(options){
         var self = this;
-        self.initialize(options);
         self.layers = [];
+        self.height = 400;
+        self.viewX = 0;
+        self.viewY = 0;
+        self.width = 400;
+
+
+        self.set(options);
         return self;
     };
 
@@ -12,29 +18,29 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         return self;
     };
 
-    CanvasEngine.prototype.initialize = function(options){
+
+    CanvasEngine.prototype.set = function(options){
         var self = this;
         self.container = options.container;
-        self.height = Parser.parseNumber(options.height,400);
-        self.viewX = Parser.parseNumber(options.viewX,0);
-        self.viewY = Parser.parseNumber(options.viewY,0);
+        self.height = Parser.parseNumber(options.height,self.width);
+        self.viewX = Parser.parseNumber(options.viewX,self.viewX);
+        self.viewY = Parser.parseNumber(options.viewY,self.viewY);
         var width = options.width;
-        $(document).ready(function(){
 
-            if(Parser.isPercentage(options.width)){
-                self.width = options.width;
-            }
-            else{
-                self.width = Parser.parseNumber(options.width,400);
-            }
 
-            $(self.container).css({
-                width:self.width,
-                height:self.height,
-                position:'relative',
-                overflow:'scroll'
-            }).addClass('transparent-background');
-        });
+        if(Parser.isPercentage(options.width)){
+            self.width = options.width;
+        }
+        else{
+            self.width = Parser.parseNumber(options.width,self.width);
+        }
+
+        $(self.container).css({
+            width:self.width,
+            height:self.height,
+            position:'relative',
+            overflow:'scroll'
+        }).addClass('transparent-background');
     };
 
     CanvasEngine.prototype.clearAllLayers = function(){
@@ -44,44 +50,25 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         return self;
     };
 
-    CanvasEngine.prototype.set = function(options){
-        var self = this;
-
-        self.height = Parser.parseNumber(options.height,self.height);
-        self.viewX = Parser.parseNumber(options.viewX,self.viewX);
-        self.viewY = Parser.parseNumber(options.viewY,self.viewY);
-
-        if(Parser.isPercentage(options.width)){
-            self.width = options.width;
-        }
-        else{
-            self.width = Parser.parseNumber(options.width,self.width);
-        }
-
-
-        $(self.container).css({
-            width:self.width,
-            height:self.height
-        });
-        self.layers.forEach(function(layer){
-            layer.refresh();
-        });
-        return self;
-    };
-
     CanvasEngine.prototype.createLayer = function(options){
         var self = this;
-        var zIndex = Parser.parseInt(options.zIndex,self.layers.length);
-        if(self.layers[zIndex] == undefined){
-            options.zIndex = zIndex;
-            var layer = new CanvasLayer(options,self);
-            self.layers[zIndex] = layer;
-            $(document).ready(function(){
-                $(self.container).append(layer.getElement());
-            });
+        var zIndex = Parser.parseInt(options.zIndex,null);
+
+        if(zIndex != null){
+            if(self.layers[zIndex] == undefined){
+                var layer = new CanvasLayer(options,self);
+                self.layers[zIndex] = layer;
+                $(document).ready(function(){
+                    $(self.container).append(layer.getElement());
+                });
+                return layer;
+            }
+            else{
+                return self.layers[zIndex].set(options);
+            }
         }
 
-        return self.layers[zIndex];
+        return null;
     };
 
     CanvasEngine.prototype.getLayer = function(zIndex){
@@ -98,6 +85,34 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
             self.layers[zIndex].destroy();
         }
         return self;
+    };
+
+    CanvasEngine.prototype.renderMap = function(map){
+        var self = this;
+        var sets = map.imageSets;
+        var size1 = sets.length;
+        for(var x = 0; x < size1;x++){
+            var size2 = sets[x].length;
+            for(var y = 0; y < size2;y++){
+                var size3 = sets[x][y].length;
+                for(var layer = 0; layer < size3;layer++){
+                    var imageSet = sets[x][y][layer];
+                    self.createLayer({
+                        zIndex:imageSet.layer,
+                        width:map.width*map.tile_w,
+                        height:map.height*map.tile_h
+                    }).drawImageSet(imageSet);
+                }
+            }
+        }
+        if(map.grid_visible){
+            self.createLayer({
+                zIndex:10,
+                width:map.width*map.tile_w,
+                height:map.height*map.tile_h
+            }).drawGrid(map.grid);
+        }
+        map.parent = self;
     };
 
     CanvasEngine.createEngine = function(options){

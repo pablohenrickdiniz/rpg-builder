@@ -1,18 +1,35 @@
 require(['paths'],function(){
     require(
-        ['bootstrap','Jquery-Conflict','CE','RL','React','InputNumber','Grid','MouseReader','Map'],
-        function(boot,$,CE,RL,React,InputNumber,Grid,MouseReader,Map){
+        [
+            'bootstrap',
+            'Jquery-Conflict',
+            'CE',
+            'ImageLoader',
+            'React',
+            'InputNumber',
+            'Grid',
+            'MouseReader',
+            'Map',
+            'MapLoader'
+        ],
+        function(
+            boot,
+            $,
+            CE,
+            ImageLoader,
+            React,
+            InputNumber,
+            Grid,
+            MouseReader,
+            Map,
+            MapLoader
+            ){
+
+
             var GameEngine = CE.createEngine({
                 container:"#canvas-container",
                 width:'100%',
                 height:700
-            });
-
-
-            var layer1 = GameEngine.createLayer({
-                zIndex:0,
-                width:300,
-                height:300
             });
 
 
@@ -73,10 +90,9 @@ require(['paths'],function(){
                 }
             });
 
-
-            var map = new Map();
-
-
+            MapLoader.load('../core/Data/Maps/MAP-1.json',function(map){
+                GameEngine.renderMap(map);
+            });
 
             var sw = 32;
             var sh = 32;
@@ -86,7 +102,7 @@ require(['paths'],function(){
             var grid = new Grid();
             $("#tileset").change(function(){
                 var url = $(this).val();
-                RL.loadImage(url,function(tmp){
+                ImageLoader.load(url,function(tmp){
                     TilesetEngine.clearAllLayers();
                     img = tmp;
                     width = img.width;

@@ -1,26 +1,35 @@
 define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseReader){
     var CanvasLayer = function(options,canvas){
+        options = typeof options == 'object'?options:{};
         var self = this;
         self.context = null;
         self.canvas = canvas;
-        self.zIndex = options.zIndex;
-        self.width = Parser.parseNumber(options.width,400);
-        self.height = Parser.parseNumber(options.height,400);
+        self.zIndex = 0;
+        self.width = 300;
+        self.height = 300;
         self.savedStates = [];
         self.name = options.name == undefined?'':options.name;
         self.mouseReader = null;
-
         self.element = null;
         $(window).resize(function(){
             self.refresh();
         });
         $(self.getElement()).on('contextmenu',function(e){
-            e.preventDefault();
+           // e.preventDefault();
         });
         $(self.getElement()).css({
             'userSelect':'none'
         });
+        self.set(options);
         return self;
+    };
+
+    CanvasLayer.prototype.show = function(){
+        $(this.getElement()).show();
+    };
+
+    CanvasLayer.prototype.hide = function(){
+        $(this.getElement()).hide();
     };
 
     CanvasLayer.prototype.getMouseReader = function(){
@@ -57,7 +66,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
 
     CanvasLayer.prototype.getElement = function(){
         var self = this;
-        if(self.element == null){
+        if(self.element == null && self.canvas != null){
             self.element = document.createElement('canvas');
             $(self.element).css({
                 zIndex:self.zIndex,
@@ -129,6 +138,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
             row.forEach(function(rectSet){
                 context.fillStyle = rectSet.fillStyle;
                 context.strokeStyle = rectSet.strokeStyle;
+                context.setLineDash(rectSet.lineDash);
                 context.fillRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
                 context.strokeRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
             });
@@ -158,13 +168,15 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
 
     CanvasLayer.prototype.drawImage = function(){
         var context = this.getContext();
+        console.log(arguments[0]);
         context.drawImage.apply(context,arguments);
         return self;
     };
 
-    CanvasLayer.prototype.drawImageSet = function(p){
+    CanvasLayer.prototype.drawImageSet = function(is){
         var context = this.getContext();
-        context.drawImage(p.image, p.sx, p.sy, p.sWidth, p.sHeight, p.x, p.y, p.width, p.height);
+        is.parent = this;
+        context.drawImage(is.image, is.sx, is.sy, is.sWidth, is.sHeight, is.x, is.y, is.width, is.height);
         return self;
     };
 

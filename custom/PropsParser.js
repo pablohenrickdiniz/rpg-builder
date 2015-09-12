@@ -22,6 +22,12 @@ define(['Jquery-Conflict'],function($){
             var exp = /^[0-9]+(\.[0-9]+)?%$/;
             return exp.test(number);
         },
+        parseArray:function(array,defaultArray){
+            if(array instanceof Array){
+                return array;
+            }
+            return defaultArray;
+        },
         parseInterval:function(value,min,max){
             if(value < min){
                 value = min;

@@ -1,6 +1,6 @@
 {
   "tilesets":{
-      "01":"../../Graphics/Tilesets/tile_custom01.png",
-      "02":"../../Graphics/Tilesets/tilea2.png"
+      "01":"../Graphics/Tilesets/tile_custom01.png",
+      "02":"../Graphics/Tilesets/tilea2.png"
   }
 }

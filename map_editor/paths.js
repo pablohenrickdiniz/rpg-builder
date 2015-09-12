@@ -3,6 +3,7 @@ requirejs.config({
     "paths":{
         "CE":"../core/Graphics/CanvasEngine",
         "CanvasLayer":"../core/Graphics/CanvasLayer",
+        "RpgLayer":"../core/Graphics/RpgLayer",
         "PropsParser":"../custom/PropsParser",
         "ImageSet":"../core/Graphics/ImageSet",
         "RL":"../core/Resources/ResourcesLoader",
@@ -19,7 +20,10 @@ requirejs.config({
         "Color":"../core/Graphics/Color",
         "MouseReader":"../core/Reader/MouseReader",
         "Math":"../bower_components/MathLib/src/Math",
-        "Map":"../core/Graphics/Map"
+        "Map":"../core/Graphics/Map",
+        "MapLoader":"../core/Resources/MapLoader",
+        "MaterialsLoader":"../core/Resources/MaterialsLoader",
+        "GE":"../core/Graphics/GameCanvasEngine"
     },
     "shim":{
         "bootstrap":{
