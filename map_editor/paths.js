@@ -13,7 +13,11 @@ requirejs.config({
         "jquery":"../bower_components/jquery/dist/jquery.min",
         "Jquery-Conflict":'src/jquery-conflict',
         "InputNumber":"../bower_components/ReactElements/build/InputNumber",
-        "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin"
+        "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin",
+        "Grid":"../core/Graphics/Grid",
+        "RectSet":"../core/Graphics/RectSet",
+        "Color":"../core/Graphics/Color",
+        "MouseReader":"../core/Reader/MouseReader"
     },
     "shim":{
         "bootstrap":{

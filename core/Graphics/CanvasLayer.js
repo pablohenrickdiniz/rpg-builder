@@ -1,4 +1,4 @@
-define(['Jquery-Conflict','PropsParser'],function($,Parser){
+define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseReader){
     var CanvasLayer = function(options,canvas){
         var self = this;
         self.context = null;
@@ -8,11 +8,27 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         self.height = Parser.parseNumber(options.height,400);
         self.savedStates = [];
         self.name = options.name == undefined?'':options.name;
+        self.mouseReader = null;
 
         self.element = null;
         $(window).resize(function(){
             self.refresh();
         });
+        $(self.getElement()).on('contextmenu',function(e){
+            e.preventDefault();
+        });
+        $(self.getElement()).css({
+            'userSelect':'none'
+        });
+        return self;
+    };
+
+    CanvasLayer.prototype.getMouseReader = function(){
+        var self = this;
+        if(self.mouseReader == null){
+            self.mouseReader = new MouseReader(self.getElement());
+        }
+        return self.mouseReader;
     };
 
     CanvasLayer.prototype.saveState = function(name){
@@ -21,6 +37,7 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         var img = document.createElement('img');
         img.src = url;
         self.savedStates[name] = img;
+        return self;
     };
 
     CanvasLayer.prototype.restoreState = function(name){
@@ -29,11 +46,13 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         if(state != undefined){
             self.getContext().drawImage(state, 0, 0);
         }
+        return self;
     };
 
     CanvasLayer.prototype.clearStates = function(){
         var self = this;
         self.savedStates = [];
+        return self;
     };
 
     CanvasLayer.prototype.getElement = function(){
@@ -68,6 +87,7 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         $(self.getElement()).css({
             zIndex:self.zIndex
         });
+        return self;
     };
 
     CanvasLayer.prototype.resize = function(width,height){
@@ -82,6 +102,7 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
             img.src = url;
             self.getContext().drawImage(img, 0, 0);
         }
+        return self;
     };
 
     CanvasLayer.prototype.refresh = function(){
@@ -90,6 +111,7 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
             left:self.canvas.viewX,
             top:self.canvas.viewY
         });
+        return self;
     };
 
     CanvasLayer.prototype.getContext = function(){
@@ -100,15 +122,28 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         return self.context;
     };
 
-    CanvasLayer.prototype.drawGrid = function(x,y,sw,sh,w,h){
+    CanvasLayer.prototype.drawGrid = function(grid){
         var self = this;
         var context = self.getContext();
-        context.strokeStyle = 'black';
-        for(var i = x ;i <= w/sw;i++){
-            for(var j = y; j <= h/sh;j++){
-                context.strokeRect(i*sw,j*sh,sw,sh);
-            }
-        }
+        grid.rectSets.forEach(function(row){
+            row.forEach(function(rectSet){
+                context.fillStyle = rectSet.fillStyle;
+                context.strokeStyle = rectSet.strokeStyle;
+                context.fillRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
+                context.strokeRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
+            });
+        });
+        return self;
+    };
+
+    CanvasLayer.prototype.drawRectSet = function(rectSet){
+        var self = this;
+        var context = self.getContext();
+        context.fillStyle = rectSet.fillStyle;
+        context.strokeStyle = rectSet.strokeStyle;
+        context.fillRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
+        context.strokeRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
+        return self;
     };
 
 
@@ -118,26 +153,32 @@ define(['Jquery-Conflict','PropsParser'],function($,Parser){
         if(self.canvas.layers[self.zIndex] != undefined){
             delete self.canvas.layers[self.zIndex];
         }
+        return self;
     };
 
     CanvasLayer.prototype.drawImage = function(){
         var context = this.getContext();
         context.drawImage.apply(context,arguments);
+        return self;
     };
 
     CanvasLayer.prototype.drawImageSet = function(p){
         var context = this.getContext();
         context.drawImage(p.image, p.sx, p.sy, p.sWidth, p.sHeight, p.x, p.y, p.width, p.height);
+        return self;
     };
 
     CanvasLayer.prototype.clear = function(){
         var self = this;
         self.getContext().clearRect(0,0,self.width,self.height);
+        return self;
     };
 
     CanvasLayer.prototype.clearRect = function(){
-        var context = this.getContext();
+        var self = this;
+        var context = self.getContext();
         context.clearRect.apply(context,arguments);
+        return self;
     };
 
     return CanvasLayer;

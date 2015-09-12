@@ -1,5 +1,6 @@
 define(['PropsParser'],function(Parser){
     var Color = function(options){
+        options = typeof  options == 'object'?options:{};
         var self = this;
         self.red = 0;
         self.blue = 0;
@@ -547,8 +548,8 @@ define(['PropsParser'],function(Parser){
 
     Color.Patterns = {
         HEXADECIMAL: /^#[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$/,
-        RGB: /^rgb\\(\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*\\)$/,
-        RGBA: /^rgba\\(\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*(0|[1-9]\\d?|1\\d\\d?|2[0-4]\\d|25[0-5])\\s*,\\s*((0.[1-9])|[01])\\s*\\)$/,
+        RGB: /^rgb\((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\)$/,
+        RGBA:/^rgba\((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(0.[0-9]{1,2}|1)\)$/,
         NAME: /^[A-Z][a-zA-z0-9]{2,15}$/
     };
 
@@ -563,33 +564,33 @@ define(['PropsParser'],function(Parser){
             var r;
             var g;
             var b;
-            if (Color.Patterns.HEXADECIMAL.test(str)) {
+
+            if(str == 'transparent'){
+                color = new Color({
+                    alpha:0
+                });
+            }
+            else if (Color.Patterns.HEXADECIMAL.test(str)) {
                 str = str.substr(str.indexOf("#") + 1, str.length);
                 r = parseInt(str.substr(0, 2), 16);
                 g = parseInt(str.substr(2, 2), 16);
                 b = parseInt(str.substr(4, 2), 16);
-                color = new Color(r, g, b);
-            } else {
-                if (Color.Patterns.RGB.test(str)) {
-                    str = str.replace("rgb(", "").replace(")", "").split(",");
-                    r = parseInt(str[0]);
-                    g = parseInt(str[1]);
-                    b = parseInt(str[2]);
-                    color = new Color(r, g, b);
-                } else {
-                    if (Color.Patterns.RGBA.test(str)) {
-                        str = str.replace("rgba(", "").replace(")", "").split(",");
-                        r = parseInt(str[0]);
-                        g = parseInt(str[1]);
-                        b = parseInt(str[2]);
-                        var a = parseFloat(str[3]);
-                        color = new Color(r, g, b, a);
-                    } else {
-                        if (Color.Patterns.NAME.test(str)) {
-                            color = Color.parse(Color.Name[str]);
-                        }
-                    }
-                }
+                color = new Color({red:r, blue:g, green:g});
+            } else if (Color.Patterns.RGB.test(str)) {
+                str = str.replace("rgb(", "").replace(")", "").split(",");
+                r = parseInt(str[0]);
+                g = parseInt(str[1]);
+                b = parseInt(str[2]);
+                color = new Color({red:r,blue:b,green:g});
+            } else if (Color.Patterns.RGBA.test(str)) {
+                str = str.replace("rgba(", "").replace(")", "").split(",");
+                r = parseInt(str[0]);
+                g = parseInt(str[1]);
+                b = parseInt(str[2]);
+                var a = parseFloat(str[3]);
+                color = new Color({red:r,blue:b,green:g,alpha:a});
+            } else if (Color.Patterns.NAME.test(str)) {
+                color = Color.parse(Color.Name[str]);
             }
         }
 

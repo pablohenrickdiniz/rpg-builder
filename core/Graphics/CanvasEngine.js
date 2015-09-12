@@ -3,11 +3,13 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         var self = this;
         self.initialize(options);
         self.layers = [];
+        return self;
     };
 
     CanvasEngine.prototype.resize = function(width){
         var self = this;
         self.width = Parser.parsePercent(width,$(self.container).parent());
+        return self;
     };
 
     CanvasEngine.prototype.initialize = function(options){
@@ -39,6 +41,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         this.layers.forEach(function(layer){
             layer.clear();
         });
+        return self;
     };
 
     CanvasEngine.prototype.set = function(options){
@@ -63,6 +66,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         self.layers.forEach(function(layer){
             layer.refresh();
         });
+        return self;
     };
 
     CanvasEngine.prototype.createLayer = function(options){
@@ -93,6 +97,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         if(self.layers[zIndex] != undefined){
             self.layers[zIndex].destroy();
         }
+        return self;
     };
 
     CanvasEngine.createEngine = function(options){

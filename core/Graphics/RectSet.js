@@ -5,9 +5,10 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.height = 32;
         self.x = 0;
         self.y = 0;
-        self.fillStyle = Color.create({alpha:1}).toRGBA();
-        self.strokeStyle = Color.create({alpha:0}).toRGBA();
+        self.fillStyle = Color.create({alpha:0}).toRGBA();
+        self.strokeStyle = Color.create({alpha:1}).toRGBA();
         self.set(options);
+        return self;
     };
 
     RectSet.prototype.set = function(options){
@@ -18,6 +19,7 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.y =  Parser.parseNumber(options.y,self.y);
         self.fillStyle = Color.isColor(options.fillStyle)?options.fillStyle:self.fillStyle;
         self.strokeStyle = Color.isColor(options.strokeStyle)?options.strokeStyle:self.strokeStyle;
+        return self;
     };
 
     return RectSet;

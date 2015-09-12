@@ -50,7 +50,9 @@ define(['PropsParser'],function(Parser){
     };
 
     ImageSet.prototype.onLoad = function(callback){
-        this.loads.push(callback);
+        var self = this;
+        self.loads.push(callback);
+        return self;
     };
 
     return ImageSet;
