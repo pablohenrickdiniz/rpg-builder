@@ -68,7 +68,7 @@ define(['ImageSet','ImageLoader'],function(ImageSet,ImageLoader){
                                 var resource_image = materials.tilesets[image_id];
 
                                 var image_set = new ImageSet({
-                                    image:resource_image,
+                                    url:resource_image,
                                     x:tile_w*y,
                                     y:tile_h*x,
                                     sx:tile_w*clipping_pos[1],

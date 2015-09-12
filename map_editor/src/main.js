@@ -1,7 +1,7 @@
 require(['paths'],function(){
     require(
-        ['bootstrap','Jquery-Conflict','CE','RL','React','InputNumber','Grid','MouseReader'],
-        function(boot,$,CE,RL,React,InputNumber,Grid,MouseReader){
+        ['bootstrap','Jquery-Conflict','CE','RL','React','InputNumber','Grid','MouseReader','Map'],
+        function(boot,$,CE,RL,React,InputNumber,Grid,MouseReader,Map){
             var GameEngine = CE.createEngine({
                 container:"#canvas-container",
                 width:'100%',
@@ -74,11 +74,9 @@ require(['paths'],function(){
             });
 
 
-            var map = {
-                map:[],
-                tile_w:32,
-                tile_h:32
-            };
+            var map = new Map();
+
+
 
             var sw = 32;
             var sh = 32;
@@ -134,14 +132,28 @@ require(['paths'],function(){
                 <div className="row">
                     <div className="col-md-6">
                         <label>Largura(px)</label>
-                        <InputNumber min={16} value={32} max={100} onChange={largura_change}/>
+                        <InputNumber min={32} value={32} max={100} onChange={largura_change}/>
                     </div>
                     <div className="col-md-6">
                         <label>Altura(px)</label>
-                        <InputNumber min={16} value={32} max={100} onChange={altura_change}/>
+                        <InputNumber min={32} value={32} max={100} onChange={altura_change}/>
                     </div>
                 </div>,
                 document.getElementById('input-container')
+            );
+
+            React.render(
+                <div className="row">
+                    <div className="col-md-6">
+                        <label>Largura(steps)</label>
+                        <InputNumber min={5} value={5} max={1000}/>
+                    </div>
+                    <div className="col-md-6">
+                        <label>Altura(steps)</label>
+                        <InputNumber min={5} value={5} max={1000}/>
+                    </div>
+                </div>,
+                document.getElementById('canvas-input')
             );
         });
 });

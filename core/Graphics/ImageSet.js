@@ -6,9 +6,9 @@ define(['PropsParser'],function(Parser){
     ImageSet.prototype.initialize = function(options){
         var self = this;
         self.loads = [];
-        self.imageUrl = options.image != undefined?options.image:"";
+        self.url = options.url != undefined?options.url:"";
         self.image = document.createElement('img');
-        self.image.src = self.imageUrl;
+        self.image.src = self.url;
         self.x = Parser.parseNumber(options.x,0);
         self.y = Parser.parseNumber(options.y,0);
         self.width = Parser.parseNumber(options.width,0);

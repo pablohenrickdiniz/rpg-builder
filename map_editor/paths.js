@@ -18,7 +18,8 @@ requirejs.config({
         "RectSet":"../core/Graphics/RectSet",
         "Color":"../core/Graphics/Color",
         "MouseReader":"../core/Reader/MouseReader",
-        "Math":"../bower_components/MathLib/src/Math"
+        "Math":"../bower_components/MathLib/src/Math",
+        "Map":"../core/Graphics/Map"
     },
     "shim":{
         "bootstrap":{
