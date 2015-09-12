@@ -30,11 +30,36 @@ require(['paths'],function(){
             grid_layer.getMouseReader().onmousemove(function(e){
                 var self = this;
                 if(self.left){
+                    var pa = self.lastDown.left;
+                    var pb = self.lastMove;
+                    var width = Math.abs(pb.x-pa.x);
+                    var height = Math.abs(pb.y-pa.y);
 
+                    var area = {
+                        x:pa.x,
+                        y:pa.y,
+                        width:width,
+                        height:height
+                    };
+
+                    area.x = pa.x > pb.x?area.x-width:area.x;
+                    area.y = pa.y > pb.y?area.y-height:area.y;
+
+                    var rectSets = grid.getRectsFromArea(area);
+                    grid.apply({
+                        fillStyle:'transparent'
+                    });
+                    rectSets.forEach(function(rectSet){
+                        rectSet.set({
+                            fillStyle:'rgba(0,0,100,0.5)'
+                        });
+                    });
+                    grid_layer.clear().drawGrid(grid);
                 }
                 else{
-                    var rectSet = grid.getRectFrom(self.lastMove);
-                    if(rectSet != null){
+                    var rects = grid.getRectsFromArea(self.lastMove);
+                    if(rects.length > 0){
+                        var rectSet = rects[0];
                         grid.apply({
                             fillStyle:'transparent'
                         });
@@ -46,11 +71,6 @@ require(['paths'],function(){
                         grid_layer.clear().drawGrid(grid);
                     }
                 }
-            });
-
-
-            grid_layer.getMouseReader().onmousedown(MouseReader.LEFT,function(e){
-                console.log(this.lastDown.left);
             });
 
 
