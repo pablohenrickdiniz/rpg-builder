@@ -23,7 +23,8 @@ requirejs.config({
         "Map":"../core/Graphics/Map",
         "MapLoader":"../core/Resources/MapLoader",
         "MaterialsLoader":"../core/Resources/MaterialsLoader",
-        "GE":"../core/Graphics/GameCanvasEngine"
+        "GE":"../core/Graphics/GameCanvasEngine",
+        "MapEditor":'../core/Tools/build/MapEditor'
     },
     "shim":{
         "bootstrap":{

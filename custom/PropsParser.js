@@ -19,8 +19,10 @@ define(['Jquery-Conflict'],function($){
             return width*(percent/100);
         },
         isPercentage:function(number){
-            var exp = /^[0-9]+(\.[0-9]+)?%$/;
-            return exp.test(number);
+            return (/^[0-9]+(\.[0-9]+)?%$/).test(number);
+        },
+        isInt:function(number){
+            return (/^[0-9]+$/).test(number);
         },
         parseArray:function(array,defaultArray){
             if(array instanceof Array){

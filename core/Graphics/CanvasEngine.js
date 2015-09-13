@@ -6,8 +6,6 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         self.viewX = 0;
         self.viewY = 0;
         self.width = 400;
-
-
         self.set(options);
         return self;
     };
@@ -39,7 +37,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
             width:self.width,
             height:self.height,
             position:'relative',
-            overflow:'scroll'
+            overflow:'hidden'
         }).addClass('transparent-background');
     };
 
@@ -48,6 +46,12 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
             layer.clear();
         });
         return self;
+    };
+
+    CanvasEngine.prototype.applyToLayers = function(options){
+        this.layers.forEach(function(layer){
+            layer.set(options);
+        });
     };
 
     CanvasEngine.prototype.createLayer = function(options){
@@ -89,6 +93,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
 
     CanvasEngine.prototype.renderMap = function(map){
         var self = this;
+        self.clearAllLayers();
         var sets = map.imageSets;
         var size1 = sets.length;
         for(var x = 0; x < size1;x++){
@@ -105,13 +110,13 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
                 }
             }
         }
-        if(map.grid_visible){
-            self.createLayer({
-                zIndex:10,
-                width:map.width*map.tile_w,
-                height:map.height*map.tile_h
-            }).drawGrid(map.grid);
-        }
+
+        self.createLayer({
+            zIndex:10,
+            width:map.width*map.tile_w,
+            height:map.height*map.tile_h
+        }).drawGrid(map.grid).hide();
+
         map.parent = self;
     };
 

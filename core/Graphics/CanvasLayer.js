@@ -101,13 +101,13 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
 
     CanvasLayer.prototype.resize = function(width,height){
         var self = this;
-        if(width != self.width && height != self.height){
+        if(width != self.width || height != self.height){
             self.width = width;
             self.height = height;
             var url = self.getElement().toDataURL('image/png');
             $(self.getElement()).attr('width',width);
             $(self.getElement()).attr('height',height);
-            var img = document.createElement('img');
+            var img = new Image();
             img.src = url;
             self.getContext().drawImage(img, 0, 0);
         }
@@ -139,10 +139,12 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
                 context.fillStyle = rectSet.fillStyle;
                 context.strokeStyle = rectSet.strokeStyle;
                 context.setLineDash(rectSet.lineDash);
+                context.lineWidth = rectSet.lineWidth;
                 context.fillRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
                 context.strokeRect(rectSet.x,rectSet.y,rectSet.width,rectSet.height);
             });
         });
+        grid.parent = this;
         return self;
     };
 

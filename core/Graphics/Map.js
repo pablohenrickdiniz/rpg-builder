@@ -3,9 +3,9 @@ define(['PropsParser','Grid'],function(Parser,Grid){
         options = typeof  options == 'object'?options:{};
         var self = this;
         self.development = true;
-        self.grid_visible = true;
-        self.width = 5;
-        self.height = 5;
+        self.grid_visible = false;
+        self.width = 8;
+        self.height = 16;
         self.tile_w = 32;
         self.tile_h = 32;
         self.imageSets = [];
@@ -17,17 +17,23 @@ define(['PropsParser','Grid'],function(Parser,Grid){
 
     Map.prototype.set = function(options){
         var self = this;
-        self.width = Parser.parseNumber(options.width,self.width);
-        self.height = Parser.parseNumber(options.height,self.height);
         self.tile_w =  Parser.parseNumber(options.tile_w,self.tile_w);
         self.tile_h =  Parser.parseNumber(options.tile_h,self.tile_h);
         self.imageSets = Parser.parseArray(options.imageSets,self.imageSets);
+        self.width = Parser.parseNumber(options.width,self.width);
+        self.height = Parser.parseNumber(options.height,self.height);
+        if(self.parent != null){
+            self.parent.applyToLayers({
+                width:self.width*self.tile_w,
+                height:self.height*self.tile_h
+            });
+        }
         self.grid.set({
             width:self.width*self.tile_w,
             height:self.height*self.tile_h,
             sw:self.tile_w,
             sh:self.tile_h
-        }).update();
+        });
     };
 
     Map.prototype.showGrid = function(){

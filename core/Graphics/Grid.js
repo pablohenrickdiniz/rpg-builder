@@ -4,11 +4,10 @@ define(['PropsParser','RectSet'],function(Parser,RectSet){
         var self = this;
         self.width = 0;
         self.height = 0;
-        self.x = 0;
-        self.y = 0;
         self.sw = 0;
         self.sh = 0;
         self.rectSets = [];
+        self.parent = null;
         self.set(options);
     };
 
@@ -52,38 +51,75 @@ define(['PropsParser','RectSet'],function(Parser,RectSet){
 
     Grid.prototype.set = function(options){
         var self = this;
+        var aux_width = self.width;
+        var aux_height = self.height;
+        var aux_x = self.x;
+        var aux_y = self.y;
+        var aux_sw = self.sw;
+        var aux_sh = self.sh;
         self.width = Parser.parseNumber(options.width,self.width);
         self.height = Parser.parseNumber(options.height,self.height);
-        self.x = Parser.parseNumber(options.x,self.x);
-        self.y = Parser.parseNumber(options.y,self.y);
         self.sw = Parser.parseNumber(options.sw,self.sw);
         self.sh = Parser.parseNumber(options.sh,self.sh);
+
+        var redraw =  self.sw != aux_sw || self.sh != aux_sh;
+        self.update();
+
+
         return self;
     };
 
     Grid.prototype.update = function(){
         var self = this;
-        self.rectSets = [];
-        var x = self.x;
-        var y = self.y;
-        var w = self.width;
-        var h = self.height;
         var sw = self.sw;
         var sh = self.sh;
+        var w = self.width;
+        var h = self.height;
 
-        for(var i = x ;i <= w/sw;i++){
-            if(self.rectSets[i] == undefined){
-                self.rectSets[i] = [];
+
+        if(w > 0 && h > 0){
+            var cols = Math.floor(w/sw);
+            var rows = Math.floor(h/sh);
+            var count = 0;
+
+
+            for(var i = self.rectSets.length; i < rows;i++){
+                if(self.rectSets[i] == undefined){
+                    self.rectSets[i] = [];
+                }
+                for(var j =self.rectSets[i].length; j < cols;j++){
+                    count++;
+                    self.rectSets[i][j] = new RectSet({
+                        x:j*self.sw,
+                        y:i*self.sh,
+                        width:sw,
+                        height:sh
+                    });
+                }
             }
-            for(var j = y; j <= h/sh;j++){
-                self.rectSets[i][j] = new RectSet({
-                    x:i*sw,
-                    y:j*sh,
-                    width:sw,
-                    height:sh
-                });
+
+            for(var j = self.rectSets[0].length;j < cols;j++){
+                for(var i = 0; i < self.rectSets.length;i++){
+                    count++;
+                    self.rectSets[i][j] = new RectSet({
+                        x:j*self.sw,
+                        y:i*self.sh,
+                        width:sw,
+                        height:sh
+                    });
+                }
             }
+
+            for(var i =0; i < self.rectSets.length;i++){
+                self.rectSets[i].length = cols;
+            }
+            self.rectSets.length = Math.min(rows,self.rectSets.length);
         }
+        else{
+            self.rectSets = [];
+        }
+
+
         return self;
     };
 
