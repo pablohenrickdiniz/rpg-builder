@@ -1,4 +1,5 @@
-define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React'],function(CE,Grid,Map,$,ImageLoader,InputNumber,React){
+define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math'],
+    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math){
     var MapEditor = {
         currentLayer:0,
         gameEngine:null,
@@ -202,6 +203,32 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React']
                     container:"#canvas-container",
                     width:'100%',
                     height:700
+                });
+                var engine = self.gameEngine;
+                var editor = self;
+                editor.gameEngine.getMouseReader().onmousedown(1,function(){
+                    editor.lastView = {
+                        x:engine.viewX,
+                        y:engine.viewY
+                    };
+                });
+
+                editor.gameEngine.getMouseReader().onmousemove(function(){
+                    var self = this;
+                    if(self.left){
+                        var pa = self.lastDown.left;
+                        var pb = self.lastMove;
+
+                        var p = Math.vmv(pa,pb);
+                        var view = editor.lastView;
+                        var x = Math.max(view.x-p.x,0);
+                        var y = Math.max(view.y-p.y,0);
+
+                        engine.set({
+                            viewX:x,
+                            viewY:y
+                        });
+                    }
                 });
             }
             return self.gameEngine;

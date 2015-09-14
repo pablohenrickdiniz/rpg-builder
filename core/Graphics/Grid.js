@@ -1,15 +1,12 @@
-define(['PropsParser','RectSet'],function(Parser,RectSet){
+define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,AbstractGrid){
     var Grid = function(options){
         options = typeof options == 'object'?options:{};
         var self = this;
-        self.width = 0;
-        self.height = 0;
-        self.sw = 0;
-        self.sh = 0;
         self.rectSets = [];
-        self.parent = null;
-        self.set(options);
+        AbstractGrid.call(self,[options]);
     };
+
+    Grid.prototype = AbstractGrid.prototype;
 
     Grid.prototype.getRectsFromArea = function(options){
         var rects = [];
@@ -19,11 +16,10 @@ define(['PropsParser','RectSet'],function(Parser,RectSet){
         var width =  Parser.parseNumber(options.width,0);
         var height =  Parser.parseNumber(options.height,0);
 
-        var si = parseInt(Math.floor(x/self.sw));
-        var sj = parseInt(Math.floor(y/self.sh));
-        var ei = parseInt(Math.floor((x+width)/self.sw));
-        var ej = parseInt(Math.floor((y+height)/self.sh));
-
+        var si = parseInt(Math.floor(y/self.sh));
+        var sj = parseInt(Math.floor(x/self.sw));
+        var ei = parseInt(Math.floor((y+height)/self.sh));
+        var ej = parseInt(Math.floor((x+width)/self.sw));
 
         for(var i = si; i <= ei;i++){
             if(self.rectSets[i] != undefined){
@@ -114,6 +110,9 @@ define(['PropsParser','RectSet'],function(Parser,RectSet){
                 self.rectSets[i].length = cols;
             }
             self.rectSets.length = Math.min(rows,self.rectSets.length);
+            if(self.parent != null){
+                self.parent.clear().drawGrid(self);
+            }
         }
         else{
             self.rectSets = [];

@@ -90,7 +90,7 @@ define(['Jquery-Conflict'],function($){
 
         $(self.element).mousemove(mousemove);
         $(self.element).mousedown(mousedown);
-        $(self.element).mouseup(mouseup);
+        $(document).mouseup(mouseup);
         self.unbindEvents = function(){
             $(self.element).unbind('mousemove',mousemove);
             $(self.element).unbind('mousedown',mousedown);

@@ -15,6 +15,7 @@ requirejs.config({
         "Jquery-Conflict":'src/jquery-conflict',
         "InputNumber":"../bower_components/ReactElements/build/InputNumber",
         "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin",
+        "AbstractGrid":"../core/Graphics/AbstractGrid",
         "Grid":"../core/Graphics/Grid",
         "RectSet":"../core/Graphics/RectSet",
         "Color":"../core/Graphics/Color",
@@ -24,7 +25,8 @@ requirejs.config({
         "MapLoader":"../core/Resources/MapLoader",
         "MaterialsLoader":"../core/Resources/MaterialsLoader",
         "GE":"../core/Graphics/GameCanvasEngine",
-        "MapEditor":'../core/Tools/build/MapEditor'
+        "MapEditor":'../core/Tools/build/MapEditor',
+        "Overlap":"../bower_components/MathLib/src/Overlap"
     },
     "shim":{
         "bootstrap":{

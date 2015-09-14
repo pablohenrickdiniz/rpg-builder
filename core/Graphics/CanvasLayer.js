@@ -1,4 +1,4 @@
-define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseReader){
+define(['Jquery-Conflict','PropsParser','MouseReader','Overlap'],function($,Parser,MouseReader,Overlap){
     var CanvasLayer = function(options,canvas){
         options = typeof options == 'object'?options:{};
         var self = this;
@@ -22,6 +22,20 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
         });
         self.set(options);
         return self;
+    };
+
+    CanvasLayer.prototype.getVisibleArea = function(){
+        var self = this;
+        var width = Math.min(self.width,self.canvas.getWidth());
+        var height = Math.min(self.height,self.canvas.getHeight());
+        var x = self.canvas.viewX;
+        var y = self.canvas.viewY;
+        return {
+            x:x,
+            y:y,
+            width:width,
+            height:height
+        }
     };
 
     CanvasLayer.prototype.show = function(){
@@ -146,6 +160,11 @@ define(['Jquery-Conflict','PropsParser','MouseReader'],function($,Parser,MouseRe
         });
         grid.parent = this;
         return self;
+    };
+
+    CanvasLayer.prototype.drawAbstractGrid = function(grid){
+        var self = this;
+        var context = self.getContext();
     };
 
     CanvasLayer.prototype.drawRectSet = function(rectSet){

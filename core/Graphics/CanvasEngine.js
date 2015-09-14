@@ -1,4 +1,4 @@
-define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Parser,$){
+define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(CanvasLayer,Parser,$,MouseReader){
     var CanvasEngine = function(options){
         var self = this;
         self.layers = [];
@@ -6,14 +6,32 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         self.viewX = 0;
         self.viewY = 0;
         self.width = 400;
+        self.mouseReader = null;
         self.set(options);
         return self;
+    };
+
+
+    CanvasEngine.prototype.getMouseReader = function(){
+        var self = this;
+        if(self.mouseReader == null){
+            self.mouseReader = new MouseReader(self.container);
+        }
+        return self.mouseReader;
     };
 
     CanvasEngine.prototype.resize = function(width){
         var self = this;
         self.width = Parser.parsePercent(width,$(self.container).parent());
         return self;
+    };
+
+    CanvasEngine.prototype.getWidth = function(){
+        return $(this.container).width();
+    };
+
+    CanvasEngine.prototype.getHeight = function(){
+        return $(this.container).height();
     };
 
 
@@ -32,6 +50,13 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict'],function(CanvasLayer,Pars
         else{
             self.width = Parser.parseNumber(options.width,self.width);
         }
+
+        self.layers.forEach(function(layer){
+            $(layer.getElement()).css({
+                left:self.viewX,
+                top:self.viewY
+            });
+        });
 
         $(self.container).css({
             width:self.width,
