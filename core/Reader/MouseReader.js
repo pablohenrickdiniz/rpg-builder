@@ -30,61 +30,70 @@ define(['Jquery-Conflict'],function($){
         var self = this;
 
         var mousemove = function (event) {
-            self.lastMove = {x:event.offsetX,y:event.offsetY};
-            self.mousemove.forEach(function(callback){
-                callback.apply(self,[event]);
-            });
+            var target = event.target;
+            var x = event.offsetX;
+            var y = event.offsetY;
+
+            if(target == $(self.element)[0]){
+                self.mousemove.forEach(function(callback){
+                    callback.apply(self,[event,{x:x,y:y}]);
+                });
+            }
         };
 
         var mousedown = function(event){
-            var pos = {x:event.offsetX,y:event.offsetY};
-            switch (event.which) {
-                case 1:
-                    self.left = true;
-                    self.lastDown.left = pos;
-                    self.leftdown.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
-                    break;
-                case 2:
-                    self.middle = true;
-                    self.lastDown.middle = pos;
-                    self.middledown.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
-                    break;
-                case 3:
-                    self.right = true;
-                    self.lastDown.right = pos;
-                    self.rightdown.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
+            if(event.target == $(self.element)[0]){
+                var pos = {x:event.offsetX,y:event.offsetY};
+                switch (event.which) {
+                    case 1:
+                        self.left = true;
+                        self.lastDown.left = pos;
+                        self.leftdown.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                        break;
+                    case 2:
+                        self.middle = true;
+                        self.lastDown.middle = pos;
+                        self.middledown.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                        break;
+                    case 3:
+                        self.right = true;
+                        self.lastDown.right = pos;
+                        self.rightdown.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                }
             }
         };
 
         var mouseup = function (event) {
-            var pos = {x:event.offsetX,y:event.offsetY};
-            switch (event.which) {
-                case 1:
-                    self.left = false;
-                    self.lastUp.left = pos;
-                    self.leftup.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
-                    break;
-                case 2:
-                    self.middle = false;
-                    self.lastUp.middle = pos;
-                    self.middleup.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
-                    break;
-                case 3:
-                    self.right = false;
-                    self.lastUp.right = pos;
-                    self.rightup.forEach(function (callback) {
-                        callback.apply(self,[event]);
-                    });
+            if(event.target == $(self.element)[0]){
+                var pos = {x:event.offsetX,y:event.offsetY};
+                switch (event.which) {
+                    case 1:
+                        self.left = false;
+                        self.lastUp.left = pos;
+                        self.leftup.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                        break;
+                    case 2:
+                        self.middle = false;
+                        self.lastUp.middle = pos;
+                        self.middleup.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                        break;
+                    case 3:
+                        self.right = false;
+                        self.lastUp.right = pos;
+                        self.rightup.forEach(function (callback) {
+                            callback.apply(self,[event]);
+                        });
+                }
             }
         };
 

@@ -40,3 +40,7 @@ select{
     border-radius: 0 !important;
 }
 
+.canvas-layer{
+    pointer-events:none;
+
+}
