@@ -86,12 +86,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 MapEditor.getMap().set({
                     width:value
                 });
-
+                MapEditor.fixPos();
             },
             heightMapChange:function(value){
                 MapEditor.getMap().set({
                     height:value
                 });
+                MapEditor.fixPos();
             },
             showGrid:function(e){
                 var self = MapEditor;
@@ -206,24 +207,31 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     });
                     var engine = self.gameEngine;
                     var editor = self;
-                    editor.gameEngine.getMouseReader().onmousedown(1,function(){
+
+
+                    engine.getMouseReader().onmousedown(1,function(){
                         editor.lastView = {
                             x:engine.viewX,
                             y:engine.viewY
                         };
                     });
 
-                    editor.gameEngine.getMouseReader().onmousemove(function(e,pb){
+                    engine.getMouseReader().onmousemove(function(e,pb){
                         var self = this;
                         if(self.left){
                             var pa = self.lastDown.left;
-
                             var p = Math.vmv(pa,pb);
                             var view = editor.lastView;
                             var grid_layer = engine.createLayer({zIndex:10});
                             var x =view.x-p.x;
                             var y = view.y-p.y;
 
+                            var min_x = engine.getWidth()-grid_layer.width;
+                            var min_y = engine.getHeight()-grid_layer.height;
+                            min_x = min_x>0?0:min_x;
+                            min_y = min_y>0?0:min_y;
+                            x = Math.min(Math.max(x,min_x),0);
+                            y = Math.min(Math.max(y,min_y),0);
 
                             engine.set({
                                 viewX:x,
@@ -234,6 +242,23 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
                 }
                 return self.gameEngine;
+            },
+            fixPos:function(){
+                var engine = this.getGameEngine();
+                var x = engine.viewX;
+                var y = engine.viewY;
+                var grid_layer = engine.createLayer({zIndex:10});
+                var min_x = engine.getWidth()-grid_layer.width;
+                var min_y = engine.getHeight()-grid_layer.height;
+                min_x = min_x>0?0:min_x;
+                min_y = min_y>0?0:min_y;
+                x = Math.min(Math.max(x,min_x),0);
+                y = Math.min(Math.max(y,min_y),0);
+
+                engine.set({
+                    viewX:x,
+                    viewY:y
+                });
             },
             getMap:function(){
                 var self = this;

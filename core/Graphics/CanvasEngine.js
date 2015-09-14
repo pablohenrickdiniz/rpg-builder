@@ -37,8 +37,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
 
     CanvasEngine.prototype.set = function(options){
         var self = this;
-        self.container = options.container;
-        self.height = Parser.parseNumber(options.height,self.width);
+        self.container = $(options.container)[0] == undefined?self.container:options.container;
+        self.height = Parser.parseNumber(options.height,self.height);
         self.viewX = Parser.parseNumber(options.viewX,self.viewX);
         self.viewY = Parser.parseNumber(options.viewY,self.viewY);
         var width = options.width;
