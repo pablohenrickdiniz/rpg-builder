@@ -1,16 +1,14 @@
-define(['PropsParser','Grid'],function(Parser,Grid){
+define(['PropsParser'],function(Parser){
     var Map = function(options){
+        console.log('Initializing Map...');
         options = typeof  options == 'object'?options:{};
         var self = this;
-        self.development = true;
-        self.grid_visible = false;
         self.width = 8;
         self.height = 16;
         self.tile_w = 32;
         self.tile_h = 32;
         self.imageSets = [];
         self.parent = null;
-        self.grid = new Grid();
         self.set(options);
     };
 
@@ -28,32 +26,7 @@ define(['PropsParser','Grid'],function(Parser,Grid){
                 height:self.height*self.tile_h
             });
         }
-        self.grid.set({
-            width:self.width*self.tile_w,
-            height:self.height*self.tile_h,
-            sw:self.tile_w,
-            sh:self.tile_h
-        });
     };
-
-    Map.prototype.showGrid = function(){
-        this.grid_visible = true;
-        if(this.parent != null){
-            this.parent.createLayer({
-                zIndex:10
-            }).show();
-        }
-    };
-
-    Map.prototype.hideGrid = function(){
-        this.grid_visible = false;
-        if(this.parent != null){
-            this.parent.createLayer({
-                zIndex:10
-            }).hide();
-        }
-    };
-
 
     return Map;
 });

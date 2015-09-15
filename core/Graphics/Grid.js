@@ -110,9 +110,6 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
                 self.rectSets[i].length = cols;
             }
             self.rectSets.length = Math.min(rows,self.rectSets.length);
-            if(self.parent != null){
-                self.parent.clear().drawGrid(self);
-            }
         }
         else{
             self.rectSets = [];

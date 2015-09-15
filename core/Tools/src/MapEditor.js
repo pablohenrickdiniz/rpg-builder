@@ -1,5 +1,5 @@
-define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math'],
-    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math){
+define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math','AbstractGrid'],
+    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math,AbstractGrid){
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -7,6 +7,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             tilesetGridLayer:null,
             tilesetImageLayer:null,
             tilesetGrid:null,
+            mapAbstractGrid:null,
+            abstractGridLayer:null,
             map:null,
             initialize:function(){
                 var self = this;
@@ -15,7 +17,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var width = 0;
                 var height = 0;
                 var img = null;
-
+                debugger;
                 $("#tileset").change(function(){
                     var url = $(this).val();
                     ImageLoader.load(url,function(tmp){
@@ -83,13 +85,22 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 self.getGameEngine().renderMap(self.getMap());
             },
             widthMapChange:function(value){
+                var self = this;
                 MapEditor.getMap().set({
                     width:value
                 });
+                MapEditor.getMapAbstractGrid().set({
+                    width:value
+                });
+
                 MapEditor.fixPos();
             },
             heightMapChange:function(value){
+                var self = this;
                 MapEditor.getMap().set({
+                    height:value
+                });
+                self.getMapAbstractGrid().set({
                     height:value
                 });
                 MapEditor.fixPos();
@@ -97,11 +108,24 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             showGrid:function(e){
                 var self = MapEditor;
                 if($(e.target).is(':checked')){
-                    self.getMap().showGrid();
+                    self.getAbstractGridLayer().show();
                 }
                 else{
-                    self.getMap().hideGrid();
+                    self.getAbstractGridLayer().hide();
                 }
+            },
+            getAbstractGridLayer:function(){
+                var self = this;
+                if(self.abstractGridLayer == null){
+                    var map = self.getMap();
+                    self.getGameEngine().createLayer({
+                        zIndex:10,
+                        width:map.width*map.tile_w,
+                        height:map.height*map.tile_h
+                    }).drawAbstractGrid(self.getMapAbstractGrid()).hide();
+                }
+
+                return self.abstractGridLayer;
             },
             getTilesetGrid:function(){
                 var self = this;
@@ -125,6 +149,19 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     sh:value
                 });
                 MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
+            },
+            getMapAbstractGrid:function(){
+                var self = this;
+                if(self.mapAbstractGrid == null){
+                    var map = self.getMap();
+                    self.mapAbstractGrid = new AbstractGrid({
+                        width:map.width*map.tile_w,
+                        height:map.height*map.tile_h,
+                        sw:map.tile_w,
+                        sh:map.tile_h
+                    });
+                }
+                return self.mapAbstractGrid;
             },
             getTilesetImageLayer:function(){
                 var self = this;
@@ -160,12 +197,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             grid.apply({
                                 fillStyle:'transparent'
                             });
+                            /*
                             rectSets.forEach(function(rectSet){
                                 rectSet.set({
                                     fillStyle:'rgba(0,0,100,0.5)'
                                 });
                             });
-                            tilesetGridLayer.clear().drawGrid(grid);
+                            tilesetGridLayer.clear().drawGrid(grid);*/
                         }
                         else{
                             var rects = grid.getRectsFromArea(self.lastMove);

@@ -28,7 +28,7 @@ define(['Jquery-Conflict'],function($){
 
     MouseReader.prototype.start = function () {
         var self = this;
-
+        console.log('intializing mouse reader...');
         var mousemove = function (event) {
             var target = event.target;
             var x = event.offsetX;

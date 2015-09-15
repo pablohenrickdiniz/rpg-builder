@@ -1,4 +1,4 @@
-define(['Jquery-Conflict','PropsParser','MouseReader','Overlap'],function($,Parser,MouseReader,Overlap){
+define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],function($,Parser,MouseReader,Overlap,Color){
     var CanvasLayer = function(options,canvas){
         options = typeof options == 'object'?options:{};
         var self = this;
@@ -15,7 +15,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap'],function($,Pars
             self.refresh();
         });
         $(self.getElement()).on('contextmenu',function(e){
-           // e.preventDefault();
+            // e.preventDefault();
         });
         $(self.getElement()).css({
             'userSelect':'none'
@@ -36,6 +36,12 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap'],function($,Pars
             width:width,
             height:height
         }
+    };
+
+    CanvasLayer.prototype.isSetVisible = function(rectSet){
+        var self = this;
+        var area = self.getVisibleArea();
+        return !(rectSet.x+rectSet.width < area.x || area.x+area.width < rectSet.x || rectSet.y+rectSet.height < area.y || area.y+area.height < rectSet.y);
     };
 
     CanvasLayer.prototype.show = function(){
@@ -163,8 +169,22 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap'],function($,Pars
     };
 
     CanvasLayer.prototype.drawAbstractGrid = function(grid){
-        var self = this;
-        var context = self.getContext();
+        if(grid.isDrawable()){
+            var self = this;
+            var context = self.getContext();
+            context.fillStyle = 'transparent';
+            context.strokeStyle = Color.create({alpha:0.2}).toRGBA();
+            context.lineWidth = 1;
+            context.lineDash = [];
+            var ei = Math.floor(grid.width/grid.sw);
+            var ej = Math.floor(grid.height/grid.sh);
+            for(var i = 0; i < ei;i++){
+                for(var j = 0; j < ej;j++){
+                    context.strokeRect((i*grid.sw)+grid.x,(j*grid.sh)+grid.y,grid.sw,grid.sh);
+                }
+            }
+        }
+        return self;
     };
 
     CanvasLayer.prototype.drawRectSet = function(rectSet){

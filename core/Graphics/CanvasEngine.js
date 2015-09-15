@@ -1,5 +1,6 @@
 define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(CanvasLayer,Parser,$,MouseReader){
     var CanvasEngine = function(options){
+        console.log('intializing canvas engine...');
         var self = this;
         self.layers = [];
         self.height = 400;
@@ -36,6 +37,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
 
 
     CanvasEngine.prototype.set = function(options){
+        console.log('updating canvas engine...');
         var self = this;
         self.container = $(options.container)[0] == undefined?self.container:options.container;
         self.height = Parser.parseNumber(options.height,self.height);
@@ -85,6 +87,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
 
         if(zIndex != null){
             if(self.layers[zIndex] == undefined){
+                console.log('creating layer index '+zIndex);
                 var layer = new CanvasLayer(options,self);
                 self.layers[zIndex] = layer;
                 $(document).ready(function(){
@@ -117,6 +120,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.renderMap = function(map){
+        console.log('rendering map...');
         var self = this;
         self.clearAllLayers();
         var sets = map.imageSets;
@@ -135,12 +139,6 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
                 }
             }
         }
-
-        self.createLayer({
-            zIndex:10,
-            width:map.width*map.tile_w,
-            height:map.height*map.tile_h
-        }).drawGrid(map.grid).hide();
 
         map.parent = self;
     };

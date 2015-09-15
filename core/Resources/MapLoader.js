@@ -8,11 +8,13 @@ define(['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader'],func
             url = $(a).prop('href');
             var context = url.substring(0,url.lastIndexOf('/'));
             if(self.maps[url] == undefined){
+                console.log('loading map '+url);
                 $.ajax({
                     url:url,
                     type:'get',
                     dataType:'json',
                     success:function(data){
+                        console.log('map loaded...');
                         self.createMapObject(data,callback,context);
                     }
                 });
@@ -22,6 +24,7 @@ define(['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader'],func
             }
         },
         createMapObject:function(data,callback,context){
+            console.log('creating map object...');
             context = context == undefined?'':context;
             var map = new Map({
                 tile_w:data.tile_w,
