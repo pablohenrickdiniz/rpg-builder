@@ -190,13 +190,29 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 console.log('MapEditor get tileset grid layer...');
                 var self = this;
                 if(self.tilesetGridLayer == null){
-                    var tilesetGridLayer =  self.getTilesetEngine().createLayer({zIndex:1,name:'gride'});
+                    self.tilesetGridLayer = self.getTilesetEngine().createLayer({zIndex:1,name:'gride'});
+                }
+                return self.tilesetGridLayer;
+            },
+            getTilesetEngine:function(){
+                console.log('MapEditor get tileset engine...');
+                var self = this;
+                if(self.tilesetEngine == null){
+                    self.tilesetEngine = CE.createEngine({
+                        container:"#tileset-grid",
+                        width:'100%',
+                        height:665
+                    });
+                    var engine = self.tilesetEngine;
+                    var tilesetGridLayer = self.getTilesetGridLayer();
                     var grid = self.getTilesetGrid();
-                    tilesetGridLayer.getMouseReader().onmousemove(function(e){
+                    self.tilesetEngine.getMouseReader().onmousemove(function(e){
+                        console.log('mouse move...');
                         var self = this;
                         if(self.left){
-                            var pa = self.lastDown.left;
-                            var pb = self.lastMove;
+                            var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
+                            var pa = Math.vpv(self.lastDown.left,translate);
+                            var pb = Math.vpv(self.lastMove,translate);
                             var width = Math.abs(pb.x-pa.x);
                             var height = Math.abs(pb.y-pa.y);
 
@@ -210,14 +226,17 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             area.x = pa.x > pb.x?area.x-width:area.x;
                             area.y = pa.y > pb.y?area.y-height:area.y;
 
+
                             var rectSets = grid.getRectsFromArea(area);
                             grid.apply({
-                                fillStyle:'transparent'
+                                fillStyle:'transparent',
+                                state:0
                             });
 
                             rectSets.forEach(function(rectSet){
                                 rectSet.set({
-                                    fillStyle:'rgba(0,0,100,0.5)'
+                                    fillStyle:'rgba(0,0,100,0.5)',
+                                    state:1
                                 });
                             });
                             tilesetGridLayer.clear().drawGrid(grid);
@@ -228,28 +247,21 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                 var rectSet = rects[0];
                                 grid.apply({
                                     fillStyle:'transparent'
+                                },function(){
+                                    return this.state != 1;
                                 });
+
                                 rectSet.set({
-                                    fillStyle:'rgba(100,0,0,0.5)'
+                                    fillStyle:'rgba(0,0,100,0.5)'
                                 });
 
                                 tilesetGridLayer.clear().drawGrid(grid);
                             }
                         }
                     });
-                    self.tilesetGridLayer = tilesetGridLayer;
-                }
-                return self.tilesetGridLayer;
-            },
-            getTilesetEngine:function(){
-                console.log('MapEditor get tileset engine...');
-                var self = this;
-                if(self.tilesetEngine == null){
-                    self.tilesetEngine = CE.createEngine({
-                        container:"#tileset-grid",
-                        width:'100%',
-                        height:665
-                    })
+
+
+
                 }
                 return self.tilesetEngine;
             },
@@ -266,17 +278,18 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     var editor = self;
 
 
-                    engine.getMouseReader().onmousedown(1,function(){
+                    engine.getMouseReader().onmousedown(3,function(){
                         editor.lastView = {
                             x:engine.viewX,
                             y:engine.viewY
                         };
                     });
 
-                    engine.getMouseReader().onmousemove(function(e,pb){
+                    engine.getMouseReader().onmousemove(function(e){
                         var self = this;
-                        if(self.left){
-                            var pa = self.lastDown.left;
+                        if(self.right){
+                            var pa = self.lastDown.right;
+                            var pb = self.lastMove;
                             var p = Math.vmv(pa,pb);
                             var view = editor.lastView;
                             var grid_layer = engine.createLayer({zIndex:10});

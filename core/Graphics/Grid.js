@@ -36,11 +36,13 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
     };
 
 
-    Grid.prototype.apply = function(options){
+    Grid.prototype.apply = function(options,condition){
         var self = this;
         self.rectSets.forEach(function(row){
             row.forEach(function(rectSet){
-                rectSet.set(options);
+                if(condition == undefined || condition.apply(rectSet)){
+                    rectSet.set(options);
+                }
             });
         });
         return self;
