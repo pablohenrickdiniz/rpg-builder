@@ -1,4 +1,4 @@
-define(function(){
+define(['PropsParser'],function(Parser){
     var AbstractGrid = function(options){
         console.log('initializing Abstract Grid...');
         options = typeof options == 'object'?options:{};
@@ -14,11 +14,13 @@ define(function(){
     };
 
     AbstractGrid.prototype.isDrawable = function(){
+        console.log('AbstractGrid is drawable...');
         var self = this;
         return self.sw > 0 && self.sh > 0 && self.width >0 && self.height > 0;
     };
 
     AbstractGrid.prototype.set = function(options){
+        console.log('AbstractGrid set...');
         var self = this;
         self.width = Parser.parseNumber(options.width,self.width);
         self.height = Parser.parseNumber(options.height,self.height);

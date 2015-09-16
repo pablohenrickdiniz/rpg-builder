@@ -14,6 +14,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
 
 
     CanvasEngine.prototype.getMouseReader = function(){
+        console.log('Canvas Engine get mouse reader...');
         var self = this;
         if(self.mouseReader == null){
             self.mouseReader = new MouseReader(self.container);
@@ -22,22 +23,25 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.resize = function(width){
+        console.log('Canvas Engine resize...');
         var self = this;
         self.width = Parser.parsePercent(width,$(self.container).parent());
         return self;
     };
 
     CanvasEngine.prototype.getWidth = function(){
+        console.log('Canvas Engine get width...');
         return $(this.container).width();
     };
 
     CanvasEngine.prototype.getHeight = function(){
+        console.log('Canvas Engine get height...');
         return $(this.container).height();
     };
 
 
     CanvasEngine.prototype.set = function(options){
-        console.log('updating canvas engine...');
+        console.log('Canvas Engine set...');
         var self = this;
         self.container = $(options.container)[0] == undefined?self.container:options.container;
         self.height = Parser.parseNumber(options.height,self.height);
@@ -69,6 +73,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.clearAllLayers = function(){
+        console.log('Canvas engine clear all layers...');
         this.layers.forEach(function(layer){
             layer.clear();
         });
@@ -76,12 +81,14 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.applyToLayers = function(options){
+        console.log('Canvas engine aply to layers...');
         this.layers.forEach(function(layer){
             layer.set(options);
         });
     };
 
     CanvasEngine.prototype.createLayer = function(options){
+        console.log('Canvas engine create layer...');
         var self = this;
         var zIndex = Parser.parseInt(options.zIndex,null);
 
@@ -104,6 +111,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.getLayer = function(zIndex){
+        console.log('Canvas Engine get layer...');
         var self = this;
         if(self.layers[zIndex] != undefined){
             return self.layers[zIndex];
@@ -112,6 +120,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.removeLayer = function(zIndex){
+        console.log('Canvas Engine remove layer...');
         var self = this;
         if(self.layers[zIndex] != undefined){
             self.layers[zIndex].destroy();
@@ -120,7 +129,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.prototype.renderMap = function(map){
-        console.log('rendering map...');
+        console.log('Canvas Engine render map...');
         var self = this;
         self.clearAllLayers();
         var sets = map.imageSets;
@@ -144,6 +153,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
     };
 
     CanvasEngine.createEngine = function(options){
+        console.log('Canvas Engine create engine...');
         return new CanvasEngine(options);
     };
 

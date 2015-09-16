@@ -14,6 +14,7 @@ define(['PropsParser'],function(Parser){
 
 
     Map.prototype.set = function(options){
+        console.log('Map set...');
         var self = this;
         self.tile_w =  Parser.parseNumber(options.tile_w,self.tile_w);
         self.tile_h =  Parser.parseNumber(options.tile_h,self.tile_h);

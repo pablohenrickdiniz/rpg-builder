@@ -11,13 +11,14 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             abstractGridLayer:null,
             map:null,
             initialize:function(){
+                console.log('MapEditor initialize...');
                 var self = this;
                 var sw = 32;
                 var sh = 32;
                 var width = 0;
                 var height = 0;
                 var img = null;
-                debugger;
+
                 $("#tileset").change(function(){
                     var url = $(this).val();
                     ImageLoader.load(url,function(tmp){
@@ -85,40 +86,50 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 self.getGameEngine().renderMap(self.getMap());
             },
             widthMapChange:function(value){
+                console.log('MapEditor width map change...');
                 var self = this;
-                MapEditor.getMap().set({
-                    width:value
-                });
-                MapEditor.getMapAbstractGrid().set({
+                var map = MapEditor.getMap();
+                var grid = MapEditor.getMapAbstractGrid();
+                map.set({
                     width:value
                 });
 
+                grid.set({
+                    width:map.width*map.tile_w
+                });
+
+                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
             },
             heightMapChange:function(value){
-                var self = this;
-                MapEditor.getMap().set({
+                console.log('MapEditor height map change...');
+                var grid = MapEditor.getMapAbstractGrid()
+                var map =MapEditor.getMap();
+                map.set({
                     height:value
                 });
-                self.getMapAbstractGrid().set({
-                    height:value
+
+                grid.set({
+                    height:map.height*map.tile_h
                 });
+                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
             },
             showGrid:function(e){
-                var self = MapEditor;
+                console.log('MapEditor show grid...');
                 if($(e.target).is(':checked')){
-                    self.getAbstractGridLayer().show();
+                    MapEditor.getAbstractGridLayer().show();
                 }
                 else{
-                    self.getAbstractGridLayer().hide();
+                    MapEditor.getAbstractGridLayer().hide();
                 }
             },
             getAbstractGridLayer:function(){
+                console.log('MapEditor get abstract grid layer...');
                 var self = this;
                 if(self.abstractGridLayer == null){
                     var map = self.getMap();
-                    self.getGameEngine().createLayer({
+                    self.abstractGridLayer = self.getGameEngine().createLayer({
                         zIndex:10,
                         width:map.width*map.tile_w,
                         height:map.height*map.tile_h
@@ -128,6 +139,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.abstractGridLayer;
             },
             getTilesetGrid:function(){
+                console.log('MapEditor get tileset grid...');
                 var self = this;
                 if(self.tilesetGrid == null){
                     self.tilesetGrid = new Grid();
@@ -135,6 +147,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.tilesetGrid;
             },
             widthGridChange:function(value){
+                console.log('MapEditor width grid change...');
                 var grid = MapEditor.getTilesetGrid();
                 grid.set({
                     sw:value
@@ -144,6 +157,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             },
 
             heightGridChange:function(value){
+                console.log('MapEditor height grid change...');
                 var grid = MapEditor.getTilesetGrid();
                 grid.set({
                     sh:value
@@ -151,6 +165,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
             },
             getMapAbstractGrid:function(){
+                console.log('MapEditor get map abstract grid...');
                 var self = this;
                 if(self.mapAbstractGrid == null){
                     var map = self.getMap();
@@ -164,6 +179,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.mapAbstractGrid;
             },
             getTilesetImageLayer:function(){
+                console.log('MapEditor get tileset image layer...');
                 var self = this;
                 if(self.tilesetImageLayer == null){
                     self.tilesetImageLayer = self.getTilesetEngine().createLayer({zIndex:0,name:'tileset'});
@@ -171,6 +187,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.tilesetImageLayer;
             },
             getTilesetGridLayer:function(){
+                console.log('MapEditor get tileset grid layer...');
                 var self = this;
                 if(self.tilesetGridLayer == null){
                     var tilesetGridLayer =  self.getTilesetEngine().createLayer({zIndex:1,name:'gride'});
@@ -197,13 +214,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             grid.apply({
                                 fillStyle:'transparent'
                             });
-                            /*
+
                             rectSets.forEach(function(rectSet){
                                 rectSet.set({
                                     fillStyle:'rgba(0,0,100,0.5)'
                                 });
                             });
-                            tilesetGridLayer.clear().drawGrid(grid);*/
+                            tilesetGridLayer.clear().drawGrid(grid);
                         }
                         else{
                             var rects = grid.getRectsFromArea(self.lastMove);
@@ -225,6 +242,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.tilesetGridLayer;
             },
             getTilesetEngine:function(){
+                console.log('MapEditor get tileset engine...');
                 var self = this;
                 if(self.tilesetEngine == null){
                     self.tilesetEngine = CE.createEngine({
@@ -236,6 +254,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.tilesetEngine;
             },
             getGameEngine:function(){
+                console.log('MapEditor get game engine...');
                 var self = this;
                 if(self.gameEngine == null){
                     self.gameEngine = CE.createEngine({
@@ -275,6 +294,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                 viewX:x,
                                 viewY:y
                             });
+
+                            MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(MapEditor.getMapAbstractGrid());
                         }
                     });
 
@@ -282,6 +303,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.gameEngine;
             },
             fixPos:function(){
+                console.log('MapEditor fix pos...');
                 var engine = this.getGameEngine();
                 var x = engine.viewX;
                 var y = engine.viewY;
@@ -299,6 +321,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 });
             },
             getMap:function(){
+                console.log('MapEditor get map...');
                 var self = this;
                 if(self.map == null){
                     self.map = new Map();

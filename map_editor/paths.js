@@ -34,6 +34,9 @@ requirejs.config({
         },
         "InputNumber":{
             deps:["SetIntervalMixin"]
+        },
+        "Grid":{
+            deps:["AbstractGrid"]
         }
     }
 });

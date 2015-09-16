@@ -1,12 +1,13 @@
 define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,AbstractGrid){
     var Grid = function(options){
+        console.log('intializing Grid...');
         options = typeof options == 'object'?options:{};
         var self = this;
+        AbstractGrid.apply(self,[options]);
         self.rectSets = [];
-        AbstractGrid.call(self,[options]);
     };
 
-    Grid.prototype = AbstractGrid.prototype;
+    Grid.prototype = new AbstractGrid;
 
     Grid.prototype.getRectsFromArea = function(options){
         var rects = [];
