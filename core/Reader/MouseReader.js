@@ -28,20 +28,19 @@ define(['Jquery-Conflict'],function($){
 
     MouseReader.prototype.start = function () {
         var self = this;
-        console.log('intializing mouse reader...');
-        var mousemove = function (event) {
+        $(self.element).mousemove(function(event){
             var target = event.target;
             var x = event.offsetX;
             var y = event.offsetY;
-
+            self.lastMove = {x:x,y:y};
             if(target == $(self.element)[0]){
                 self.mousemove.forEach(function(callback){
-                    callback.apply(self,[event,{x:x,y:y}]);
+                    callback.apply(self,[event]);
                 });
             }
-        };
+        });
 
-        var mousedown = function(event){
+        $(self.element).mousedown(function(event){
             if(event.target == $(self.element)[0]){
                 var pos = {x:event.offsetX,y:event.offsetY};
                 switch (event.which) {
@@ -67,9 +66,9 @@ define(['Jquery-Conflict'],function($){
                         });
                 }
             }
-        };
+        });
 
-        var mouseup = function (event) {
+        $(document).mouseup(function(event){
             if(event.target == $(self.element)[0]){
                 var pos = {x:event.offsetX,y:event.offsetY};
                 switch (event.which) {
@@ -95,16 +94,13 @@ define(['Jquery-Conflict'],function($){
                         });
                 }
             }
-        };
+        });
+    };
 
-        $(self.element).mousemove(mousemove);
-        $(self.element).mousedown(mousedown);
-        $(document).mouseup(mouseup);
-        self.unbindEvents = function(){
-            $(self.element).unbind('mousemove',mousemove);
-            $(self.element).unbind('mousedown',mousedown);
-            $(self.element).unbind('mouseup',mouseup);
-        };
+    MouseReader.prototype.unbindEvents = function(){
+        var self = this;
+        $(self.element).unbind('mousemove',self.mousemovecallback);
+        $(self.element).unbind('mousedown',self.mousedowncallback);
     };
 
     MouseReader.prototype.onmousedown = function (which, callback) {

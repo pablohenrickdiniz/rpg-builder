@@ -60,16 +60,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         $(self.getElement()).hide();
         return self;
     };
-
-    CanvasLayer.prototype.getMouseReader = function(){
-        console.log('Canvas layer get mouse reader...');
-        var self = this;
-        if(self.mouseReader == null){
-            self.mouseReader = new MouseReader(self.getElement());
-        }
-        return self.mouseReader;
-    };
-
+    
     CanvasLayer.prototype.saveState = function(name){
         console.log('Canvas layer save state...');
         var self = this;

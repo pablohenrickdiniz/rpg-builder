@@ -69,7 +69,9 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
             height:self.height,
             position:'relative',
             overflow:'hidden'
-        }).addClass('transparent-background');
+        }).addClass('transparent-background').on('contextmenu',function(e){
+            e.preventDefault();
+        })
     };
 
     CanvasEngine.prototype.clearAllLayers = function(){
