@@ -59,7 +59,9 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
         self.sw = Parser.parseNumber(options.sw,self.sw);
         self.sh = Parser.parseNumber(options.sh,self.sh);
 
-        var redraw =  self.sw != aux_sw || self.sh != aux_sh;
+        if(self.sw != aux_sw || self.sh != aux_sh){
+            self.rectSets = [];
+        }
         self.update();
 
 
