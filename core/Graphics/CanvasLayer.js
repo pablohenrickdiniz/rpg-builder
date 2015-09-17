@@ -12,6 +12,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         self.name = options.name == undefined?'':options.name;
         self.mouseReader = null;
         self.element = null;
+        self.opacity = 1;
         $(window).resize(function(){
             self.refresh();
         });
@@ -118,9 +119,11 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         var width = Parser.parseNumber(options.width,self.width);
         var height = Parser.parseNumber(options.height,self.height);
         self.name = options.name == undefined?self.name:options.name;
+        self.opacity = Parser.parseNumber(options.opacity,self.opacity);
         self.resize(width,height);
         $(self.getElement()).css({
-            zIndex:self.zIndex
+            zIndex:self.zIndex,
+            opacity:self.opacity
         });
         return self;
     };

@@ -9,8 +9,8 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
 
     Grid.prototype = new AbstractGrid;
 
-    Grid.prototype.getRectsFromArea = function(options){
-        var rects = [];
+
+    Grid.prototype.getAreaInterval = function(options){
         var self = this;
         var x = Parser.parseNumber(options.x,0);
         var y = Parser.parseNumber(options.y,0);
@@ -21,10 +21,17 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
         var sj = parseInt(Math.floor(x/self.sw));
         var ei = parseInt(Math.floor((y+height)/self.sh));
         var ej = parseInt(Math.floor((x+width)/self.sw));
+        return {si:si,sj:sj,ei:ei,ej:ej};
 
-        for(var i = si; i <= ei;i++){
+    };
+
+    Grid.prototype.getRectsFromArea = function(options){
+        var rects = [];
+        var self = this;
+        var interval = self.getAreaInterval(options);
+        for(var i = interval.si; i <= interval.ei;i++){
             if(self.rectSets[i] != undefined){
-                for(var j = sj; j <= ej;j++){
+                for(var j = interval.sj; j <= interval.ej;j++){
                     if(self.rectSets[i][j] != undefined){
                         rects.push(self.rectSets[i][j]);
                     }

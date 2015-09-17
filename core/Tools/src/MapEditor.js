@@ -10,6 +10,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             mapAbstractGrid:null,
             abstractGridLayer:null,
             map:null,
+            tilesetImage:null,
+            selectedInterval:[],
+            activeLayer:0,
             initialize:function(){
                 console.log('MapEditor initialize...');
                 var self = this;
@@ -17,13 +20,12 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var sh = 32;
                 var width = 0;
                 var height = 0;
-                var img = null;
 
                 $("#tileset").change(function(){
                     var url = $(this).val();
-                    ImageLoader.load(url,function(tmp){
+                    ImageLoader.load(url,function(img){
+                        self.tilesetImage = img;
                         self.getTilesetEngine().clearAllLayers();
-                        img = tmp;
                         width = img.width;
                         height = img.height;
 
@@ -48,6 +50,23 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         }).drawGrid(grid);
                     });
                 });
+
+                $("#layer").change(function(){
+                    self.activeLayer = $(this).val();
+                    var gameEngine = self.getGameEngine();
+                    self.gameEngine.createLayer({
+                        zIndex:self.activeLayer,
+                        opacity:1
+                    });
+                    self.gameEngine.applyToLayers({
+                        opacity:0.5
+                    },function(){
+                        return this.zIndex != self.activeLayer
+                    })
+                });
+
+                $("#tileset").change();
+                $("#layer").change();
 
                 React.render(
                     <div className="row">
@@ -103,7 +122,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             },
             heightMapChange:function(value){
                 console.log('MapEditor height map change...');
-                var grid = MapEditor.getMapAbstractGrid()
+                var grid = MapEditor.getMapAbstractGrid();
                 var map =MapEditor.getMap();
                 map.set({
                     height:value
@@ -133,7 +152,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         zIndex:10,
                         width:map.width*map.tile_w,
                         height:map.height*map.tile_h
-                    }).drawAbstractGrid(self.getMapAbstractGrid()).hide();
+                    }).drawAbstractGrid(self.getMapAbstractGrid());
                 }
 
                 return self.abstractGridLayer;
@@ -206,6 +225,32 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     var engine = self.tilesetEngine;
                     var tilesetGridLayer = self.getTilesetGridLayer();
                     var grid = self.getTilesetGrid();
+
+                    self.tilesetEngine.getMouseReader().onmousedown(1,function(){
+                        var self = this;
+                        var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
+                        var pa = Math.vpv(self.lastDown.left,translate);
+                        var area = {
+                            x:pa.x,
+                            y:pa.y
+                        };
+
+                        var rectSets = grid.getRectsFromArea(area);
+                        grid.apply({
+                            fillStyle:'transparent',
+                            state:0
+                        });
+                        rectSets.forEach(function(rectSet){
+                            rectSet.set({
+                                fillStyle:'rgba(0,0,100,0.5)',
+                                state:1
+                            });
+                        });
+                        MapEditor.selectedInterval = grid.getAreaInterval(area);
+                        tilesetGridLayer.clear().drawGrid(grid);
+                    });
+
+
                     self.tilesetEngine.getMouseReader().onmousemove(function(e){
                         console.log('mouse move...');
                         var self = this;
@@ -239,6 +284,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                     state:1
                                 });
                             });
+                            MapEditor.selectedInterval = grid.getAreaInterval(area);
                             tilesetGridLayer.clear().drawGrid(grid);
                         }
                         else{

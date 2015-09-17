@@ -3,8 +3,8 @@ define(['PropsParser'],function(Parser){
         console.log('Initializing Map...');
         options = typeof  options == 'object'?options:{};
         var self = this;
-        self.width = 8;
-        self.height = 16;
+        self.width = 10;
+        self.height = 10;
         self.tile_w = 32;
         self.tile_h = 32;
         self.imageSets = [];

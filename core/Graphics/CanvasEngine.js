@@ -82,10 +82,12 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return self;
     };
 
-    CanvasEngine.prototype.applyToLayers = function(options){
+    CanvasEngine.prototype.applyToLayers = function(options,conditions){
         console.log('Canvas engine aply to layers...');
         this.layers.forEach(function(layer){
-            layer.set(options);
+            if(conditions == undefined || conditions.apply(layer)){
+                layer.set(options);
+            }
         });
     };
 
