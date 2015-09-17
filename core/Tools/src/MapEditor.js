@@ -62,7 +62,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         opacity:0.5
                     },function(){
                         return this.zIndex != self.activeLayer
-                    })
+                    });
                 });
 
                 $("#tileset").change();
@@ -369,8 +369,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
 
                             var layer = engine.createLayer({
-                                zIndex:engine.currentLayer
+                                zIndex:MapEditor.activeLayer
                             });
+
+
 
                             for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
                                 for(var j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
@@ -384,7 +386,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                         y:i*map.tile_h
                                     });
 
-                                    console.log(imageSet);
 
                                     layer.clearRect(imageSet.x, imageSet.y, imageSet.width, imageSet.height);
                                     layer.drawImageSet(imageSet);
