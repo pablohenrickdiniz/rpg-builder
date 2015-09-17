@@ -39,7 +39,6 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return $(this.container).height();
     };
 
-
     CanvasEngine.prototype.set = function(options){
         console.log('Canvas Engine set...');
         var self = this;

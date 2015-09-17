@@ -1,5 +1,5 @@
-define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math','AbstractGrid'],
-    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math,AbstractGrid){
+define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math','AbstractGrid','ImageSet'],
+    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math,AbstractGrid,ImageSet){
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -24,7 +24,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 $("#tileset").change(function(){
                     var url = $(this).val();
                     ImageLoader.load(url,function(img){
-                        self.tilesetImage = img;
+                        self.tilesetImage = url;
                         self.getTilesetEngine().clearAllLayers();
                         width = img.width;
                         height = img.height;
@@ -255,23 +255,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         console.log('mouse move...');
                         var self = this;
                         if(self.left){
-                            var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
-                            var pa = Math.vpv(self.lastDown.left,translate);
-                            var pb = Math.vpv(self.lastMove,translate);
-                            var width = Math.abs(pb.x-pa.x);
-                            var height = Math.abs(pb.y-pa.y);
-
-                            var area = {
-                                x:pa.x,
-                                y:pa.y,
-                                width:width,
-                                height:height
-                            };
-
-                            area.x = pa.x > pb.x?area.x-width:area.x;
-                            area.y = pa.y > pb.y?area.y-height:area.y;
-
-
+                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
                             var rectSets = grid.getRectsFromArea(area);
                             grid.apply({
                                 fillStyle:'transparent',
@@ -310,6 +294,25 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
                 }
                 return self.tilesetEngine;
+            },
+            getDrawedArea:function(engine){
+                var self = this;
+                var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
+                var pa = Math.vpv(self.lastDown.left,translate);
+                var pb = Math.vpv(self.lastMove,translate);
+                var width = Math.abs(pb.x-pa.x);
+                var height = Math.abs(pb.y-pa.y);
+
+                var area = {
+                    x:pa.x,
+                    y:pa.y,
+                    width:width,
+                    height:height
+                };
+
+                area.x = pa.x > pb.x?area.x-width:area.x;
+                area.y = pa.y > pb.y?area.y-height:area.y;
+                return area;
             },
             getGameEngine:function(){
                 console.log('MapEditor get game engine...');
@@ -355,6 +358,71 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             });
 
                             MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(MapEditor.getMapAbstractGrid());
+                        }
+                        else if(self.left){
+                            var map = MapEditor.getMap();
+                            var image = MapEditor.tilesetImage;
+                            var interval = MapEditor.selectedInterval;
+                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
+                            var area_interval = map.getAreaInterval(area);
+                            var images_sets = [];
+
+
+                            var layer = engine.createLayer({
+                                zIndex:engine.currentLayer
+                            });
+
+                            for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
+                                for(var j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
+                                    var imageSet = new ImageSet({
+                                        url:image,
+                                        width:map.tile_w,
+                                        height:map.tile_h,
+                                        sx:col*map.tile_w,
+                                        sy:row*map.tile_h,
+                                        x:j*map.tile_w,
+                                        y:i*map.tile_h
+                                    });
+
+                                    console.log(imageSet);
+
+                                    layer.clearRect(imageSet.x, imageSet.y, imageSet.width, imageSet.height);
+                                    layer.drawImageSet(imageSet);
+
+                                    images_sets.push(imageSet);
+
+                                    col++;
+                                    if(col > interval.ej){
+                                        col = interval.sj;
+                                    }
+                                }
+                                row++;
+                                if(row > interval.ei){
+                                    row = interval.si;
+                                }
+                            }
+
+                            /*
+
+                            var map = MapEditor.getMap();
+                            var image = MapEditor.tilesetImage;
+                            var interval = MapEditor.selectedInterval;
+                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
+                            var area_interval = map.getAreaInterval(area);
+                            var images_sets = [];
+
+                            for(var i = area_interval.si; i < area_interval.ei;i++){
+                                for(var j = area_interval.sj;j < area_interval.ej;j++){
+                                    var imageSet = {
+                                        url:image,
+                                        width:map.tile_w,
+                                        height:map.tile_h,
+                                        x:map.tile_w*j,
+                                        y:map.tile_h*i,
+                                        sx:
+                                    };
+                                }
+                            }*/
                         }
                     });
 

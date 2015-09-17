@@ -14,6 +14,16 @@ define(['PropsParser','Color'],function(Parser,Color){
         return self;
     };
 
+    RectSet.prototype.props = function(){
+        var self = this;
+        return {
+            width:self.width,
+            height:self.height,
+            x:self.x,
+            y:self.y
+        };
+    };
+
     RectSet.prototype.getLine = function(){
         var self = this;
         return Math.floor(self.y/self.height);

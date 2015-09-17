@@ -12,6 +12,21 @@ define(['PropsParser'],function(Parser){
         self.set(options);
     };
 
+    Map.prototype.getAreaInterval = function(options){
+        var self = this;
+        var x = Parser.parseNumber(options.x,0);
+        var y = Parser.parseNumber(options.y,0);
+        var width =  Parser.parseNumber(options.width,0);
+        var height =  Parser.parseNumber(options.height,0);
+
+        var si = parseInt(Math.floor(y/self.tile_h));
+        var sj = parseInt(Math.floor(x/self.tile_w));
+        var ei = parseInt(Math.floor((y+height)/self.tile_h));
+        var ej = parseInt(Math.floor((x+width)/self.tile_w));
+        return {si:si,sj:sj,ei:ei,ej:ej};
+    };
+
+
 
     Map.prototype.set = function(options){
         console.log('Map set...');
