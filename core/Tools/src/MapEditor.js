@@ -369,12 +369,17 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
 
                             var layer = engine.createLayer({
-                                zIndex:MapEditor.activeLayer
+                                zIndex:MapEditor.activeLayer,
+                                width:map.width*map.tile_w,
+                                height:map.height*map.tile_h
                             });
 
 
 
                             for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
+                                if(images_sets[i] == undefined){
+                                    images_sets[i] = [];
+                                }
                                 for(var j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
                                     var imageSet = new ImageSet({
                                         url:image,
@@ -386,11 +391,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                         y:i*map.tile_h
                                     });
 
-
                                     layer.clearRect(imageSet.x, imageSet.y, imageSet.width, imageSet.height);
                                     layer.drawImageSet(imageSet);
 
-                                    images_sets.push(imageSet);
+                                    images_sets[i][j] = imageSet;
 
                                     col++;
                                     if(col > interval.ej){
@@ -403,27 +407,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                 }
                             }
 
-                            /*
 
-                            var map = MapEditor.getMap();
-                            var image = MapEditor.tilesetImage;
-                            var interval = MapEditor.selectedInterval;
-                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
-                            var area_interval = map.getAreaInterval(area);
-                            var images_sets = [];
-
-                            for(var i = area_interval.si; i < area_interval.ei;i++){
-                                for(var j = area_interval.sj;j < area_interval.ej;j++){
-                                    var imageSet = {
-                                        url:image,
-                                        width:map.tile_w,
-                                        height:map.tile_h,
-                                        x:map.tile_w*j,
-                                        y:map.tile_h*i,
-                                        sx:
-                                    };
-                                }
-                            }*/
+                            images_sets.forEach(function(row,i){
+                                row.forEach(function(imageSet,j){
+                                    map.setTile(i,j,imageSet);
+                                });
+                            });
+                            console.log(map);
                         }
                     });
 

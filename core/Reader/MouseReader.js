@@ -68,6 +68,7 @@ define(['Jquery-Conflict'],function($){
             }
         });
 
+
         $(document).mouseup(function(event){
             if(event.target == $(self.element)[0]){
                 var pos = {x:event.offsetX,y:event.offsetY};
@@ -94,6 +95,12 @@ define(['Jquery-Conflict'],function($){
                         });
                 }
             }
+        });
+
+        $(self.element).mouseout(function(event){
+            self.left = false;
+            self.right = false;
+            self.middle = false;
         });
     };
 

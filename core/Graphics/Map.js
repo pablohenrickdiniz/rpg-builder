@@ -26,6 +26,19 @@ define(['PropsParser'],function(Parser){
         return {si:si,sj:sj,ei:ei,ej:ej};
     };
 
+    Map.prototype.setTile = function(i,j,tile){
+        var self = this;
+        if(self.imageSets[i] == undefined){
+            self.imageSets[i] = [];
+        }
+
+        if(self.imageSets[i][j] == undefined){
+            self.imageSets[i][j] = [];
+        }
+
+        self.imageSets[i][j][tile.layer] = tile;
+    };
+
 
 
     Map.prototype.set = function(options){
