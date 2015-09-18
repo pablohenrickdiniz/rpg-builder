@@ -12,7 +12,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return self;
     };
 
-
+    //Get the mouse events for container element
     CanvasEngine.prototype.getMouseReader = function(){
         console.log('Canvas Engine get mouse reader...');
         var self = this;
@@ -22,6 +22,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return self.mouseReader;
     };
 
+
     CanvasEngine.prototype.resize = function(width){
         console.log('Canvas Engine resize...');
         var self = this;
@@ -29,16 +30,31 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return self;
     };
 
+    //Get the width of canvas container
+    //(int) getWidth
     CanvasEngine.prototype.getWidth = function(){
         console.log('Canvas Engine get width...');
         return $(this.container).width();
     };
 
+    //Get the height of canvas container
+    //(int) getHeight
     CanvasEngine.prototype.getHeight = function(){
         console.log('Canvas Engine get height...');
         return $(this.container).height();
     };
 
+    /*Set the attributes of Canvas engine
+    set(object options)
+    example:
+    {
+        container:'#canvas-container', //layers of canvas container
+        height:400, //width of the container
+        width:400,  //height of the container
+        viewX:0,    //x position of left top conner of container
+        viewY:0     //y position of left top conner of container
+    }
+    */
     CanvasEngine.prototype.set = function(options){
         console.log('Canvas Engine set...');
         var self = this;
@@ -73,6 +89,10 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         })
     };
 
+    /*
+        (CanvasEngine) clearAllLayers
+        clear all contents of canvas layers
+     */
     CanvasEngine.prototype.clearAllLayers = function(){
         console.log('Canvas engine clear all layers...');
         this.layers.forEach(function(layer){
@@ -81,6 +101,9 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         return self;
     };
 
+    /*
+        (CanvasEngine) applyToLayers()
+     */
     CanvasEngine.prototype.applyToLayers = function(options,conditions){
         console.log('Canvas engine aply to layers...');
         this.layers.forEach(function(layer){
@@ -88,6 +111,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
                 layer.set(options);
             }
         });
+        return self;
     };
 
     CanvasEngine.prototype.createLayer = function(options){
