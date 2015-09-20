@@ -13,6 +13,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             tilesetImage:null,
             selectedInterval:[],
             activeLayer:0,
+            /*
+                Inicializa o editor de mapas
+             */
             initialize:function(){
                 console.log('MapEditor initialize...');
                 var self = this;
@@ -104,6 +107,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
                 self.getGameEngine().renderMap(self.getMap());
             },
+            //widthMapChange(int width) altera a largura do mapa
             widthMapChange:function(value){
                 console.log('MapEditor width map change...');
                 var self = this;
@@ -120,6 +124,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
             },
+            //heightMapChange(int height) altera a altura do mapa
             heightMapChange:function(value){
                 console.log('MapEditor height map change...');
                 var grid = MapEditor.getMapAbstractGrid();
@@ -134,6 +139,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
             },
+            /*
+                void: show grid(Event e) mostra ou esconde a grade do mapa
+             */
             showGrid:function(e){
                 console.log('MapEditor show grid...');
                 if($(e.target).is(':checked')){
@@ -143,6 +151,11 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     MapEditor.getAbstractGridLayer().hide();
                 }
             },
+
+            /*
+                AbstractGrid : getAbstractGrid() Obtém instância da grade que
+                cobre o mapa
+            */
             getAbstractGridLayer:function(){
                 console.log('MapEditor get abstract grid layer...');
                 var self = this;
@@ -157,6 +170,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
                 return self.abstractGridLayer;
             },
+            /*
+                Grid: getTilesetGrid() Obtém instância da grade que
+                cobre os tilesets
+             */
             getTilesetGrid:function(){
                 console.log('MapEditor get tileset grid...');
                 var self = this;
@@ -165,6 +182,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.tilesetGrid;
             },
+            /*
+                void: widthGridChange(int value) altera a largura da
+                grade que cobre os tilesets
+             */
             widthGridChange:function(value){
                 console.log('MapEditor width grid change...');
                 var grid = MapEditor.getTilesetGrid();
@@ -174,7 +195,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
 
                 MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
             },
-
+            /*
+                void: heightGridChange(int value) altera a altura da
+                grade que cobre os tilesets
+             */
             heightGridChange:function(value){
                 console.log('MapEditor height grid change...');
                 var grid = MapEditor.getTilesetGrid();
@@ -183,6 +207,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 });
                 MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
             },
+            /*
+                obtém a instância de uma grade Abstrata
+             */
             getMapAbstractGrid:function(){
                 console.log('MapEditor get map abstract grid...');
                 var self = this;
@@ -197,6 +224,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.mapAbstractGrid;
             },
+            /*
+             obtém a instância da camada canvas que desenha os tilesets
+             */
             getTilesetImageLayer:function(){
                 console.log('MapEditor get tileset image layer...');
                 var self = this;
@@ -205,6 +235,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.tilesetImageLayer;
             },
+            /*
+                obtém a instância da camada canvas que desenha a grade sobre os tilesets
+             */
             getTilesetGridLayer:function(){
                 console.log('MapEditor get tileset grid layer...');
                 var self = this;
@@ -213,6 +246,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.tilesetGridLayer;
             },
+            /*
+             instanciação e configuração do objeto Game Engine, que renderiza
+             os elementos canvas dos tilesets
+             */
             getTilesetEngine:function(){
                 console.log('MapEditor get tileset engine...');
                 var self = this;
@@ -220,7 +257,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     self.tilesetEngine = CE.createEngine({
                         container:"#tileset-grid",
                         width:'100%',
-                        height:665
+                        height:665,
+                        draggable:true
                     });
                     var engine = self.tilesetEngine;
                     var tilesetGridLayer = self.getTilesetGridLayer();
@@ -250,7 +288,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         tilesetGridLayer.clear().drawGrid(grid);
                     });
 
-
                     self.tilesetEngine.getMouseReader().onmousemove(function(e){
                         console.log('mouse move...');
                         var self = this;
@@ -271,8 +308,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             MapEditor.selectedInterval = grid.getAreaInterval(area);
                             tilesetGridLayer.clear().drawGrid(grid);
                         }
-                        else{
-                            var rects = grid.getRectsFromArea(self.lastMove);
+                       else{
+                            var area = Math.vpv(self.lastMove,{x:-engine.viewX,y:-engine.viewY});
+                            var rects = grid.getRectsFromArea(area);
                             if(rects.length > 0){
                                 var rectSet = rects[0];
                                 grid.apply({
@@ -295,9 +333,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.tilesetEngine;
             },
+            /*
+                retorna a regigão retangular da distáncia entre o último clique com o botão
+                esquerdo e a posição atual do mouse
+             */
             getDrawedArea:function(engine){
                 var self = this;
-                var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
+                var translate = {x:-engine.viewX,y:-engine.viewY};
                 var pa = Math.vpv(self.lastDown.left,translate);
                 var pb = Math.vpv(self.lastMove,translate);
                 var width = Math.abs(pb.x-pa.x);
@@ -314,6 +356,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 area.y = pa.y > pb.y?area.y-height:area.y;
                 return area;
             },
+            /*
+                instanciação e configuração do objeto Game Engine, que renderiza
+                os elementos canvas do mapa
+             */
             getGameEngine:function(){
                 console.log('MapEditor get game engine...');
                 var self = this;
@@ -321,42 +367,16 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     self.gameEngine = CE.createEngine({
                         container:"#canvas-container",
                         width:'100%',
-                        height:700
+                        height:700,
+                        draggable:true
                     });
                     var engine = self.gameEngine;
                     var editor = self;
 
 
-                    engine.getMouseReader().onmousedown(3,function(){
-                        editor.lastView = {
-                            x:engine.viewX,
-                            y:engine.viewY
-                        };
-                    });
-
                     engine.getMouseReader().onmousemove(function(e){
                         var self = this;
                         if(self.right){
-                            var pa = self.lastDown.right;
-                            var pb = self.lastMove;
-                            var p = Math.vmv(pa,pb);
-                            var view = editor.lastView;
-                            var grid_layer = engine.createLayer({zIndex:10});
-                            var x =view.x-p.x;
-                            var y = view.y-p.y;
-
-                            var min_x = engine.getWidth()-grid_layer.width;
-                            var min_y = engine.getHeight()-grid_layer.height;
-                            min_x = min_x>0?0:min_x;
-                            min_y = min_y>0?0:min_y;
-                            x = Math.min(Math.max(x,min_x),0);
-                            y = Math.min(Math.max(y,min_y),0);
-
-                            engine.set({
-                                viewX:x,
-                                viewY:y
-                            });
-
                             MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(MapEditor.getMapAbstractGrid());
                         }
                         else if(self.left){
@@ -420,6 +440,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 }
                 return self.gameEngine;
             },
+            //corrige a posição viewX,viewY quando o mapa é redimensionado
             fixPos:function(){
                 console.log('MapEditor fix pos...');
                 var engine = this.getGameEngine();
@@ -438,6 +459,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     viewY:y
                 });
             },
+            //instanciação do objeto map
             getMap:function(){
                 console.log('MapEditor get map...');
                 var self = this;

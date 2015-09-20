@@ -1,3 +1,21 @@
+/*
+    AbstractGrid(Object options)
+    AbstractGrid representa uma grade de representação apenas visual,
+    na qual os retângulos que a compõem não podem ser estilizados,
+    e sempre são transparentes.Serve apenas para mostrar o tamanho e o posicionamento
+    de uma região no mapa.
+
+    exemplo:
+    new AbstractGrid({
+        x:0,            posição x do canto superior esquerdo
+        y:0,            posição y do canto superior esquerdo
+        width:100,      largura total da grade
+        height:100,     altura total da grade
+        sw:10,          largura de cada retângulo da grade
+        sh:10           altura de cada retãngula da grade
+    });
+
+ */
 define(['PropsParser'],function(Parser){
     var AbstractGrid = function(options){
         console.log('initializing Abstract Grid...');

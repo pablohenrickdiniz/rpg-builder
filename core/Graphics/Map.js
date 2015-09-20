@@ -1,3 +1,14 @@
+/*
+    Map(Object options)
+    Cria uma instância de mapa
+    exemplo:
+    var mapa = new Map({
+        width:10, // largura em retângulos ou passos
+        height10, // altura em retângulos ou passos,
+        tile_w:10, // largura de cada retângulo ou passo
+        tile_h:10  // altura de cada retângulo ou passo
+    });
+ */
 define(['PropsParser'],function(Parser){
     var Map = function(options){
         console.log('Initializing Map...');
@@ -12,6 +23,11 @@ define(['PropsParser'],function(Parser){
         self.set(options);
     };
 
+    /*
+        Object: getAreaInterval(Object options)
+        obtém o intervalo de linhas e colunas de uma
+        área dentro do mapa
+     */
     Map.prototype.getAreaInterval = function(options){
         var self = this;
         var x = Parser.parseNumber(options.x,0);
@@ -26,6 +42,12 @@ define(['PropsParser'],function(Parser){
         return {si:si,sj:sj,ei:ei,ej:ej};
     };
 
+    /*
+        Map : setTile(int i, int j, ImageSet tile)
+        Altera um tile do mapa, onde i é a linha,
+        j é a coluna, e tile é o ImageSet do tileSet
+        ImageSet.layer é a coluna
+     */
     Map.prototype.setTile = function(i,j,tile){
         var self = this;
         if(self.imageSets[i] == undefined){
@@ -37,10 +59,13 @@ define(['PropsParser'],function(Parser){
         }
 
         self.imageSets[i][j][tile.layer] = tile;
+        return self;
     };
 
-
-
+    /*
+        Map : set(Object options)
+        Altera as propriedades do mapa
+     */
     Map.prototype.set = function(options){
         console.log('Map set...');
         var self = this;
@@ -55,6 +80,7 @@ define(['PropsParser'],function(Parser){
                 height:self.height*self.tile_h
             });
         }
+        return self;
     };
 
     return Map;

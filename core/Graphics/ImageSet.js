@@ -1,3 +1,19 @@
+/*
+    ImageSet(Object options)
+    Cria um objeto que define uma região de imagem
+    exemplo:
+    var image = new ImageSet({
+        url:'http;//www.example.com/img/image.png' // caminho para a imagem,
+        x:0, //posição x da imagem
+        y:0, //posição y da imagem
+        width:32, //largura da imagem
+        height:32, //altura da imagem
+        sx: 0, //posição x do qual o corte inicia
+        sy: 0, //posição y do qual o corte inicia
+        sWidth:32, //largura da área de corte
+        sHeight:32 //altura da área de corte
+    });
+ */
 define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
     var ImageSet = function(options){
         var self = this;
@@ -18,14 +34,23 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         self.set(options);
     };
 
-    ImageSet.prototype.change = function(){
-        var self = this;
-        if(self.parent != undefined){
-            self.parent.clearRect(self.x,self.y,self.width,self.height);
-            self.parent.drawImageSet(self);
-        }
-    };
 
+    /*
+        ImageSet : set(Object options)
+        Altera as propriedades de ImageSet
+        exemplo:
+        imageSet.set({
+     url:'http;//www.example.com/img/image.png' // caminho para a imagem,
+     x:0, //posição x da imagem
+     y:0, //posição y da imagem
+     width:32, //largura da imagem
+     height:32, //altura da imagem
+     sx: 0, //posição x do qual o corte inicia
+     sy: 0, //posição y do qual o corte inicia
+     sWidth:32, //largura da área de corte
+     sHeight:32 //altura da área de corte
+        });
+     */
     ImageSet.prototype.set = function(options){
         var self = this;
         self.loads = [];
@@ -48,35 +73,17 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
             ImageLoader.load(self.url,function(img){
                 self.loaded = true;
                 self.image = img;
-                self.change();
             });
         }
+        return self;
     };
 
-    ImageSet.prototype.getProps = function(){
-        var self = this;
-        return {
-            x:self.x,
-            y:self.y,
-            width:self.width,
-            height:self.height,
-            sx:self.sx,
-            sy:self.sy,
-            sWidth:self.sWidth,
-            sHeight:self.sHeight,
-            image:self.image,
-            layer:self.layer
-        };
-    };
-
+    /*
+        boolean isLoaded()
+        Verifica se a imagem de imageSet já foi carregada
+     */
     ImageSet.prototype.isLoaded = function(){
         return this.loaded;
-    };
-
-    ImageSet.prototype.onLoad = function(callback){
-        var self = this;
-        self.loads.push(callback);
-        return self;
     };
 
     return ImageSet;

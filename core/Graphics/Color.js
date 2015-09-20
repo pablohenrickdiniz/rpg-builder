@@ -1,6 +1,6 @@
-define(['PropsParser'],function(Parser){
-    var Color = function(options){
-        options = typeof  options == 'object'?options:{};
+define(['PropsParser'], function (Parser) {
+    var Color = function (options) {
+        options = typeof  options == 'object' ? options : {};
         var self = this;
         self.red = 0;
         self.blue = 0;
@@ -8,43 +8,71 @@ define(['PropsParser'],function(Parser){
         self.alpha = 1;
         self.set(options);
     };
-
-    Color.prototype.set = function(options){
+    /*
+     Color: set(Object options)
+     Altera as propriedades da cor
+     exemplo:
+     var cor = new Color({
+     red:100,
+     blue:100,
+     green:100
+     });
+     cor => {red:100,blue:100,green:100,opacity:1};
+     cor.set({
+     red:200,
+     opacity:0.8
+     });
+     cor => {red:200,blue:100,green:100,opacity:0.8};
+     */
+    Color.prototype.set = function (options) {
         var self = this;
-        self.red = Parser.parseInterval(Parser.parseInt(options.red,self.red),0,255);
-        self.blue = Parser.parseInterval(Parser.parseInt(options.blue,self.blue),0,255);
-        self.green =  Parser.parseInterval(Parser.parseInt(options.green,self.green),0,255);
-        self.alpha = Parser.parseInterval(Parser.parseFloat(options.alpha,self.alpha),0,1);
+        self.red = Parser.parseInterval(Parser.parseInt(options.red, self.red), 0, 255);
+        self.blue = Parser.parseInterval(Parser.parseInt(options.blue, self.blue), 0, 255);
+        self.green = Parser.parseInterval(Parser.parseInt(options.green, self.green), 0, 255);
+        self.alpha = Parser.parseInterval(Parser.parseFloat(options.alpha, self.alpha), 0, 1);
+        return self;
     };
-
-    Color.prototype.isTransparent = function(){
+    /*
+     boolean ; isTransparent()
+     Verifica se a cor é transparente
+     */
+    Color.prototype.isTransparent = function () {
         return this.alpha == 0;
     };
 
-    Color.create = function(options){
-        return new Color(options);
-    };
-
+    /*
+     String : toRGB()
+     Obtém a representação da cor em RGB
+     */
     Color.prototype.toRGB = function () {
-        var self = this;
-        if(self.isTransparent()){
+        var
+            self = this;
+        if (self.isTransparent()) {
             return 'transparent';
         }
         return "rgb(" + self.red + "," + self.blue + "," + self.green + ")";
     };
 
-    Color.prototype.toRGBA= function () {
+    /*
+     String : toRGBA()
+     Obtém a representação da cor em rgba
+     */
+    Color.prototype.toRGBA = function () {
         var self = this;
-        if(self.isTransparent()){
+        if (self.isTransparent()) {
             return 'transparent';
         }
         return "rgba(" + self.red + "," + self.blue + "," + self.green + ","
             + self.alpha + ")";
     };
 
+    /*
+     String : toHEX()
+     Obtém a representação da cor em hexadecimal
+     */
     Color.prototype.toHEX = function () {
         var self = this;
-        if(self.isTransparent()){
+        if (self.isTransparent()) {
             return 'transparent';
         }
 
@@ -57,14 +85,22 @@ define(['PropsParser'],function(Parser){
         return ("#" + r + g + b).toUpperCase();
     };
 
+    /*
+     String: toString()
+     Representação da cor em string
+     */
     Color.prototype.toString = function () {
         var self = this;
-        if(self.isTransparent()){
+        if (self.isTransparent()) {
             return 'transparent';
         }
         return self.toRGBA();
     };
 
+    /*
+     Color : reverse()
+     Inverte a cor (in place)
+     */
     Color.prototype.reverse = function () {
         var self = this;
         self.red = self.red < 128 ? 128 + (128 - self.red)
@@ -73,11 +109,16 @@ define(['PropsParser'],function(Parser){
             : 128 - (self.blue - 128);
         self.green = self.green < 128 ? 128 + (128 - self.green)
             : 128 - (self.green - 128);
+        return self;
     };
 
+    /*
+     String : asName
+     Obtém o nome da cor, caso essa cor possua nome
+     */
     Color.asName = function () {
         var self = this;
-        if(self.isTransparent()){
+        if (self.isTransparent()) {
             return 'transparent';
         }
         for (var index in Color.Name) {
@@ -87,7 +128,10 @@ define(['PropsParser'],function(Parser){
         }
         return "";
     };
-
+    /*
+     Nome das Cores e suas respectivas
+     representações em Hexadecimal
+     */
     Color.Name = {
         Snow: '#FFFAFA',
         GhostWhite: '#F8F8FF',
@@ -546,28 +590,41 @@ define(['PropsParser'],function(Parser){
         Chocolate2: '#EE7621'
     };
 
+    /*
+     Expressões regulares de cores válidas
+     */
     Color.Patterns = {
         HEXADECIMAL: /^#[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$/,
         RGB: /^rgb\((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\)$/,
-        RGBA:/^rgba\((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(0.[0-9]{1,2}|1)\)$/,
+        RGBA: /^rgba\((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2}),(0.[0-9]{1,2}|1)\)$/,
         NAME: /^[A-Z][a-zA-z0-9]{2,15}$/
     };
 
-    Color.isColor = function(color){
+    /*
+     boolean: isColor()
+     Verifica se é uma cor válida
+     */
+    Color.isColor = function (color) {
         color = Color.parse(color);
         return color != null;
     };
 
+    /*
+        Color: parse(String string)
+        Tentar converter a cor em um objeto Color,
+        caso não seja possível será retornado null
+        o atributo string pode ser um nome de uma cor, rgb, rgba ou hexadecimal
+     */
     Color.parse = function (str) {
         var color = null;
-        if(typeof str == 'string'){
+        if (typeof str == 'string') {
             var r;
             var g;
             var b;
 
-            if(str == 'transparent'){
+            if (str == 'transparent') {
                 color = new Color({
-                    alpha:0
+                    alpha: 0
                 });
             }
             else if (Color.Patterns.HEXADECIMAL.test(str)) {
@@ -575,20 +632,20 @@ define(['PropsParser'],function(Parser){
                 r = parseInt(str.substr(0, 2), 16);
                 g = parseInt(str.substr(2, 2), 16);
                 b = parseInt(str.substr(4, 2), 16);
-                color = new Color({red:r, blue:g, green:g});
+                color = new Color({red: r, blue: g, green: g});
             } else if (Color.Patterns.RGB.test(str)) {
                 str = str.replace("rgb(", "").replace(")", "").split(",");
                 r = parseInt(str[0]);
                 g = parseInt(str[1]);
                 b = parseInt(str[2]);
-                color = new Color({red:r,blue:b,green:g});
+                color = new Color({red: r, blue: b, green: g});
             } else if (Color.Patterns.RGBA.test(str)) {
                 str = str.replace("rgba(", "").replace(")", "").split(",");
                 r = parseInt(str[0]);
                 g = parseInt(str[1]);
                 b = parseInt(str[2]);
                 var a = parseFloat(str[3]);
-                color = new Color({red:r,blue:b,green:g,alpha:a});
+                color = new Color({red: r, blue: b, green: g, alpha: a});
             } else if (Color.Patterns.NAME.test(str)) {
                 color = Color.parse(Color.Name[str]);
             }
