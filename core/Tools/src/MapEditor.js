@@ -98,16 +98,33 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             </div>
                         </div>
                         <div className="col-md-6">
-                            <label>Mostrar Grade</label>
-                            <input type="checkbox" className="form-control" onChange={self.showGrid}/>
+                            <div className="col-md-6">
+                                <label>Mostrar Grade</label>
+                                <input type="checkbox" className="form-control" onChange={self.showGrid}/>
+                            </div>
+                            <div className="col-md-6">
+                                <button className="btn btn-default" onClick={self.showLayers}>Mostrar Camadas</button>
+                            </div>
                         </div>
                     </div>,
                     document.getElementById('canvas-input')
                 );
 
                 self.getGameEngine().renderMap(self.getMap());
+                $(window).resize(function(){
+                    self.fixPos();
+                });
             },
-            //widthMapChange(int width) altera a largura do mapa
+            /*
+                void: showLayers()
+                mostra todas as camadas
+             */
+            showLayers:function(){
+                MapEditor.getGameEngine().applyToLayers({
+                    opacity:1
+                });
+            },
+            // void : widthMapChange(int width) altera a largura do mapa
             widthMapChange:function(value){
                 console.log('MapEditor width map change...');
                 var self = this;
@@ -121,10 +138,11 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     width:map.width*map.tile_w
                 });
 
-                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
+                MapEditor.getGameEngine().renderMap(map);
+                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
             },
-            //heightMapChange(int height) altera a altura do mapa
+            //void : heightMapChange(int height) altera a altura do mapa
             heightMapChange:function(value){
                 console.log('MapEditor height map change...');
                 var grid = MapEditor.getMapAbstractGrid();
@@ -136,8 +154,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 grid.set({
                     height:map.height*map.tile_h
                 });
-                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
                 MapEditor.fixPos();
+                MapEditor.getGameEngine().renderMap(map);
+                MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
             },
             /*
                 void: show grid(Event e) mostra ou esconde a grade do mapa
@@ -368,7 +387,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         container:"#canvas-container",
                         width:'100%',
                         height:700,
-                        draggable:true
+                        draggable:true,
+                        scalable:false
                     });
                     var engine = self.gameEngine;
                     var editor = self;
@@ -408,7 +428,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                         sx:col*map.tile_w,
                                         sy:row*map.tile_h,
                                         x:j*map.tile_w,
-                                        y:i*map.tile_h
+                                        y:i*map.tile_h,
+                                        layer:MapEditor.activeLayer
                                     });
 
                                     layer.clearRect(imageSet.x, imageSet.y, imageSet.width, imageSet.height);
@@ -433,7 +454,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                     map.setTile(i,j,imageSet);
                                 });
                             });
-                            console.log(map);
                         }
                     });
 

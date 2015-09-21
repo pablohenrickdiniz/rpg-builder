@@ -20,6 +20,7 @@ define(['PropsParser'],function(Parser){
         self.tile_h = 32;
         self.imageSets = [];
         self.parent = null;
+        self.renderIntervals = [];
         self.set(options);
     };
 
@@ -57,7 +58,6 @@ define(['PropsParser'],function(Parser){
         if(self.imageSets[i][j] == undefined){
             self.imageSets[i][j] = [];
         }
-
         self.imageSets[i][j][tile.layer] = tile;
         return self;
     };

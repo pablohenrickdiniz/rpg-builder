@@ -59,7 +59,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         verifica se uma área retangular está visível
      */
     CanvasLayer.prototype.isSetVisible = function(rectSet){
-        console.log('Canvas Layer is set visible...');
+       // console.log('Canvas Layer is set visible...');
         var self = this;
         var area = self.getVisibleArea();
         return !(rectSet.x+rectSet.width < area.x || area.x+area.width < rectSet.x || rectSet.y+rectSet.height < area.y || area.y+area.height < rectSet.y);
@@ -70,7 +70,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Mostra a camada de canvas
      */
     CanvasLayer.prototype.show = function(){
-        console.log('Canvas layer show...');
+        //console.log('Canvas layer show...');
         var self = this;
         $(self.getElement()).show();
         return self;
@@ -81,7 +81,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Esconde a camada de canvas
      */
     CanvasLayer.prototype.hide = function(){
-        console.log('Canvas layer hide...');
+        //console.log('Canvas layer hide...');
         var self = this;
         $(self.getElement()).hide();
         return self;
@@ -94,7 +94,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         será necessário para copiála
      */
     CanvasLayer.prototype.saveState = function(name){
-        console.log('Canvas layer save state...');
+        //console.log('Canvas layer save state...');
         var self = this;
         var url = self.getElement().toDataURL('image/png');
         var img = document.createElement('img');
@@ -108,7 +108,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Redesenha o gráfico do canvas previamente salvo
      */
     CanvasLayer.prototype.restoreState = function(name){
-        console.log('Canvas layer restore state...');
+        //console.log('Canvas layer restore state...');
         var self = this;
         var state = self.savedStates[name];
         if(state != undefined){
@@ -122,7 +122,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Remove todos os gráficos que foram salvos
      */
     CanvasLayer.prototype.clearStates = function(){
-        console.log('Canvas layer restore states...');
+        //console.log('Canvas layer restore states...');
         var self = this;
         self.savedStates = [];
         return self;
@@ -133,7 +133,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         obtém o elemento html canvas
      */
     CanvasLayer.prototype.getElement = function(){
-        console.log('Canvas layer get element...')
+        //console.log('Canvas layer get element...')
         var self = this;
         if(self.element == null && self.canvas != null){
             self.element = document.createElement('canvas');
@@ -166,7 +166,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         });
      */
     CanvasLayer.prototype.set = function(options){
-        console.log('Canvas layer set...');
+        //console.log('Canvas layer set...');
         var self = this;
         var width = Parser.parseNumber(options.width,self.width);
         var height = Parser.parseNumber(options.height,self.height);
@@ -186,7 +186,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Redimensiona a camada de canvas
      */
     CanvasLayer.prototype.resize = function(width,height){
-        console.log('Canvas Layer resize...');
+        //console.log('Canvas Layer resize...');
         var self = this;
         if(width != self.width || height != self.height){
             self.width = width;
@@ -204,7 +204,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Obtém o contexto do canvas
      */
     CanvasLayer.prototype.getContext = function(){
-        console.log('Canvas layer get context...');
+        //console.log('Canvas layer get context...');
         var self = this;
         if(self.context == null){
             self.context = self.getElement().getContext('2d');
@@ -217,7 +217,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         desenha a grade grid na camada
      */
     CanvasLayer.prototype.drawGrid = function(grid){
-        console.log('Canvas layer draw grid...');
+        //console.log('Canvas layer draw grid...');
         var self = this;
         var context = self.getContext();
         grid.rectSets.forEach(function(row){
@@ -239,7 +239,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Desenha a grade grid na camada
      */
     CanvasLayer.prototype.drawAbstractGrid = function(grid){
-        console.log('Canvas layer draw abstract grid...');
+        //console.log('Canvas layer draw abstract grid...');
         if(grid.isDrawable()){
             var self = this;
             var context = self.getContext();
@@ -268,7 +268,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Desenha um retângulo
      */
     CanvasLayer.prototype.drawRectSet = function(rectSet){
-        console.log('Canvas layer draw rect set...');
+        //console.log('Canvas layer draw rect set...');
         var self = this;
         var context = self.getContext();
         context.fillStyle = rectSet.fillStyle;
@@ -283,7 +283,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Remove a camada da árvore DOM e da CanvasEngine correspondentes
      */
     CanvasLayer.prototype.destroy = function(){
-        console.log('Canvas layer destroy...');
+        //console.log('Canvas layer destroy...');
         var self = this;
         $(self.element).remove();
         if(self.canvas.layers[self.zIndex] != undefined){
@@ -297,7 +297,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Desenha uma imagem
      */
     CanvasLayer.prototype.drawImage = function(){
-        console.log('Canvas layer draw image...');
+        //console.log('Canvas layer draw image...');
         var context = this.getContext();
         context.drawImage.apply(context,arguments);
         return self;
@@ -308,7 +308,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Desenha uma área recortade de uma imagem
      */
     CanvasLayer.prototype.drawImageSet = function(is){
-        console.log('Canvas layer draw image set...');
+        //console.log('Canvas layer draw image set...');
         var context = this.getContext();
         is.parent = this;
         context.drawImage(is.image, is.sx, is.sy, is.sWidth, is.sHeight, is.x, is.y, is.width, is.height);
@@ -320,18 +320,19 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Remove o conteúdo da camada de canvas
      */
     CanvasLayer.prototype.clear = function(){
-        console.log('Canvas layer clear...');
+        //console.log('Canvas layer clear...');
         var self = this;
         self.getContext().clearRect(0,0,self.width,self.height);
         return self;
     };
 
     CanvasLayer.prototype.refresh = function(){
-        console.log('Canvas layer refresh...');
+        //console.log('Canvas layer refresh...');
         var self = this;
         $(self.getElement()).css({
             left:self.canvas.viewX,
-            top:self.canvas.viewY
+            top:self.canvas.viewY,
+            scale:self.canvas.scale
         });
         return self;
     };
@@ -341,7 +342,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         Apaga uma região retângular da camade de canvas
      */
     CanvasLayer.prototype.clearRect = function(){
-        console.log('Canvas layer clear rect...');
+        //console.log('Canvas layer clear rect...');
         var self = this;
         var context = self.getContext();
         context.clearRect.apply(context,arguments);

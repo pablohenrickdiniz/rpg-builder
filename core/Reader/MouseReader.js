@@ -23,6 +23,8 @@ define(['Jquery-Conflict'],function($){
             middle:{x:0,y:0}
         };
         self.lastMove = {x:0,y:0};
+        self.lastWheel = {deltaX:0,deltaY:0};
+        self.mouseWheel = [];
         self.start();
     };
 
@@ -102,12 +104,28 @@ define(['Jquery-Conflict'],function($){
             self.right = false;
             self.middle = false;
         });
+
+        $(self.element).on('mousewheel',function(e){
+            self.lastWheel = {
+                deltaX:e.originalEvent.deltaX,
+                deltaY:e.originalEvent.deltaY
+            };
+            self.mouseWheel.forEach(function(callback){
+                callback.apply(self,[e]);
+            });
+        });
     };
 
     MouseReader.prototype.unbindEvents = function(){
         var self = this;
-        $(self.element).unbind('mousemove',self.mousemovecallback);
-        $(self.element).unbind('mousedown',self.mousedowncallback);
+        $(self.element).unbind('mousemove');
+        $(self.element).unbind('mousedown');
+        $(self.element).unbind('mousewheel');
+    };
+
+    MouseReader.prototype.onmousewheel = function(callback){
+        var self = this;
+        self.mouseWheel.push(callback);
     };
 
     MouseReader.prototype.onmousedown = function (which, callback) {

@@ -11,6 +11,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         self.width = 400;
         self.mouseReader = null;
         self.draggable = false;
+        self.scalable = false;
+        self.scale = 1;
         self.set(options);
         self.initialize();
         return self;
@@ -46,6 +48,25 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
                     viewX:x,
                     viewY:y
                 });
+            }
+        });
+
+        self.getMouseReader().onmousewheel(function(e){
+            var reader = this;
+            if(self.scalable){
+                var y = reader.lastWheel.deltaY;
+                if(y > 0){
+                    if(self.scale > 0.1){
+                        self.set({
+                            scale:self.scale-0.1
+                        });
+                    }
+                }
+                else if(y < 0){
+                    self.set({
+                        scale:self.scale+0.1
+                    });
+                }
             }
         });
     };
@@ -107,6 +128,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         self.height = Parser.parseNumber(options.height,self.height);
         self.viewX = Parser.parseNumber(options.viewX,self.viewX);
         self.viewY = Parser.parseNumber(options.viewY,self.viewY);
+        self.scale = Parser.parseNumber(options.scale,self.scale);
+        self.scalable = typeof options.scalable == 'boolean'?options.scalable:self.scalable;
         self.draggable = typeof options.draggable == 'boolean'?options.draggable:self.draggable;
         var width = options.width;
 
@@ -118,10 +141,12 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
             self.width = Parser.parseNumber(options.width,self.width);
         }
 
+
         self.layers.forEach(function(layer){
             $(layer.getElement()).css({
                 left:self.viewX,
-                top:self.viewY
+                top:self.viewY,
+                transform:'scale('+self.scale+')'
             });
         });
 
@@ -241,24 +266,33 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         CanvasEngine: renderMap(Map map)
         Renderiza o mapa nas camadas de canvas
      */
+
+
+
     CanvasEngine.prototype.renderMap = function(map){
         console.log('Canvas Engine render map...');
         var self = this;
         self.clearAllLayers();
         var sets = map.imageSets;
         var size1 = sets.length;
-        for(var x = 0; x < size1;x++){
-            var size2 = sets[x].length;
-            for(var y = 0; y < size2;y++){
-                var size3 = sets[x][y].length;
-                for(var layer = 0; layer < size3;layer++){
-                    var imageSet = sets[x][y][layer];
-                    self.createLayer({
-                        zIndex:imageSet.layer,
-                        width:map.width*map.tile_w,
-                        height:map.height*map.tile_h
-                    }).drawImageSet(imageSet);
-                }
+        map.renderIntervals.forEach(function(interval){
+            clearInterval(interval);
+        });
+        console.log(map);
+
+        for(var i = 0; i < size1;i++){
+            var size2 = sets[i].length;
+            for(var j = 0; j < size2;j++){
+                sets[i][j].forEach(function(imageSet){
+                    map.renderIntervals.push(setTimeout(function(){
+                        var layer = self.createLayer({
+                            zIndex:imageSet.layer,
+                            width:map.width*map.tile_w,
+                            height:map.height*map.tile_h
+                        });
+                        layer.drawImageSet(imageSet);
+                    },(20*i)+(j*20)));
+                });
             }
         }
 
