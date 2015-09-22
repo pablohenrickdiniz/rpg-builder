@@ -3,8 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <title>Animation Editor</title>
+    <script type="text/javascript" src="../bower_components/requirejs/require.js"></script>
+    <script type="text/javascript">
+        requirejs(['./paths'],function(){
+            require(['CE','Animation','ImageSet','ImageLoader','Frame'],function(CE,Animation,ImageSet,ImageLoader,Frame){
+                var engine = CE.createEngine({
+                    container:'#canvas-container',
+                    width:600,
+                    height:600
+                });
+                var layer = engine.createLayer({
+                    zIndex:0,
+                    width:600,
+                    height:600
+                });
+
+                var url = 'http://i444.photobucket.com/albums/qq168/grandmadeb_rmvx/catrecolors.png';
+
+                ImageLoader.load(url,function(){
+                    var frames1 = [];
+                    var frames2 = [];
+
+
+                    for(var i = 0; i < 3;i++){
+                        var imageSet1 = new ImageSet({
+                            url:url,
+                            width:32,
+                            height:32,
+                            x:0,
+                            y:0,
+                            sx:32*i,
+                            sy:32
+                        });
+
+                        var imageSet2 = new ImageSet({
+                            url:url,
+                            width:32,
+                            height:32,
+                            x:0,
+                            y:0,
+                            sx:32*i,
+                            sy:64
+                        });
+
+
+                        frames1.push(new Frame({
+                            imageSets:[imageSet1]
+                        }));
+
+                        frames2.push(new Frame({
+                            imageSets:[imageSet2]
+                        }));
+                    }
+
+                    var animation1 = new Animation({
+                        x:100,
+                        y:100,
+                        width:32,
+                        height:32,
+                        frames:frames1,
+                        canvasLayer:layer,
+                        speed:6
+                    });
+
+                    var animation2 = new Animation({
+                        x:140,
+                        y:100,
+                        width:32,
+                        height:32,
+                        frames:frames2,
+                        canvasLayer:layer,
+                        speed:6
+                    });
+
+                    animation1.execute();
+                    animation2.execute();
+                });
+            });
+        });
+    </script>
 </head>
 <body>
+<div id="canvas-container">
 
+</div>
 </body>
 </html>

@@ -75,11 +75,11 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     <div className="row">
                         <div className="col-md-6">
                             <label>Largura(px)</label>
-                            <InputNumber min={32} value={32} max={100} onChange={self.widthGridChange}/>
+                            <InputNumber min={32} value={32} max={1000} onChange={self.widthGridChange}/>
                         </div>
                         <div className="col-md-6">
                             <label>Altura(px)</label>
-                            <InputNumber min={32} value={32} max={100} onChange={self.heightGridChange}/>
+                            <InputNumber min={32} value={32} max={1000} onChange={self.heightGridChange}/>
                         </div>
                     </div>,
                     document.getElementById('input-container')

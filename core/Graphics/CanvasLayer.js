@@ -326,6 +326,16 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         return self;
     };
 
+
+    CanvasLayer.prototype.drawAnimation = function(animation){
+        var self = this;
+        self.clearRect(animation.x,animation.y,animation.width,animation.height);
+        var context = self.getContext();
+        animation.frames[animation.indexFrame].imageSets.forEach(function(is){
+            context.drawImage(is.image, is.sx, is.sy, is.sWidth, is.sHeight, is.x+animation.x, is.y+animation.y, is.width, is.height);
+        });
+    };
+
     CanvasLayer.prototype.refresh = function(){
         //console.log('Canvas layer refresh...');
         var self = this;
