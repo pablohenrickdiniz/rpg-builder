@@ -278,7 +278,6 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         map.renderIntervals.forEach(function(interval){
             clearInterval(interval);
         });
-        console.log(map);
 
         for(var i = 0; i < size1;i++){
             var size2 = sets[i].length;

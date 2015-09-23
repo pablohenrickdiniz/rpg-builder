@@ -10,18 +10,7 @@
         }
     </style>
     <script type="text/javascript" src="../bower_components/requirejs/require.js"></script>
-    <script type="text/javascript">
-        requirejs(['./paths'],function(){
-            require(['CE','Animation','ImageSet','ImageLoader','Frame','bootstrap'],function(CE,Animation,ImageSet,ImageLoader,Frame){
-                var engine = CE.createEngine({
-                    container:'#canvas-container',
-                    width:'100%',
-                    height:600
-                });
-
-            });
-        });
-    </script>
+    <script type="text/javascript" src="build/main.js"></script>
 </head>
 <body>
 <div class="row container">
@@ -31,11 +20,10 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="col-md-12">
-            <label for="">Adicionar Gráfico</label>
-            <input type="file" class="form-control" id="animation-file"/>
+        <div class="col-md-12" id="input-image-container">
+
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" id="animations">
 
         </div>
     </div>

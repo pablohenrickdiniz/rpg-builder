@@ -23,7 +23,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var sh = 32;
                 var width = 0;
                 var height = 0;
-
                 $("#tileset").change(function(){
                     var url = $(this).val();
                     ImageLoader.load(url,function(img){
@@ -186,7 +185,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         height:map.height*map.tile_h
                     }).drawAbstractGrid(self.getMapAbstractGrid());
                 }
-
                 return self.abstractGridLayer;
             },
             /*
