@@ -1,0 +1,17 @@
+.input-image-info{
+    display:inline-block;
+    text-indent: 20px;
+}
+
+.input-image .input-group{
+    border: 1px solid #CCC;
+    border-radius: 4px;
+}
+
+.input-image .input-group-addon:hover{
+    cursor: pointer;
+}
+
+.input-image .image{
+    width:100%;
+}

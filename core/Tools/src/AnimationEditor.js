@@ -2,12 +2,17 @@ define(['CE','React','Accordion','InputImage'],function(CE,React,Accordion,Input
     return {
         animationCanvas:null,
         accordion:null,
+        graphics:[],
         initialize:function(){
             var self = this;
             React.render(
-                <InputImage title="Adicionar Gráfico" multiple="true"/>,
+                <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
                 document.getElementById('input-image-container')
             );
+        },
+        addGraphics:function(images){
+            var accordion = self.getAccordion();
+
         },
         getAnimationCanvas:function(){
             var self = this;
