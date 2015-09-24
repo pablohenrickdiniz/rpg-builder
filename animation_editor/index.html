@@ -5,6 +5,8 @@
     <title>Animation Editor</title>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/inputImage.css"/>
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../bower_components/ReactElements/src/css/player.css"/>
     <style type="text/css">
         #canvas-container{
             border: 1px solid #EEE;
@@ -16,13 +18,31 @@
 <body>
 <div class="row container">
     <div class="col-md-6">
-        <div id="canvas-container">
+        <div class="row">
+            <div class="col-md-2">
 
+            </div>
+            <div class="col-md-10">
+                <div id="canvas-container">
+
+                </div>
+            </div>
+            <div class="col-md-12" id="controls-container">
+
+            </div>
         </div>
     </div>
     <div class="col-md-6">
+        <div class="col-md-12">
+
+        </div>
         <div class="col-md-12" id="input-image-container">
 
+        </div>
+        <div class="col-md-12">
+            <select name="" id="images" class="form-control">
+                <option value="">Nenhuma Imagem</option>
+            </select>
         </div>
         <div class="col-md-12" id="animations">
 

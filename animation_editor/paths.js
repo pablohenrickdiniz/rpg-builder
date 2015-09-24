@@ -30,7 +30,8 @@ requirejs.config({
         "AccordionItem":"../bower_components/ReactElements/build/AccordionItem",
         "Accordion":"../bower_components/ReactElements/build/Accordion",
         "IdGenerator":"../bower_components/ReactElements/build/custom/IdGenerator",
-        "InputImage":"build/InputImage"
+        "InputImage":"build/InputImage",
+        "InputControls":"../bower_components/ReactElements/build/InputControls"
     },
     "shim":{
         "Accordion":{
