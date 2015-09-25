@@ -142,7 +142,8 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
                 position:'absolute',
                 backgroundColor:'transparent',
                 left:self.canvas.viewX,
-                top:self.canvas.viewY
+                top:self.canvas.viewY,
+                pointerEvents:'none'
             });
 
             $(self.element).addClass('canvas-layer');

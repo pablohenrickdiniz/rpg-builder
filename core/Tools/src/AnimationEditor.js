@@ -1,4 +1,4 @@
-define(['CE','React','InputImage','InputControls','SequenceList','Select'],function(CE,React,InputImage,InputControls,SequenceList,Select){
+define(['CE','React','InputImage','InputControls','SequenceList','Select','ImageLoader'],function(CE,React,InputImage,InputControls,SequenceList,Select,ImageLoader){
     var AnimationEditor = {
         animationCanvas:null,
         animationImage:null,
@@ -36,10 +36,42 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select'],funct
         getAnimationImage:function(){
             var self = this;
             if(self.animationImage == null){
-                self.animationCanvas = CE.createEngine({
+                self.animationImage = CE.createEngine({
                     container:'#animations',
                     width:'100%',
-                    height:600
+                    height:600,
+                    selectable:true
+                });
+                self.animationImage.onAreaSelect(function(area,grid){
+                    var reader = self.animationImage.getMouseReader();
+                    var rects = grid.getRectsFromArea(area);
+
+                    if(reader.left){
+                        grid.apply({
+                            fillStyle:'transparent'
+                        });
+                        rects.forEach(function(rect){
+                            rect.set({
+                                fillStyle:'rgba(0,0,150,0.5)',
+                                state:1
+                            });
+                        });
+                    }
+                    else{
+                        grid.apply({
+                            fillStyle:'transparent'
+                        },function(){
+                            return this.state != 1;
+                        });
+                        rects.forEach(function(rect){
+                            if(rect.state != 1){
+                                rect.set({
+                                    fillStyle:'rgba(0,0,150,0.5)',
+                                    state:0
+                                });
+                            }
+                        });
+                    }
                 });
             }
             return self.animationImage;
@@ -57,11 +89,22 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select'],funct
                 document.getElementById('images-container')
             );
         },
-        changeGraphic:function(){
+        changeGraphic:function(url){
+            ImageLoader.load(url,function(img){
+                AnimationEditor.getGraphicLayer().set({
+                    width:img.width,
+                    height:img.height
+                }).clear().drawImage(img,0,0);
+                AnimationEditor.getAnimationImage().updateGrid({
+                    width:img.width,
+                    height:img.height,
+                    sw:32,
+                    sh:32
+                });
 
+            });
         },
         frameSelect:function(id){
-
 
         },
         getGraphicLayer:function(){
@@ -72,13 +115,6 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select'],funct
                 });
             }
             return self.graphicLayer;
-        },
-        getGraphicGrid:function(){
-            var self = this;
-            if(self.graphicGrid == null){
-
-            }
-            return self.graphicGrid;
         },
         getFrameList:function(){
             var self = this;

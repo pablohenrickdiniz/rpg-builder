@@ -249,7 +249,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         width:'100%',
                         height:665,
                         draggable:true,
-                        selectable:true
+                        selectable:true,
+                        multiSelect:true
                     });
 
                     /*

@@ -1,4 +1,4 @@
-define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid'],function(CanvasLayer,Parser,$,MouseReader,Grid){
+define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math'],function(CanvasLayer,Parser,$,MouseReader,Grid,Math){
     var CanvasEngine = function(options){
         console.log('intializing canvas engine...');
         var self = this;
@@ -13,6 +13,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid'],func
         self.draggable = false;
         self.scalable = false;
         self.selectable = false;
+        self.multiSelect = false;
         self.grid = null;
         self.scale = 1;
         self.gridLayer = null;
@@ -97,7 +98,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid'],func
             Calcula e redesenha uma área selecionada no tileset
          */
         self.getMouseReader().onmousemove(function(e){
-            if(self.selectable && typeof self.areaSelect == 'function'){
+            if(self.multiSelect && self.selectable && typeof self.areaSelect == 'function'){
                 console.log('mouse move...');
                 var reader = this;
                 var grid = self.getGrid();
@@ -248,6 +249,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid'],func
         self.scalable = typeof options.scalable == 'boolean'?options.scalable:self.scalable;
         self.draggable = typeof options.draggable == 'boolean'?options.draggable:self.draggable;
         self.selectable = typeof options.selectable == 'boolean'?options.selectable:self.selectable;
+        self.multiSelect = typeof options.multiSelect == 'boolean'?options.multiSelect:self.multiSelect;
         var width = options.width;
 
 
