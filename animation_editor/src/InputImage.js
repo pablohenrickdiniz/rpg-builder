@@ -37,7 +37,7 @@ define(['React'],function(React){
                             {info}
                         </span>
                         <span className="input-group-addon" onClick={self.add}>
-                            Adicionar
+                            +
                         </span>
                     </div>
                 </div>
@@ -63,7 +63,10 @@ define(['React'],function(React){
             for(var i = 0; i < files.length;i++){
                 if(self.allowedExtensions.indexOf(files[i].type) != -1){
                     var url = URL.createObjectURL(files[i]);
-                    imageFiles.push(url);
+                    imageFiles.push({
+                        url:url,
+                        name:files[i].name
+                    });
                 }
             }
             self.setState({

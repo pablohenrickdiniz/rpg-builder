@@ -1,4 +1,4 @@
-define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(CanvasLayer,Parser,$,MouseReader){
+define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid'],function(CanvasLayer,Parser,$,MouseReader,Grid){
     var CanvasEngine = function(options){
         console.log('intializing canvas engine...');
         var self = this;
@@ -12,7 +12,12 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         self.mouseReader = null;
         self.draggable = false;
         self.scalable = false;
+        self.selectable = false;
+        self.grid = null;
         self.scale = 1;
+        self.gridLayer = null;
+        self.maxZindex = 0;
+        self.areaSelect = null;
         self.set(options);
         self.initialize();
         return self;
@@ -69,6 +74,117 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
                 }
             }
         });
+
+        /*
+            Calcula e redesenha um retângulo selecionado no tileset
+         */
+        self.getMouseReader().onmousedown(1,function(){
+            if(self.selectable && typeof self.areaSelect == 'function'){
+                var reader = this;
+                var translate = {x:Math.abs(self.viewX),y:Math.abs(self.viewY)};
+                var pa = Math.vpv(reader.lastDown.left,translate);
+                var area = {
+                    x:pa.x,
+                    y:pa.y
+                };
+                var grid = self.getGrid();
+                self.areaSelect.apply(self,[area,grid]);
+                self.getGridLayer().clear().drawGrid(grid);
+            }
+        });
+
+        /*
+            Calcula e redesenha uma área selecionada no tileset
+         */
+        self.getMouseReader().onmousemove(function(e){
+            if(self.selectable && typeof self.areaSelect == 'function'){
+                console.log('mouse move...');
+                var reader = this;
+                var grid = self.getGrid();
+                var area = null;
+                if(reader.left){
+                    area = self.getDrawedArea();
+                }
+                else{
+                    area = Math.vpv(reader.lastMove,{x:-self.viewX,y:-self.viewY});
+                }
+                self.areaSelect.apply(self,[area,grid]);
+                self.getGridLayer().clear().drawGrid(grid);
+            }
+        });
+    };
+
+
+    /*
+        Object : getDrawedArea()
+        obter a área selecionada
+     */
+    CanvasEngine.prototype.getDrawedArea = function(){
+        var self = this;
+        var reader = self.getMouseReader();
+        var translate = {x:-self.viewX,y:-self.viewY};
+        var pa = Math.vpv(reader.lastDown.left,translate);
+        var pb = Math.vpv(reader.lastMove,translate);
+        var width = Math.abs(pb.x-pa.x);
+        var height = Math.abs(pb.y-pa.y);
+
+        var area = {
+            x:pa.x,
+            y:pa.y,
+            width:width,
+            height:height
+        };
+
+        area.x = pa.x > pb.x?area.x-width:area.x;
+        area.y = pa.y > pb.y?area.y-height:area.y;
+        return area;
+    };
+
+
+    /*
+        CanvasEngine : onAreaSelect(function callback)
+        chama callback quando uma área for selecionada
+     */
+    CanvasEngine.prototype.onAreaSelect = function(callback){
+        var self = this;
+        self.areaSelect = callback;
+        return self;
+    };
+
+    /*
+        CanvasEngine: update engine grid
+        atualiza camada de grade
+     */
+    CanvasEngine.prototype.updateGrid = function(options){
+        var self = this;
+        self.getGridLayer().set(options).clear().drawGrid(self.getGrid().set(options));
+        return self;
+    };
+
+    /*
+        CanvasLayer : getGridLayer()
+        obtém camada de desenho da grade
+     */
+    CanvasEngine.prototype.getGridLayer = function(){
+        var self = this;
+        if(self.gridLayer == null){
+            self.gridLayer = self.createLayer({
+                zIndex:self.maxZindex+1
+            });
+        }
+        return self.gridLayer;
+    };
+
+    /*
+        Grid : getGrid()
+        obtém objeto grid
+     */
+    CanvasEngine.prototype.getGrid = function(){
+        var self = this;
+        if(self.grid == null){
+            self.grid = new Grid();
+        }
+        return self.grid;
     };
 
     /*
@@ -131,6 +247,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
         self.scale = Parser.parseNumber(options.scale,self.scale);
         self.scalable = typeof options.scalable == 'boolean'?options.scalable:self.scalable;
         self.draggable = typeof options.draggable == 'boolean'?options.draggable:self.draggable;
+        self.selectable = typeof options.selectable == 'boolean'?options.selectable:self.selectable;
         var width = options.width;
 
 
@@ -222,6 +339,12 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader'],function(Ca
 
         if(zIndex != null){
             if(self.layers[zIndex] == undefined){
+                self.maxZindex = Math.max(self.maxZindex,zIndex);
+                if(self.gridLayer != null){
+                    self.gridLayer.set({
+                        zIndex:self.maxZindex
+                    });
+                }
                 console.log('creating layer index '+zIndex);
                 var layer = new CanvasLayer(options,self);
                 self.layers[zIndex] = layer;

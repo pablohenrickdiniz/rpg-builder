@@ -4,9 +4,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             currentLayer:0,
             gameEngine:null,
             tilesetEngine:null,
-            tilesetGridLayer:null,
             tilesetImageLayer:null,
-            tilesetGrid:null,
             mapAbstractGrid:null,
             abstractGridLayer:null,
             map:null,
@@ -36,20 +34,12 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             height:height
                         }).drawImage(img,0,0);
 
-                        var grid = self.getTilesetGrid();
-
-                        grid.set({
+                        self.getTilesetEngine().updateGrid({
                             sw:sw,
                             sh:sh,
                             width:width,
                             height:height
                         });
-
-
-                        self.getTilesetGridLayer().set({
-                            width:width,
-                            height:height
-                        }).drawGrid(grid);
                     });
                 });
 
@@ -188,41 +178,24 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 return self.abstractGridLayer;
             },
             /*
-                Grid: getTilesetGrid() Obtém instância da grade que
-                cobre os tilesets
-             */
-            getTilesetGrid:function(){
-                console.log('MapEditor get tileset grid...');
-                var self = this;
-                if(self.tilesetGrid == null){
-                    self.tilesetGrid = new Grid();
-                }
-                return self.tilesetGrid;
-            },
-            /*
                 void: widthGridChange(int value) altera a largura da
                 grade que cobre os tilesets
              */
             widthGridChange:function(value){
-                console.log('MapEditor width grid change...');
-                var grid = MapEditor.getTilesetGrid();
-                grid.set({
+                var self = this;
+                MapEditor.getTilesetEngine().updateGrid({
                     sw:value
                 });
-
-                MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
             },
             /*
                 void: heightGridChange(int value) altera a altura da
                 grade que cobre os tilesets
              */
             heightGridChange:function(value){
-                console.log('MapEditor height grid change...');
-                var grid = MapEditor.getTilesetGrid();
-                grid.set({
+                var self = this;
+                MapEditor.getTilesetEngine().updateGrid({
                     sh:value
                 });
-                MapEditor.getTilesetGridLayer().clear().drawGrid(grid);
             },
             /*
                 obtém a instância de uma grade Abstrata
@@ -275,58 +248,32 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         container:"#tileset-grid",
                         width:'100%',
                         height:665,
-                        draggable:true
-                    });
-                    var engine = self.tilesetEngine;
-                    var tilesetGridLayer = self.getTilesetGridLayer();
-                    var grid = self.getTilesetGrid();
-
-                    self.tilesetEngine.getMouseReader().onmousedown(1,function(){
-                        var self = this;
-                        var translate = {x:Math.abs(engine.viewX),y:Math.abs(engine.viewY)};
-                        var pa = Math.vpv(self.lastDown.left,translate);
-                        var area = {
-                            x:pa.x,
-                            y:pa.y
-                        };
-
-                        var rectSets = grid.getRectsFromArea(area);
-                        grid.apply({
-                            fillStyle:'transparent',
-                            state:0
-                        });
-                        rectSets.forEach(function(rectSet){
-                            rectSet.set({
-                                fillStyle:'rgba(0,0,100,0.5)',
-                                state:1
-                            });
-                        });
-                        MapEditor.selectedInterval = grid.getAreaInterval(area);
-                        tilesetGridLayer.clear().drawGrid(grid);
+                        draggable:true,
+                        selectable:true
                     });
 
-                    self.tilesetEngine.getMouseReader().onmousemove(function(e){
-                        console.log('mouse move...');
-                        var self = this;
-                        if(self.left){
-                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
+                    /*
+                        Prepara o callback de tileset Engine para
+                        leitura e visualização da área selecionada
+                     */
+                    self.tilesetEngine.onAreaSelect(function(area,grid){
+                        var reader = this.getMouseReader();
+                        if(reader.left){
                             var rectSets = grid.getRectsFromArea(area);
+                            var interval = grid.getAreaInterval(area);
                             grid.apply({
                                 fillStyle:'transparent',
                                 state:0
                             });
-
                             rectSets.forEach(function(rectSet){
                                 rectSet.set({
                                     fillStyle:'rgba(0,0,100,0.5)',
                                     state:1
                                 });
                             });
-                            MapEditor.selectedInterval = grid.getAreaInterval(area);
-                            tilesetGridLayer.clear().drawGrid(grid);
+                            self.selectedInterval = interval;
                         }
-                       else{
-                            var area = Math.vpv(self.lastMove,{x:-engine.viewX,y:-engine.viewY});
+                        else{
                             var rects = grid.getRectsFromArea(area);
                             if(rects.length > 0){
                                 var rectSet = rects[0];
@@ -335,44 +282,16 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                                 },function(){
                                     return this.state != 1;
                                 });
-
                                 rectSet.set({
                                     fillStyle:'rgba(0,0,100,0.5)'
                                 });
-
-                                tilesetGridLayer.clear().drawGrid(grid);
                             }
                         }
                     });
-
-
-
                 }
                 return self.tilesetEngine;
             },
-            /*
-                retorna a regigão retangular da distáncia entre o último clique com o botão
-                esquerdo e a posição atual do mouse
-             */
-            getDrawedArea:function(engine){
-                var self = this;
-                var translate = {x:-engine.viewX,y:-engine.viewY};
-                var pa = Math.vpv(self.lastDown.left,translate);
-                var pb = Math.vpv(self.lastMove,translate);
-                var width = Math.abs(pb.x-pa.x);
-                var height = Math.abs(pb.y-pa.y);
 
-                var area = {
-                    x:pa.x,
-                    y:pa.y,
-                    width:width,
-                    height:height
-                };
-
-                area.x = pa.x > pb.x?area.x-width:area.x;
-                area.y = pa.y > pb.y?area.y-height:area.y;
-                return area;
-            },
             /*
                 instanciação e configuração do objeto Game Engine, que renderiza
                 os elementos canvas do mapa
@@ -401,7 +320,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             var map = MapEditor.getMap();
                             var image = MapEditor.tilesetImage;
                             var interval = MapEditor.selectedInterval;
-                            var area = MapEditor.getDrawedArea.apply(self,[engine]);
+                            var area = engine.getDrawedArea();
                             var area_interval = map.getAreaInterval(area);
                             var images_sets = [];
 
