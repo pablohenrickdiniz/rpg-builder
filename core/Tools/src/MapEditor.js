@@ -250,7 +250,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         height:665,
                         draggable:true,
                         selectable:true,
-                        multiSelect:true
+                        multiSelect:true,
+                        scalable:true
                     });
 
                     /*
@@ -306,7 +307,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         width:'100%',
                         height:700,
                         draggable:true,
-                        scalable:false
+                        scalable:true
                     });
                     var engine = self.gameEngine;
                     var editor = self;

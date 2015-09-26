@@ -28,6 +28,8 @@ define(['PropsParser'],function(Parser){
         self.sw = 0;
         self.sh = 0;
         self.parent = null;
+        self.fillStyle = 'transparent';
+        self.strokeStyle = '#000000';
         self.set(options);
     };
 

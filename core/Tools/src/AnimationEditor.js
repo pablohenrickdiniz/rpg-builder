@@ -1,4 +1,6 @@
-define(['CE','React','InputImage','InputControls','SequenceList','Select','ImageLoader'],function(CE,React,InputImage,InputControls,SequenceList,Select,ImageLoader){
+define(
+    ['CE','React','InputImage','InputControls','SequenceList','Select','ImageLoader','Jquery-Conflict','InputNumber'],
+    function(CE,React,InputImage,InputControls,SequenceList,Select,ImageLoader,$,InputNumber){
     var AnimationEditor = {
         animationCanvas:null,
         animationImage:null,
@@ -8,10 +10,21 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select','Image
         graphicGrid:null,
         frames:[],
         graphics:[],
+        image:null,
         initialize:function(){
             var self = this;
             self.getAnimationCanvas();
             self.getAnimationImage();
+            self.getFrameList();
+            $('#grid-color').change(function(){
+                var color = $(this).val();
+                var canvas = self.getAnimationImage();
+                var grid = canvas.getGrid();
+                grid.apply({
+                    strokeStyle:color
+                });
+                canvas.redrawGrid();
+            });
             React.render(
                 <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
                 document.getElementById('input-image-container')
@@ -20,7 +33,35 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select','Image
                 <InputControls skin="black-skin" />,
                 document.getElementById('controls-container')
             );
-            self.getFrameList();
+            React.render(
+                <div className="row">
+                    <div className="col-md-6">
+                        <label>Linhas</label>
+                        <InputNumber min={1} max={1000} onChange={self.rowsChange}/>,
+                    </div>
+                    <div className="col-md-6">
+                        <label>Colunas</label>
+                        <InputNumber min={1} max={1000} onChange={self.colsChange}/>,
+                    </div>
+                </div>,
+                document.getElementById('size-container')
+            );
+        },
+        rowsChange:function(rows){
+            var self = AnimationEditor;
+            if(self.image != null){
+                self.getAnimationImage().updateGrid({
+                    sh:self.image.height/rows
+                });
+            }
+        },
+        colsChange:function(cols){
+            var self = AnimationEditor;
+            if(self.image != null){
+                self.getAnimationImage().updateGrid({
+                    sw:self.image.width/cols
+                });
+            }
         },
         getAnimationCanvas:function(){
             var self = this;
@@ -40,7 +81,10 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select','Image
                     container:'#animations',
                     width:'100%',
                     height:600,
-                    selectable:true
+                    selectable:true,
+                    draggable:true,
+                    scalable:true,
+                    multiSelect:true
                 });
                 self.animationImage.onAreaSelect(function(area,grid){
                     var reader = self.animationImage.getMouseReader();
@@ -91,6 +135,7 @@ define(['CE','React','InputImage','InputControls','SequenceList','Select','Image
         },
         changeGraphic:function(url){
             ImageLoader.load(url,function(img){
+                AnimationEditor.image = img;
                 AnimationEditor.getGraphicLayer().set({
                     width:img.width,
                     height:img.height

@@ -82,8 +82,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
         self.getMouseReader().onmousedown(1,function(){
             if(self.selectable && typeof self.areaSelect == 'function'){
                 var reader = this;
-                var translate = {x:Math.abs(self.viewX),y:Math.abs(self.viewY)};
-                var pa = Math.vpv(reader.lastDown.left,translate);
+                var translate = {x:Math.abs(self.viewX/self.scale),y:Math.abs(self.viewY/self.scale)};
+                var pa = Math.vpv(Math.sdv(self.scale,reader.lastDown.left),translate);
                 var area = {
                     x:pa.x,
                     y:pa.y
@@ -107,7 +107,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                     area = self.getDrawedArea();
                 }
                 else{
-                    area = Math.vpv(reader.lastMove,{x:-self.viewX,y:-self.viewY});
+                    area = Math.vpv(Math.sdv(self.scale,reader.lastMove),{x:-self.viewX/self.scale,y:-self.viewY/self.scale});
                 }
                 self.areaSelect.apply(self,[area,grid]);
                 self.getGridLayer().clear().drawGrid(grid);
@@ -123,9 +123,9 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
     CanvasEngine.prototype.getDrawedArea = function(){
         var self = this;
         var reader = self.getMouseReader();
-        var translate = {x:-self.viewX,y:-self.viewY};
-        var pa = Math.vpv(reader.lastDown.left,translate);
-        var pb = Math.vpv(reader.lastMove,translate);
+        var translate = {x:-self.viewX/self.scale,y:-self.viewY/self.scale};
+        var pa = Math.vpv(Math.sdv(self.scale,reader.lastDown.left),translate);
+        var pb = Math.vpv(Math.sdv(self.scale,reader.lastMove),translate);
         var width = Math.abs(pb.x-pa.x);
         var height = Math.abs(pb.y-pa.y);
 
@@ -159,6 +159,15 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
     CanvasEngine.prototype.updateGrid = function(options){
         var self = this;
         self.getGridLayer().set(options).clear().drawGrid(self.getGrid().set(options));
+        return self;
+    };
+
+    /*
+        CanvasEngine
+     */
+    CanvasEngine.prototype.redrawGrid = function(){
+        var self = this;
+        self.getGridLayer().clear().drawGrid(self.getGrid());
         return self;
     };
 
@@ -265,7 +274,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             $(layer.getElement()).css({
                 left:self.viewX,
                 top:self.viewY,
-                transform:'scale('+self.scale+')'
+                transform:'scale('+self.scale+')',
+                transformOrigin:'0 0'
             });
         });
 
@@ -274,7 +284,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             height:self.height,
             position:'relative',
             overflow:'hidden'
-        }).addClass('transparent-background').on('contextmenu',function(e){
+        }).addClass('transparent-background canvas-engine').on('contextmenu',function(e){
             e.preventDefault();
         });
         return self;

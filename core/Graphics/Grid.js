@@ -12,7 +12,7 @@
         sh:10           altura de cada retãngula da grade
     });
  */
-define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,AbstractGrid){
+define(['PropsParser','RectSet','AbstractGrid','Color'],function(Parser,RectSet,AbstractGrid,Color){
     var Grid = function(options){
         console.log('intializing Grid...');
         options = typeof options == 'object'?options:{};
@@ -97,6 +97,8 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
      */
     Grid.prototype.apply = function(options,condition){
         var self = this;
+        self.fillStyle = Color.isColor(options.fillStyle)?options.fillStyle:self.fillStyle;
+        self.strokeStyle = Color.isColor(options.strokeStyle)?options.strokeStyle:self.strokeStyle;
         self.rectSets.forEach(function(row){
             row.forEach(function(rectSet){
                 if(condition == undefined || condition.apply(rectSet)){
@@ -132,6 +134,9 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
         self.height = Parser.parseNumber(options.height,self.height);
         self.sw = Parser.parseNumber(options.sw,self.sw);
         self.sh = Parser.parseNumber(options.sh,self.sh);
+        self.fillStyle = Color.isColor(options.fillStyle)?options.fillStyle:self.fillStyle;
+        self.strokeStyle = Color.isColor(options.strokeStyle)?options.strokeStyle:self.strokeStyle;
+
 
         if(self.sw != aux_sw || self.sh != aux_sh){
             self.rectSets = [];
@@ -170,7 +175,9 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
                         x:j*self.sw,
                         y:i*self.sh,
                         width:sw,
-                        height:sh
+                        height:sh,
+                        fillStyle:self.fillStyle,
+                        strokeStyle:self.strokeStyle
                     });
                 }
             }
@@ -182,7 +189,9 @@ define(['PropsParser','RectSet','AbstractGrid'],function(Parser,RectSet,Abstract
                         x:j*self.sw,
                         y:i*self.sh,
                         width:sw,
-                        height:sh
+                        height:sh,
+                        fillStyle:self.fillStyle,
+                        strokeStyle:self.strokeStyle
                     });
                 }
             }
