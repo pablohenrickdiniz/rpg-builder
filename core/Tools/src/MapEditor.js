@@ -21,20 +21,34 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var sh = 32;
                 var width = 0;
                 var height = 0;
+                var tilesetEngine = self.getTilesetEngine();
+                var gameEngine = self.getGameEngine();
+                self.tilesetImageLayer = tilesetEngine.createLayer({
+                    name:'tileset'
+                });
+                self.tilesetGridLayer = tilesetEngine.createLayer({
+                    name:'grid'
+                });
+
+                for(var i = 0; i <= 10;i++){
+                    gameEngine.createLayer();
+                }
+
+
                 $("#tileset").change(function(){
                     var url = $(this).val();
                     ImageLoader.load(url,function(img){
                         self.tilesetImage = url;
-                        self.getTilesetEngine().clearAllLayers();
+                        tilesetEngine.clearAllLayers();
                         width = img.width;
                         height = img.height;
 
-                        self.getTilesetImageLayer().set({
+                        self.tilesetImageLayer.set({
                             width:width,
                             height:height
                         }).drawImage(img,0,0);
 
-                        self.getTilesetEngine().updateGrid({
+                        tilesetEngine.updateGrid({
                             sw:sw,
                             sh:sh,
                             width:width,
@@ -46,8 +60,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 $("#layer").change(function(){
                     self.activeLayer = $(this).val();
                     var gameEngine = self.getGameEngine();
-                    self.gameEngine.createLayer({
-                        zIndex:self.activeLayer,
+                    var layer = self.gameEngine.getLayer(self.activeLayer);
+                    layer.set({
                         opacity:1
                     });
                     self.gameEngine.applyToLayers({
@@ -169,10 +183,10 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var self = this;
                 if(self.abstractGridLayer == null){
                     var map = self.getMap();
-                    self.abstractGridLayer = self.getGameEngine().createLayer({
-                        zIndex:10,
-                        width:map.width*map.tile_w,
-                        height:map.height*map.tile_h
+                    self.abstractGridLayer = self.getGameEngine().getLayer(10);
+                    self.abstractGridLayer.set({
+                            width:map.width*map.tile_w,
+                            height:map.height*map.tile_h
                     }).drawAbstractGrid(self.getMapAbstractGrid());
                 }
                 return self.abstractGridLayer;
@@ -213,28 +227,6 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     });
                 }
                 return self.mapAbstractGrid;
-            },
-            /*
-             obtém a instância da camada canvas que desenha os tilesets
-             */
-            getTilesetImageLayer:function(){
-                console.log('MapEditor get tileset image layer...');
-                var self = this;
-                if(self.tilesetImageLayer == null){
-                    self.tilesetImageLayer = self.getTilesetEngine().createLayer({zIndex:0,name:'tileset'});
-                }
-                return self.tilesetImageLayer;
-            },
-            /*
-                obtém a instância da camada canvas que desenha a grade sobre os tilesets
-             */
-            getTilesetGridLayer:function(){
-                console.log('MapEditor get tileset grid layer...');
-                var self = this;
-                if(self.tilesetGridLayer == null){
-                    self.tilesetGridLayer = self.getTilesetEngine().createLayer({zIndex:1,name:'gride'});
-                }
-                return self.tilesetGridLayer;
             },
             /*
              instanciação e configuração do objeto Game Engine, que renderiza
@@ -327,11 +319,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                             var images_sets = [];
 
 
-                            var layer = engine.createLayer({
-                                zIndex:MapEditor.activeLayer,
-                                width:map.width*map.tile_w,
-                                height:map.height*map.tile_h
-                            });
+                            var layer = engine.getLayer(MapEditor.activeLayer);
 
 
 
@@ -385,7 +373,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 var engine = this.getGameEngine();
                 var x = engine.viewX;
                 var y = engine.viewY;
-                var grid_layer = engine.createLayer({zIndex:10});
+                var grid_layer = engine.getLayer(10);
                 var min_x = engine.getWidth()-grid_layer.width;
                 var min_y = engine.getHeight()-grid_layer.height;
                 min_x = min_x>0?0:min_x;

@@ -20,7 +20,8 @@ requirejs.config({
         "MouseReader":'../core/Reader/MouseReader',
         "RectSet":'../core/Graphics/RectSet',
         "Overlap":'../bower_components/MathLib/build/Overlap',
-        "Color":'../core/Graphics/Color'
+        "Color":'../core/Graphics/Color',
+        "ObjectLayer":"../core/Graphics/ObjectLayer"
     },
     "shim":{
         "bootstrap":{
@@ -28,6 +29,9 @@ requirejs.config({
         },
         "InputNumber":{
             deps:['SetIntervalMixin']
+        },
+        "ObjectLayer":{
+            deps:["CanvasLayer"]
         }
     }
 });

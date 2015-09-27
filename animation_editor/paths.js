@@ -33,7 +33,8 @@ requirejs.config({
         "InputImage":"build/InputImage",
         "InputControls":"../bower_components/ReactElements/build/InputControls",
         "SequenceList":"../bower_components/ReactElements/build/SequenceList",
-        "Select":"../bower_components/ReactElements/build/Select"
+        "Select":"../bower_components/ReactElements/build/Select",
+        "ObjectLayer":"../core/Graphics/ObjectLayer"
     },
     "shim":{
         "Accordion":{
@@ -92,6 +93,9 @@ requirejs.config({
         },
         "MouseReader": {
             deps: ["Jquery-Conflict"]
+        },
+        "ObjectLayer":{
+            deps:["CanvasLayer"]
         }
     }
 });

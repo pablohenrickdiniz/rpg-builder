@@ -17,7 +17,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         self.element = null;
         self.opacity = 1;
         $(window).resize(function(){
-            self.refresh();
+            self.updateElement()
         });
         $(self.getElement()).on('contextmenu',function(e){
             // e.preventDefault();
@@ -72,7 +72,9 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
     CanvasLayer.prototype.show = function(){
         //console.log('Canvas layer show...');
         var self = this;
-        $(self.getElement()).show();
+        $(self.getElement()).css({
+            visibility:'visible'
+        });
         return self;
     };
 
@@ -83,7 +85,9 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
     CanvasLayer.prototype.hide = function(){
         //console.log('Canvas layer hide...');
         var self = this;
-        $(self.getElement()).hide();
+        $(self.getElement()).css({
+            visibility:'hidden'
+        });
         return self;
     };
 
@@ -339,7 +343,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         }
     };
 
-    CanvasLayer.prototype.refresh = function(){
+    CanvasLayer.prototype.updateElement = function(){
         //console.log('Canvas layer refresh...');
         var self = this;
         $(self.getElement()).css({

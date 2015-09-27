@@ -12,6 +12,7 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         self.width = 32;
         self.height = 32;
         self.frameInterval = null;
+        self.frameSync = null;
         self.canvasLayer = null;
         self.onStepCall = null;
         self.set(options);
@@ -52,30 +53,33 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
 
     Animation.prototype.step = function(){
         var self = this;
-        self.frameInterval = setTimeout(function(){
-            FrameSync(function(){
-                self.step()
-            });
+        if(self.running){
+            self.frameInterval = setTimeout(function(){
+                self.frameSync = FrameSync(function(){
+                    self.step()
+                });
 
-            if(self.indexFrame >= self.frames.length-1){
-                self.indexFrame = 0;
-            }
-            else{
-                self.indexFrame = self.indexFrame+1;
-            }
-            if(self.canvasLayer != null){
-                self.canvasLayer.drawAnimation(self);
-            }
-            if(self.onStepCall != null){
-                self.onStepCall(self.indexFrame);
-            }
-        },1000/(self.speed));
+                if(self.indexFrame >= self.frames.length-1){
+                    self.indexFrame = 0;
+                }
+                else{
+                    self.indexFrame = self.indexFrame+1;
+                }
+                if(self.canvasLayer != null){
+                    self.canvasLayer.drawAnimation(self);
+                }
+                if(self.onStepCall != null){
+                    self.onStepCall(self.indexFrame);
+                }
+            },1000/(self.speed));
+        }
     };
 
     Animation.prototype.pause = function(){
         var self = this;
         self.running = false;
         clearInterval(self.frameInterval);
+        clearInterval(self.frameSync);
     };
 
     Animation.prototype.stop = function(){

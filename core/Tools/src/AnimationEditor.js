@@ -17,11 +17,17 @@ define(
         playing:false,
         rows:1,
         cols:1,
+        maxLayer:0,
+        /*
+            void:initialize()
+            inicializa o editor de animação
+         */
         initialize:function(){
             var self = this;
             self.getAnimationCanvas();
-            self.getAnimationImage();
+            var canvasImage = self.getAnimationImage();
             self.getFrameList();
+            self.graphicLayer = canvasImage.createLayer();
             $('#grid-color').change(function(){
                 var color = $(this).val();
                 var canvas = self.getAnimationImage();
@@ -36,7 +42,14 @@ define(
                 document.getElementById('input-image-container')
             );
             React.render(
-                <InputControls skin="black-skin" onPlay={self.playAnimation} onPause={self.pauseAnimation} onStop={self.stopAnimation}/>,
+                <div className="form-group">
+                    <div className="col-md-8">
+                        <InputControls skin="black-skin" onPlay={self.playAnimation} onPause={self.pauseAnimation} onStop={self.stopAnimation}/>
+                    </div>
+                    <div className="col-md-4">
+                        <input type="range" min="1" max="20" onChange={self.changeSpeed}/>
+                    </div>
+                </div>,
                 document.getElementById('controls-container')
             );
             React.render(
@@ -53,21 +66,46 @@ define(
                 document.getElementById('size-container')
             );
         },
+        /*
+            void: changeSpeed(Event e)
+            Muda a velocidade animação
+         */
+        changeSpeed:function(e){
+            var val = e.target.value;
+            AnimationEditor.getAnimation().setSpeed(val);
+        },
+        /*
+            void : playAnimation()
+            executa a animação
+         */
         playAnimation:function(){
             console.log('Playing animation...');
             AnimationEditor.playing = true;
             AnimationEditor.getAnimation().execute();
         },
+        /*
+            void : pauseAnimation()
+            pausa a execução da animação
+         */
         pauseAnimation:function(){
             console.log('Animation paused!');
             AnimationEditor.playing = false;
             AnimationEditor.getAnimation().pause();
         },
+        /*
+            void : stopAnimation()
+            para a execução da animação
+         */
         stopAnimation:function(){
             console.log('Animation stoped!');
             AnimationEditor.playing = false;
             AnimationEditor.getAnimation().stop();
         },
+        /*
+            void : rowsChange(int cols)
+            Executa quando o número de linhas
+            da imagem de recurso é alterado
+         */
         rowsChange:function(rows){
             var self = AnimationEditor;
             if(self.image != null){
@@ -77,6 +115,11 @@ define(
             }
             self.rows = rows;
         },
+        /*
+            void:colsChange(int cols)
+            Executa quando o número de colunas
+            da imagem de recurso é alterado
+         */
         colsChange:function(cols){
             var self = AnimationEditor;
             if(self.image != null){
@@ -86,6 +129,11 @@ define(
             }
             self.cols = cols;
         },
+        /*
+            CanvasEngine: getAnimationCanvas()
+            Obtém a engine que renderiza as camadas de canvas
+            que executa e edita os frames do objeto animation
+         */
         getAnimationCanvas:function(){
             var self = this;
             if(self.animationCanvas == null){
@@ -97,6 +145,12 @@ define(
             }
             return self.animationCanvas;
         },
+        /*
+            CanvasEngine: getAnimationImage()
+            Obtém a engine renderiza as camadas de canvas
+            mostra seleciona os quadros
+            da imagem de animação
+         */
         getAnimationImage:function(){
             var self = this;
             if(self.animationImage == null){
@@ -155,6 +209,11 @@ define(
             }
             return self.animationImage;
         },
+        /*
+            void: addGraphics(Array<String> urls)
+            Adiciona à lista de  urls com recursos de imagem
+
+         */
         addGraphics:function(urls){
             var self = AnimationEditor;
             urls.forEach(function(url){
@@ -168,10 +227,15 @@ define(
                 document.getElementById('images-container')
             );
         },
+        /*
+            void:changeGraphic(string url)
+            Carrega um recurso de imagem para animação
+            da url
+        */
         changeGraphic:function(url){
             ImageLoader.load(url,function(img){
                 AnimationEditor.image = img;
-                AnimationEditor.getGraphicLayer().set({
+                AnimationEditor.graphicLayer.set({
                     width:img.width,
                     height:img.height
                 }).clear().drawImage(img,0,0);
@@ -184,39 +248,61 @@ define(
 
             });
         },
+        /*
+            void : addFrame()
+            Adiciona um novo frame na animação
+         */
         addFrame:function(){
+            console.log('add frame...');
             var self = AnimationEditor;
             var index = self.frameLayers.length;
-
+            console.log('index');
             var canvas = self.getAnimationCanvas();
             var layer = canvas.createLayer({
-                zIndex:index,
                 width:canvas.getWidth(),
-                height:canvas.getHeight()
+                height:canvas.getHeight(),
+                type:'object'
             });
+
             var frame = new Frame();
-            if(self.croppedImage != null){
-                layer.drawImageSet(self.croppedImage);
-                frame.imageSets.push(self.croppedImage);
-            }
             self.getAnimation().frames.push(frame);
             self.frameLayers.push(layer);
             self.getFrameList().addItem('# Frame');
             self.getFrameList().itemSelect(index);
+            self.currentFrame = index;
+            self.addObject();
         },
+        /*
+            void: addObject()
+            Adiciona um novo objeto inteligente no frame selecionado
+         */
+        addObject:function(){
+            var self = AnimationEditor;
+            if(self.croppedImage != null){
+                console.log(self.currentFrame);
+                var layer = self.getAnimationCanvas().getLayer(self.currentFrame);
+                var frame = self.getAnimation().frames[self.currentFrame];
+                layer.add(self.croppedImage);
+                frame.imageSets.push(self.croppedImage);
+            }
+        },
+        /*
+            void : removeFrame(int index)
+            Remove o frame na posição index
+         */
         removeFrame:function(index){
             var self = AnimationEditor;
             if(self.frameLayers[index] != undefined){
                 self.getAnimation().frames.splice(index,1);
-                self.frameLayers[index].destroy();
+                self.getAnimationCanvas().removeLayer(index);
                 self.frameLayers.splice(index,1);
-                self.frameLayers.forEach(function(layer,index){
-                    layer.set({
-                        zIndex:index
-                    });
-                });
+                self.frameSelect(Math.max(Math.min(index,self.frameLayers.length-1),0));
             }
         },
+        /*
+            void: frameSelect(int index)
+            seleciona o mostra o frame
+         */
         frameSelect:function(index){
             var self = AnimationEditor;
             self.currentFrame = index;
@@ -233,15 +319,11 @@ define(
                 }
             });
         },
-        getGraphicLayer:function(){
-            var self = this;
-            if(self.graphicLayer == null){
-                self.graphicLayer = self.getAnimationImage().createLayer({
-                    zIndex:0
-                });
-            }
-            return self.graphicLayer;
-        },
+        /*
+            Animation: getAnimation()
+            Obtém o objeto animation, que representa
+            a animação a ser criada
+         */
         getAnimation:function(){
             var self = this;
             if(self.animation == null){
@@ -254,13 +336,27 @@ define(
             }
             return self.animation;
         },
+        /*
+            FrameList: getFrameList()
+            obtém o objeto React responsável pela
+            criação e pelos enventos da lista de frames
+         */
         getFrameList:function(){
             var self = this;
             if(self.frameList == null){
                 var getList = function(list){
                     self.frameList = list;
                 };
-                var titulo = <div><span>Frames</span><button className="btn btn-default pull-right" onClick={self.addFrame}>+</button><div className="clearfix"></div></div>;
+                var titulo = (
+                    <div>
+                        <div className="btn-group col-md-12">
+                            <button className="btn btn-default" onClick={self.addFrame}>+ Frame</button>
+                            <button className="btn btn-default" onClick={self.addObject}>+ Object</button>
+                        </div>
+                        <span>Frames</span>
+                        <div className="clearfix"></div>
+                    </div>
+                );
 
 
                 React.render(
