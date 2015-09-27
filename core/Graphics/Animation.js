@@ -1,6 +1,7 @@
 define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,CanvasLayer){
     var Animation = function(options){
         var self = this;
+        options = options == undefined?{}:options;
         self.speed = 3;
         self.repeat = false;
         self.running = false;
@@ -12,6 +13,7 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         self.height = 32;
         self.frameInterval = null;
         self.canvasLayer = null;
+        self.onStepCall = null;
         self.set(options);
     };
 
@@ -36,7 +38,9 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         }
     };
 
-
+    Animation.prototype.onStep = function(callback){
+        this.onStepCall = callback;
+    };
 
     Animation.prototype.setSpeed = function(speed){
         this.speed = speed;
@@ -62,13 +66,21 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
             if(self.canvasLayer != null){
                 self.canvasLayer.drawAnimation(self);
             }
+            if(self.onStepCall != null){
+                self.onStepCall(self.indexFrame);
+            }
         },1000/(self.speed));
+    };
+
+    Animation.prototype.pause = function(){
+        var self = this;
+        self.running = false;
+        clearInterval(self.frameInterval);
     };
 
     Animation.prototype.stop = function(){
         var self = this;
-        self.running = false;
-        clearInterval(self.frameInterval);
+        self.pause();
         self.indexFrame = -1;
     };
 

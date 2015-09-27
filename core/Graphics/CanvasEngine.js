@@ -17,6 +17,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
         self.grid = null;
         self.scale = 1;
         self.gridLayer = null;
+        self.animationLayer = null;
         self.maxZindex = 0;
         self.areaSelect = null;
         self.set(options);
@@ -60,15 +61,15 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
         self.getMouseReader().onmousewheel(function(e){
             var reader = this;
             if(self.scalable){
-                var y = reader.lastWheel.deltaY;
-                if(y > 0){
-                    if(self.scale > 0.1){
+                var y = reader.lastWheel;
+                if(y < 0){
+                    if(self.scale > 0.2){
                         self.set({
                             scale:self.scale-0.1
                         });
                     }
                 }
-                else if(y < 0){
+                else if(y > 0){
                     self.set({
                         scale:self.scale+0.1
                     });
@@ -179,10 +180,20 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
         var self = this;
         if(self.gridLayer == null){
             self.gridLayer = self.createLayer({
-                zIndex:self.maxZindex+1
+                zIndex:self.maxZindex+2
             });
         }
         return self.gridLayer;
+    };
+
+    CanvasEngine.prototype.getAnimationLayer = function(){
+        var self = this;
+        if(self.animationLayer == null){
+            self.animationLayer = self.createLayer({
+                zIndex:self.maxZindex+1
+            });
+        }
+        return self.animationLayer;
     };
 
     /*
@@ -192,7 +203,14 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
     CanvasEngine.prototype.getGrid = function(){
         var self = this;
         if(self.grid == null){
-            self.grid = new Grid();
+            var width = self.getWidth();
+            var height = self.getHeight();
+            self.grid = new Grid({
+                sw:width,
+                sh:height,
+                width:width,
+                height:height
+            });
         }
         return self.grid;
     };
@@ -274,8 +292,16 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             $(layer.getElement()).css({
                 left:self.viewX,
                 top:self.viewY,
-                transform:'scale('+self.scale+')',
-                transformOrigin:'0 0'
+                transform:'scale('+self.scale+','+self.scale+')',
+                transformOrigin:'0 0',
+                webkitTransform:'scale('+self.scale+','+self.scale+')',
+                webkitTransformOrigin:'0 0',
+                mozTransform:'scale('+self.scale+')',
+                mozTransformOrigin:'0 0',
+                oTransform:'scale('+self.scale+','+self.scale+')',
+                oTransformOrigin:'0 0',
+                msTransform:'scale('+self.scale+','+self.scale+')',
+                msTransformOrigin:'0 0'
             });
         });
 
@@ -354,6 +380,11 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                 self.maxZindex = Math.max(self.maxZindex,zIndex);
                 if(self.gridLayer != null){
                     self.gridLayer.set({
+                        zIndex:self.maxZindex+1
+                    });
+                }
+                if(self.animationLayer != null){
+                    self.animationLayer.set({
                         zIndex:self.maxZindex
                     });
                 }

@@ -23,7 +23,7 @@ define(['Jquery-Conflict'],function($){
             middle:{x:0,y:0}
         };
         self.lastMove = {x:0,y:0};
-        self.lastWheel = {deltaX:0,deltaY:0};
+        self.lastWheel = 0;
         self.mouseWheel = [];
         self.start();
     };
@@ -105,16 +105,23 @@ define(['Jquery-Conflict'],function($){
             self.middle = false;
         });
 
-        $(self.element).on('mousewheel',function(e){
-            self.lastWheel = {
-                deltaX:e.originalEvent.deltaX,
-                deltaY:e.originalEvent.deltaY
-            };
+
+        var callback = function(e){
+            e.preventDefault();
+            self.lastWheel = e.detail? e.detail*(-120) : e.wheelDelta;
             self.mouseWheel.forEach(function(callback){
                 callback.apply(self,[e]);
             });
-        });
+        };
+
+        var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel";
+
+        if ($(self.element)[0].attachEvent) //if IE (and Opera depending on user setting)
+            $(self.element)[0].attachEvent("on"+mousewheelevt, callback);
+        else if ($(self.element)[0].addEventListener) //WC3 browsers
+            $(self.element)[0].addEventListener(mousewheelevt, callback, false)
     };
+
 
     MouseReader.prototype.unbindEvents = function(){
         var self = this;
