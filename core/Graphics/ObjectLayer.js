@@ -13,7 +13,7 @@ define(['CanvasLayer'],function(CanvasLayer){
         if(self.objects[layer] == undefined){
             self.objects[layer] = [];
         }
-
+        object.parent = self;
         self.objects[layer].push(object);
         self.refresh();
         return self;
@@ -24,6 +24,7 @@ define(['CanvasLayer'],function(CanvasLayer){
         var index = self.objects.indexOf(object);
         if(index != -1){
             self.objects.splice(index,1);
+            object.parent = null;
         }
         return self;
     };

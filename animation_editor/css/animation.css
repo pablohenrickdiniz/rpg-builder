@@ -1,3 +1,8 @@
 .canvas-engine{
     border: 1px solid #EEE;
 }
+
+.close{
+    position: absolute;
+    right: 20px;
+}

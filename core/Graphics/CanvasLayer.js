@@ -317,6 +317,11 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         var context = this.getContext();
         is.parent = this;
         context.drawImage(is.image, is.sx, is.sy, is.sWidth, is.sHeight, is.x, is.y, is.width, is.height);
+        if(is.selected){
+            context.strokeStyle = 'rgba(0,0,100,0.5)';
+            context.setLineDash([5,5]);
+            context.strokeRect(is.x,is.y,is.width,is.height);
+        }
         return self;
     };
 

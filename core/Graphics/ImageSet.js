@@ -21,6 +21,8 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         self.url = '';
         self.x = 0;
         self.y = 0;
+        self.oldX = 0;
+        self.oldY = 0;
         self.width = 0;
         self.height = 0;
         self.sx = 0;
@@ -31,9 +33,23 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         self.loaded = false;
         self.image = null;
         self.parent = null;
+        self.selected = false;
         self.set(options);
     };
 
+    /*
+        Object : getBounds()
+        obtém o AABB
+     */
+    ImageSet.prototype.getBounds = function(){
+        var self = this;
+        return {
+            x:self.x,
+            y:self.y,
+            width:self.width,
+            height:self.height
+        }
+    };
 
     /*
         ImageSet : set(Object options)
