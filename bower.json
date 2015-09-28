@@ -1,25 +1,36 @@
 {
-  "name": "RPG-BUILDER",
-  "version": "0.1",
+  "name": "RPG-JS-MOD",
+  "version": "0.2",
   "homepage": "https://github.com/pablohenrickdiniz/RPG-BUILDER",
   "authors": [
-    "Pablo Henrick diniz <phydokz>"
+    "Pablo Henrick <phydokz@hotmail.com>"
   ],
-  "description": "Graphic Engine to create 2D Rpg Games",
+  "description": "Rpg Engine to create rpg games",
+  "main": "",
+  "moduleType": [],
   "keywords": [
-    "Games",
-    "Maker",
-    "Rpg",
-    "Html5",
-    "Canvas",
-    "Scenes"
+    "RpgMaker",
+    "Engine",
+    "sprites",
+    "html5",
+    "canvas"
   ],
   "license": "MIT",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "MathLib": "https://github.com/pablohenrickdiniz/MathLib.git",
+    "jquery": "~2.1.4",
+    "react": "~0.13.3",
+    "requirejs": "~2.1.20",
+    "bootstrap": "~3.3.5",
+    "ReactElements": "https://github.com/pablohenrickdiniz/ReactElements.git",
+    "font-awesome": "~4.4.0"
+  }
 }
