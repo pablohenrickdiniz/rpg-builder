@@ -13,7 +13,8 @@ define(
         'ImageSet',
         'Animation',
         'Overlap',
-        'KeyReader'
+        'KeyReader',
+        'Filter'
     ],
     function(
         CE,
@@ -29,7 +30,8 @@ define(
         ImageSet,
         Animation,
         Overlap,
-        KeyReader
+        KeyReader,
+        Filter
     ){
         var AnimationEditor = {
             animationCanvas:null,
@@ -397,7 +399,6 @@ define(
                         sw:img.width/AnimationEditor.cols,
                         sh:img.height/AnimationEditor.rows
                     });
-
                 });
             },
             /*

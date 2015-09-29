@@ -35,7 +35,8 @@ requirejs.config({
         "InputControls":"../bower_components/ReactElements/build/InputControls",
         "SequenceList":"../bower_components/ReactElements/build/SequenceList",
         "Select":"../bower_components/ReactElements/build/Select",
-        "ObjectLayer":"../core/Graphics/ObjectLayer"
+        "ObjectLayer":"../core/Graphics/ObjectLayer",
+        "Filter":"../core/Graphics/Filter"
     },
     "shim":{
         "Accordion":{

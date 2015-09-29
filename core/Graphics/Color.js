@@ -112,6 +112,8 @@ define(['PropsParser'], function (Parser) {
         return self;
     };
 
+
+
     /*
      String : asName
      Obtém o nome da cor, caso essa cor possua nome
@@ -126,7 +128,7 @@ define(['PropsParser'], function (Parser) {
                 return index;
             }
         }
-        return "";
+        return self.toHEX();
     };
     /*
      Nome das Cores e suas respectivas

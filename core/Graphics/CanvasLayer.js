@@ -336,7 +336,10 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
         return self;
     };
 
-
+    /*
+        CanvasLayer: drawAnimation(Animation animation)
+        Draw the current frame of animation
+     */
     CanvasLayer.prototype.drawAnimation = function(animation){
         var self = this;
         self.clearRect(animation.x,animation.y,animation.width,animation.height);
@@ -346,15 +349,28 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
                 context.drawImage(is.image, is.sx, is.sy, is.sWidth, is.sHeight, is.x+animation.x, is.y+animation.y, is.width, is.height);
             });
         }
+        return self;
     };
 
+    /*
+        CanvasLayer: updateElement()
+        update layer position and scale
+     */
     CanvasLayer.prototype.updateElement = function(){
         //console.log('Canvas layer refresh...');
         var self = this;
+        var left = 0;
+        var top = 0;
+        var scale = 1;
+        if(self.canvas != undefined){
+            left = self.canvas.viewX;
+            top = self.canvas.viewY;
+            scale = self.canvas.scale;
+        }
         $(self.getElement()).css({
-            left:self.canvas.viewX,
-            top:self.canvas.viewY,
-            scale:self.canvas.scale
+            left:left,
+            top:top,
+            scale:scale
         });
         return self;
     };

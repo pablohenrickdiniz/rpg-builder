@@ -79,7 +79,7 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         var self = this;
         self.running = false;
         clearInterval(self.frameInterval);
-        clearInterval(self.frameSync);
+        window.cancelAnimationFrame(self.frameSync);
     };
 
     Animation.prototype.stop = function(){
