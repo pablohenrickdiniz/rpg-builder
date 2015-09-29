@@ -10,6 +10,8 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.lineWidth = 1;
         self.lineDash = [];
         self.state = 0;
+        self.i = 0;
+        self.j = 0;
         self.set(options);
         return self;
     };
@@ -44,6 +46,8 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.lineDash = Parser.parseArray(options.lineDash,self.lineDash);
         self.fillStyle = Color.isColor(options.fillStyle)?options.fillStyle:self.fillStyle;
         self.strokeStyle = Color.isColor(options.strokeStyle)?options.strokeStyle:self.strokeStyle;
+        self.i = Parser.parseInt(options.i,self.i);
+        self.j = Parser.parseInt(options.j,self.j);
         return self;
     };
 

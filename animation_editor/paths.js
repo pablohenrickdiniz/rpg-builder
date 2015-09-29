@@ -19,6 +19,7 @@ requirejs.config({
         "MaterialsLoader":"../core/Resources/MaterialsLoader",
         "Math":"../bower_components/MathLib/src/Math",
         "MouseReader":"../core/Reader/MouseReader",
+        "KeyReader":"../core/Reader/KeyReader",
         "Overlap":"../bower_components/MathLib/src/Overlap",
         "PropsParser":"../custom/PropsParser",
         "RL":"../core/Resources/ResourcesLoader",

@@ -1,5 +1,5 @@
-define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math','ObjectLayer'],
-    function(CanvasLayer,Parser,$,MouseReader,Grid,Math,ObjectLayer){
+define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math','ObjectLayer','KeyReader'],
+    function(CanvasLayer,Parser,$,MouseReader,Grid,Math,ObjectLayer,KeyReader){
         var CanvasEngine = function(options){
             console.log('intializing canvas engine...');
             var self = this;
@@ -11,6 +11,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             self.lastViewY = 0;
             self.width = 400;
             self.mouseReader = null;
+            self.keyReader = null;
             self.draggable = false;
             self.scalable = false;
             self.selectable = false;
@@ -91,9 +92,10 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                     };
                     var grid = self.getGrid();
                     self.areaSelect.apply(self,[area,grid]);
-                    self.getGridLayer().clear().drawGrid(grid);
+                    self.refreshGridLayer();
                 }
             });
+
 
             /*
              Calcula e redesenha uma área selecionada no tileset
@@ -111,7 +113,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                         area = Math.vpv(Math.sdv(self.scale,reader.lastMove),{x:-self.viewX/self.scale,y:-self.viewY/self.scale});
                     }
                     self.areaSelect.apply(self,[area,grid]);
-                    self.getGridLayer().clear().drawGrid(grid);
+                    self.refreshGridLayer();
                 }
             });
         };
@@ -142,6 +144,16 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             return area;
         };
 
+
+
+
+        /*
+         CanvasEngine: refreshGridLayer()
+         */
+        CanvasEngine.prototype.refreshGridLayer = function(){
+            var self = this;
+            self.getGridLayer().clear().drawGrid(self.getGrid());
+        };
 
         /*
          CanvasEngine : onAreaSelect(function callback)
@@ -214,6 +226,18 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                 self.mouseReader = new MouseReader(self.container);
             }
             return self.mouseReader;
+        };
+        /*
+           KeyReader: getKeyReader() obtém instância
+           de leitor de teclado
+         */
+        CanvasEngine.prototype.getKeyReader = function(){
+            console.log('Canvas Engine get key reader...');
+            var self = this;
+            if(self.keyReader == null){
+                self.keyReader = new KeyReader(self.container);
+            }
+            return self.keyReader;
         };
         /*
          CanvasEngie : resize(int width) Redimensiona a largura da engine

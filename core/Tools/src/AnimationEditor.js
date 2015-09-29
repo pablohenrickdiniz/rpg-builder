@@ -12,7 +12,8 @@ define(
         'Frame',
         'ImageSet',
         'Animation',
-        'Overlap'
+        'Overlap',
+        'KeyReader'
     ],
     function(
         CE,
@@ -27,7 +28,8 @@ define(
         Frame,
         ImageSet,
         Animation,
-        Overlap
+        Overlap,
+        KeyReader
     ){
         var AnimationEditor = {
             animationCanvas:null,
@@ -99,32 +101,34 @@ define(
                     var reader = this;
                     var p = reader.lastDown.left;
                     var layer = self.frameLayers[self.currentFrame];
-                    var layers = layer.objects;
-                    var object = null;
-                    var found = false;
-                    if(self.selectedObject != null){
-                        self.selectedObject.selected = false;
-                        self.selectedObject.parent.refresh();
-                        self.selectedObject = null;
-                    }
+                    if(layer != undefined){
+                        var layers = layer.objects;
+                        var object = null;
+                        var found = false;
+                        if(self.selectedObject != null){
+                            self.selectedObject.selected = false;
+                            self.selectedObject.parent.refresh();
+                            self.selectedObject = null;
+                        }
 
-                    layers.forEach(function(tmp_layer){
-                        tmp_layer.forEach(function(object_tmp){
-                            if(Overlap.rectPoint(object_tmp.getBounds(),p)){
-                                object = object_tmp;
-                                object.selected = true;
-                                object.oldX = object.x;
-                                object.oldY = object.y;
-                                self.selectedObject = object;
-                                found = true;
-                                layer.refresh();
+                        layers.forEach(function(tmp_layer){
+                            tmp_layer.forEach(function(object_tmp){
+                                if(Overlap.rectPoint(object_tmp.getBounds(),p)){
+                                    object = object_tmp;
+                                    object.selected = true;
+                                    object.oldX = object.x;
+                                    object.oldY = object.y;
+                                    self.selectedObject = object;
+                                    found = true;
+                                    layer.refresh();
+                                    return false;
+                                }
+                            });
+                            if(found){
                                 return false;
                             }
                         });
-                        if(found){
-                            return false;
-                        }
-                    });
+                    }
                 });
 
                 self.getAnimationCanvas().getMouseReader().onmousemove(function(){
@@ -144,6 +148,7 @@ define(
                         }
                     }
                 });
+
             },
             /*
              void: changeSpeed(Event e)
@@ -241,10 +246,78 @@ define(
                         draggable:true,
                         scalable:true
                     });
+
+                    var moveCallback = function(ii,ij){
+                        var grid = self.animationImage.getGrid();
+                        var rect = null;
+                        if(grid.checkedSets.length > 0){
+                            rect = grid.checkedSets[0];
+                        }
+                        if(rect != null){
+                            var i = grid.rectSets[rect.i+ii] != undefined? rect.i+ii:0;
+                            var j = grid.rectSets[i][rect.j+ij] != undefined?rect.j+ij:0;
+                            if(grid.rectSets[i][j] != undefined){
+                                var newRect = grid.rectSets[i][j];
+                                grid.checkedSets = [newRect];
+                                grid.apply({
+                                    fillStyle:'transparent',
+                                    state:0
+                                });
+                                newRect.set({
+                                    fillStyle:'rgba(0,0,150,0.5)',
+                                    state:1
+                                });
+                                self.animationImage.refreshGridLayer();
+                                var canvas = self.getAnimationCanvas();
+                                self.croppedImage = new ImageSet({
+                                    url:self.image.src,
+                                    sx:newRect.x,
+                                    sy:newRect.y,
+                                    x:(canvas.getWidth()/2)-(newRect.width/2),
+                                    y:(canvas.getHeight()/2)-(newRect.height/2),
+                                    width:newRect.width,
+                                    height:newRect.height
+                                });
+                            }
+                        }
+                    };
+
+
+                    /*
+                     Muda a área selecionada com as setas do mouse
+                     */
+
+                    var reader = self.animationImage.getKeyReader();
+                    reader.onSequence([KeyReader.Keys.KEY_DOWN],function(){
+                        console.log('keydown!');
+                        moveCallback(1,0);
+                    });
+
+                    reader.onSequence([KeyReader.Keys.KEY_UP],function(){
+                        console.log('keydown!');
+                        moveCallback(-1,0);
+                    });
+
+                    reader.onSequence([KeyReader.Keys.KEY_LEFT],function(){
+                        console.log('keydown!');
+                        moveCallback(0,-1);
+                    });
+
+                    reader.onSequence([KeyReader.Keys.KEY_RIGHT],function(){
+                        console.log('keydown!');
+                        moveCallback(0,1);
+                    });
+
+                    reader.onSequence([KeyReader.Keys.KEY_SPACE],function(){
+                        self.addFrame();
+                    });
+
+
+
                     self.animationImage.onAreaSelect(function(area,grid){
                         var reader = self.animationImage.getMouseReader();
                         var rects = grid.getRectsFromArea(area);
-
+                        grid.checkedSets = rects;
                         if(reader.left){
                             grid.apply({
                                 fillStyle:'transparent'

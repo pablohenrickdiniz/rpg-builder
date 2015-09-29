@@ -19,6 +19,7 @@ define(['PropsParser','RectSet','AbstractGrid','Color'],function(Parser,RectSet,
         var self = this;
         AbstractGrid.apply(self,[options]);
         self.rectSets = [];
+        self.checkedSets = [];
     };
 
     Grid.prototype = new AbstractGrid;
@@ -177,7 +178,9 @@ define(['PropsParser','RectSet','AbstractGrid','Color'],function(Parser,RectSet,
                         width:sw,
                         height:sh,
                         fillStyle:self.fillStyle,
-                        strokeStyle:self.strokeStyle
+                        strokeStyle:self.strokeStyle,
+                        i:i,
+                        j:j
                     });
                 }
             }
@@ -191,7 +194,9 @@ define(['PropsParser','RectSet','AbstractGrid','Color'],function(Parser,RectSet,
                         width:sw,
                         height:sh,
                         fillStyle:self.fillStyle,
-                        strokeStyle:self.strokeStyle
+                        strokeStyle:self.strokeStyle,
+                        i:i,
+                        j:j
                     });
                 }
             }
