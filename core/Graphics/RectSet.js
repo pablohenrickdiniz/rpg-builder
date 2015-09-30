@@ -6,7 +6,7 @@ define(['PropsParser','Color'],function(Parser,Color){
         self.x = 0;
         self.y = 0;
         self.fillStyle = (new Color({alpha:0})).toRGBA();
-        self.strokeStyle = (new Color({alpha:0.5})).toRGBA();
+        self.strokeStyle = (new Color({alpha:1})).toRGBA();
         self.lineWidth = 1;
         self.lineDash = [];
         self.state = 0;

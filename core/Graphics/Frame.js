@@ -12,5 +12,12 @@ define(['PropsParser','IdGenerator'],function(Parser,IdGenerator){
         self.imageSets = Parser.parseArray(options.imageSets,self.imageSets);
     };
 
+    Frame.prototype.toJSON = function(){
+        var self = this;
+        return {
+            imageSets: self.imageSets.map(function(imageSet){return imageSet.toJSON();})
+        }
+    };
+
     return Frame;
 });

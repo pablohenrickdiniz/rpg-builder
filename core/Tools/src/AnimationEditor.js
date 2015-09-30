@@ -105,6 +105,7 @@ define(
                         <div className="btn-group col-md-12">
                             <button className="btn btn-primary" onClick={self.addFrame}>+ Quadro</button>
                             <button className="btn btn-primary" onClick={self.addObject}>+ Objeto</button>
+                            <button className="btn btn-success" onClick={self.export}>+ Export Json</button>
                             <button className="btn btn-danger" onClick={self.removeFrames}>- Remover Quadros</button>
                         </div>
                         <div className="clearfix"></div>
@@ -508,7 +509,7 @@ define(
                     }
                     else{
                         layer.set({
-                            opacity:self.playing?0:0.5
+                            opacity:0
                         });
                     }
                 });
@@ -548,6 +549,9 @@ define(
                     );
                 }
                 return self.frameList;
+            },
+            export:function(){
+                 console.log(AnimationEditor.getAnimation().toJSON());
             }
         };
         return AnimationEditor;

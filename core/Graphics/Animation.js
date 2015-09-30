@@ -92,5 +92,15 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         return this.running;
     };
 
+    Animation.prototype.toJSON = function(){
+        var self = this;
+        return {
+            speed:self.speed,
+            frames:self.frames.map(function(frame){return frame.toJSON()}),
+            width:self.width,
+            height:self.height
+        }
+    };
+
     return Animation;
 });

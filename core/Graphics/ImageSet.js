@@ -94,6 +94,23 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         return self;
     };
 
+
+    ImageSet.prototype.toJSON = function(){
+        var self = this;
+        return {
+            url:self.url,
+            x:self.x,
+            y:self.y,
+            width:self.width,
+            height:self.height,
+            sx:self.sx,
+            sy:self.sy,
+            sWidth:self.sWidth,
+            sHeight:self.sHeight,
+            layer:self.layer
+        }
+    };
+
     /*
         boolean isLoaded()
         Verifica se a imagem de imageSet já foi carregada
