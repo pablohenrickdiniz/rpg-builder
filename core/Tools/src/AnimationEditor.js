@@ -87,17 +87,32 @@ define(
                 );
                 React.render(
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label>Linhas</label>
                             <InputNumber min={1} max={1000} onChange={self.rowsChange} value={1}/>,
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label>Colunas</label>
                             <InputNumber min={1} max={1000} onChange={self.colsChange} value={1}/>,
                         </div>
                     </div>,
                     document.getElementById('size-container')
                 );
+
+
+                var canvasImage = self.getAnimationImage();
+
+                canvasImage.getMouseReader().onmousedown(3,function(e){
+                    if(self.image != null){
+                        var reader = this;
+                        var left = Math.vpv(reader.lastDown.right,{x:Math.abs(canvasImage.viewX),y:Math.abs(canvasImage.viewY)});
+                        var color = self.getAnimationImage().getLayer(0).getPixel(left.x,left.y);
+                        Filter.applyFilter(Filter.removeColor,self.image,[color],function(img){
+                            self.image = img;
+                            self.getAnimationImage().getLayer(0).clear().drawImage(self.image,0,0);
+                        });
+                    }
+                });
 
                 self.getAnimationCanvas().getMouseReader().onmousedown(1,function(){
                     var reader = this;
@@ -377,7 +392,7 @@ define(
                     };
                 });
                 React.render(
-                    <Select options={self.graphics} onChange={self.changeGraphic}/>,
+                    <Select options={self.graphics} onChange={self.changeGraphic} label="Imagens"/>,
                     document.getElementById('images-container')
                 );
             },

@@ -353,6 +353,23 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
     };
 
     /*
+        CanvasLayer: getPixel(int i, int j)
+        get canvas pixel
+     */
+    CanvasLayer.prototype.getPixel = function(i,j){
+        var self = this;
+        var context = self.getContext();
+        var p = context.getImageData(i,j,1,1).data;
+        var color = new Color({
+            red:p[0],
+            green:p[1],
+            blue:p[2],
+            alpha:p[3]
+        });
+        return color;
+    };
+
+    /*
         CanvasLayer: updateElement()
         update layer position and scale
      */
