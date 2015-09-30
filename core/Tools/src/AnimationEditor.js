@@ -99,7 +99,18 @@ define(
                     document.getElementById('size-container')
                 );
 
-
+                React.render(
+                    <div className="form-group">
+                        <br/>
+                        <div className="btn-group col-md-12">
+                            <button className="btn btn-primary" onClick={self.addFrame}>+ Quadro</button>
+                            <button className="btn btn-primary" onClick={self.addObject}>+ Objeto</button>
+                            <button className="btn btn-danger" onClick={self.removeFrames}>- Remover Quadros</button>
+                        </div>
+                        <div className="clearfix"></div>
+                    </div>,
+                    document.getElementById('actions-container')
+                );
                 var canvasImage = self.getAnimationImage();
 
                 canvasImage.getMouseReader().onmousedown(3,function(e){
@@ -468,6 +479,20 @@ define(
                     self.frameSelect(Math.max(Math.min(index,self.frameLayers.length-1),0));
                 }
             },
+            removeFrames:function(){
+                var confirm = window.confirm('Tem certeza que deseja remover todos os quadros?');
+                if(confirm){
+                    var self = AnimationEditor;
+                    self.frameLayers = [];
+                    self.getAnimation().frames = [];
+                    self.getAnimationCanvas().removeAllLayers();
+                    self.frameSelect(-1);
+                    self.getFrameList().setState({
+                        items:[],
+                        selected:0
+                    });
+                }
+            },
             /*
              void: frameSelect(int index)
              seleciona o mostra o frame
@@ -516,20 +541,9 @@ define(
                     var getList = function(list){
                         self.frameList = list;
                     };
-                    var titulo = (
-                        <div>
-                            <div className="btn-group col-md-12">
-                                <button className="btn btn-default" onClick={self.addFrame}>+ Frame</button>
-                                <button className="btn btn-default" onClick={self.addObject}>+ Object</button>
-                            </div>
-                            <span>Frames</span>
-                            <div className="clearfix"></div>
-                        </div>
-                    );
-
 
                     React.render(
-                        <SequenceList callback={getList} onItemSelect={self.frameSelect} onItemRemove={self.removeFrame}title={titulo}/>,
+                        <SequenceList callback={getList} onItemSelect={self.frameSelect} onItemRemove={self.removeFrame}title="Frames"/>,
                         document.getElementById('list-container')
                     );
                 }

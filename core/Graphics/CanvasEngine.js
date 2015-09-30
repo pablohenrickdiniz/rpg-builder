@@ -20,7 +20,6 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             self.scale = 1;
             self.gridLayer = null;
             self.animationLayer = null;
-            self.maxZindex = 0;
             self.areaSelect = null;
             self.set(options);
             self.initialize();
@@ -442,6 +441,18 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                     });
                 }
             }
+            return self;
+        };
+
+        /*
+            Canvasengine: removeAllLayers()
+            Remove todas as camadas de canvas
+         */
+        CanvasEngine.prototype.removeAllLayers = function(){
+            console.log('Canvas Engine remove all layers...');
+            var self = this;
+            self.layers = [];
+            $(self.container).empty();
             return self;
         };
 
