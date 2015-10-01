@@ -80,12 +80,30 @@ define(['PropsParser','FrameSync','CanvasLayer'],function(Parser,FrameSync,Canva
         self.running = false;
         clearInterval(self.frameInterval);
         window.cancelAnimationFrame(self.frameSync);
+        return self;
+    };
+
+    Animation.prototype.addFrame = function(frame){
+        var self = this;
+        frame.parent = self;
+        self.frames.push(frame);
+        return self;
+    };
+
+    Animation.prototype.removeFrame = function(frame){
+        var self = this;
+        var index = self.frames.indexOf(frame);
+        if(index != -1){
+            self.frames.splice(index,1);
+        }
+        return self;
     };
 
     Animation.prototype.stop = function(){
         var self = this;
         self.pause();
         self.indexFrame = -1;
+        return self;
     };
 
     Animation.prototype.isRunning = function() {

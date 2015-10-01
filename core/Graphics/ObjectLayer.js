@@ -16,6 +16,34 @@ define(['CanvasLayer'],function(CanvasLayer){
         return self;
     };
 
+    ObjectLayer.prototype.moveUp = function(object){
+        var self = this;
+        var index = self.objects.indexOf(object);
+        if(index != -1 && index < self.objects.length-1){
+            var objectB =self.objects[index+1];
+            objectB.layer = index;
+            object.layer = index+1;
+            self.objects[index] = objectB;
+            self.objects[index+1] = object;
+            self.refresh();
+        }
+        return self;
+    };
+
+    ObjectLayer.prototype.moveDown = function(object){
+        var self = this;
+        var index = self.objects.indexOf(object);
+        if(index != -1 && index > 0){
+            var objectB = self.objects[index-1];
+            objectB.layer = index;
+            object.layer = index-1;
+            self.objects[index] = objectB;
+            self.objects[index-1] = object;
+            self.refresh();
+        }
+        return self;
+    };
+
     ObjectLayer.prototype.remove = function(object){
         var self = this;
         var index = self.objects.indexOf(object);
@@ -29,6 +57,14 @@ define(['CanvasLayer'],function(CanvasLayer){
             self.refresh();
         }
         return self;
+    };
+
+    ObjectLayer.prototype.unselectObjects = function(){
+        var self = this;
+        self.objects.forEach(function(object){
+            object.selected = false;
+        });
+        self.refresh();
     };
 
     ObjectLayer.prototype.refresh = function(){

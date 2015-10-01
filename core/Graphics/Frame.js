@@ -4,6 +4,7 @@ define(['PropsParser','IdGenerator'],function(Parser,IdGenerator){
         options = options == undefined?{}:options;
         self.imageSets = [];
         self.soundEffect = null;
+        self.parent = null;
         self.set(options);
     };
 

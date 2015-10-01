@@ -151,7 +151,7 @@ define(['Jquery-Conflict'],function($){
         KEY_PF6 : 117,
         KEY_PF7 : 118,
         KEY_PF8 : 119,
-        KEY_ALT : 17,
+        KEY_CTRL : 17,
         KEY_ALT_GR : 18,
         KEY_SBL : 221,
         KEY_SBR : 220

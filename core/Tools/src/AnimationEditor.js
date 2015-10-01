@@ -127,8 +127,20 @@ define(
                     }
                 });
 
+                var animationCanvas = self.getAnimationCanvas();
+                var animationMouseReader = animationCanvas.getMouseReader();
+                var animationKeyReader = animationCanvas.getKeyReader();
 
-                self.getAnimationCanvas().getKeyReader().onSequence([KeyReader.Keys.KEY_DEL],function(){
+
+                animationCanvas.updateGrid({
+                    width:animationCanvas.getWidth(),
+                    height:animationCanvas.getHeight(),
+                    sw:32,
+                    sh:32,
+                    opacity:0.1
+                });
+
+                animationKeyReader.onSequence([KeyReader.Keys.KEY_DEL],function(){
                     console.log('delete...');
                     if(self.selectedObject != null && self.selectedObject.parent != null){
                         var object = self.selectedObject;
@@ -145,7 +157,26 @@ define(
                     }
                 });
 
-                self.getAnimationCanvas().getMouseReader().onmousedown(1,function(){
+                animationKeyReader.onSequence([KeyReader.Keys.KEY_CTRL,KeyReader.Keys.KEY_UP],function(){
+                    var object = self.selectedObject;
+                    if(object != null){
+                        if(object.parent != null){
+                            object.parent.moveUp(object);
+                        }
+                    }
+                });
+
+                animationKeyReader.onSequence([KeyReader.Keys.KEY_CTRL,KeyReader.Keys.KEY_DOWN],function(){
+                    var object = self.selectedObject;
+                    if(object != null){
+                        if(object.parent != null){
+                            object.parent.moveDown(object);
+                        }
+                    }
+                });
+
+
+                animationMouseReader.onmousedown(1,function(){
                     var reader = this;
                     var p = reader.lastDown.left;
                     var layer = self.frameLayers[self.currentFrame];
@@ -177,7 +208,7 @@ define(
                     }
                 });
 
-                self.getAnimationCanvas().getMouseReader().onmousemove(function(){
+                animationMouseReader.onmousemove(function(){
                     var reader = this;
                     var object =  self.selectedObject;
                     if(reader.left && object != null){
@@ -194,14 +225,13 @@ define(
                         }
                     }
                 });
-
             },
             /*
              void: changeSpeed(Event e)
              Muda a velocidade animação
              */
             changeSpeed:function(e){
-                var val = e.target.value;
+                var val = parseInt(e.target.value);
                 AnimationEditor.getAnimation().setSpeed(val);
             },
             /*
@@ -210,6 +240,10 @@ define(
              */
             playAnimation:function(){
                 console.log('Playing animation...');
+                var self = AnimationEditor;
+                self.frameLayers.forEach(function(layer){
+                    layer.unselectObjects();
+                });
                 AnimationEditor.playing = true;
                 AnimationEditor.getAnimation().execute();
             },
@@ -462,7 +496,7 @@ define(
                 });
 
                 var frame = new Frame();
-                self.getAnimation().frames.push(frame);
+                self.getAnimation().addFrame(frame);
                 self.frameLayers.push(layer);
                 self.getFrameList().addItem('# Frame');
                 self.getFrameList().itemSelect(index);
@@ -502,9 +536,9 @@ define(
                 var confirm = window.confirm('Tem certeza que deseja remover todos os quadros?');
                 if(confirm){
                     var self = AnimationEditor;
+                    self.getAnimationCanvas().removeLayers(self.frameLayers);
                     self.frameLayers = [];
                     self.getAnimation().frames = [];
-                    self.getAnimationCanvas().removeAllLayers();
                     self.frameSelect(-1);
                     self.getFrameList().setState({
                         items:[],
@@ -539,9 +573,12 @@ define(
              */
             getAnimation:function(){
                 var self = this;
+                var engine = self.getAnimationCanvas();
                 if(self.animation == null){
                     self.animation = new Animation({
-                        speed:7
+                        speed:7,
+                        width:engine.getWidth(),
+                        height:engine.getHeight()
                     });
                     self.animation.onStep(function(step){
                         self.getFrameList().itemSelect(step);

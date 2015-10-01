@@ -424,6 +424,15 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             }
             return null;
         };
+
+
+        CanvasEngine.prototype.removeLayers = function(layers){
+            var self = this;
+            layers.forEach(function(layer){
+                self.removeLayer(layer.zIndex);
+            });
+        };
+
         /*
          CanvasEngine: removeLayer(int zIndex)
          Remove uma camada de canvas pelo zIndex
@@ -444,24 +453,11 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             return self;
         };
 
-        /*
-            Canvasengine: removeAllLayers()
-            Remove todas as camadas de canvas
-         */
-        CanvasEngine.prototype.removeAllLayers = function(){
-            console.log('Canvas Engine remove all layers...');
-            var self = this;
-            self.layers = [];
-            $(self.container).empty();
-            return self;
-        };
 
         /*
          CanvasEngine: renderMap(Map map)
          Renderiza o mapa nas camadas de canvas
          */
-
-
 
         CanvasEngine.prototype.renderMap = function(map){
             console.log('Canvas Engine render map...');
