@@ -10,6 +10,7 @@ define(['PropsParser','IdGenerator'],function(Parser,IdGenerator){
     Frame.prototype.set = function(options){
         var self = this;
         self.imageSets = Parser.parseArray(options.imageSets,self.imageSets);
+        return self;
     };
 
     Frame.prototype.toJSON = function(){
@@ -17,6 +18,15 @@ define(['PropsParser','IdGenerator'],function(Parser,IdGenerator){
         return {
             imageSets: self.imageSets.map(function(imageSet){return imageSet.toJSON();})
         }
+    };
+
+    Frame.prototype.removeImageSet = function(imageSet){
+        var self = this;
+        var index = self.imageSets.indexOf(imageSet);
+        if(index != -1){
+            self.imageSets.splice(index,1);
+        }
+        return self;
     };
 
     return Frame;

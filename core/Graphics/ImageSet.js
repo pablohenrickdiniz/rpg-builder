@@ -37,6 +37,12 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         self.set(options);
     };
 
+
+    ImageSet.prototype.clone = function(){
+        return new ImageSet(this.toJSON());
+    };
+
+
     /*
         Object : getBounds()
         obtém o AABB

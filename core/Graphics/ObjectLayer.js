@@ -9,12 +9,9 @@ define(['CanvasLayer'],function(CanvasLayer){
 
     ObjectLayer.prototype.add = function(object){
         var self = this;
-        var layer = object.layer;
-        if(self.objects[layer] == undefined){
-            self.objects[layer] = [];
-        }
         object.parent = self;
-        self.objects[layer].push(object);
+        object.layer = self.objects.length;
+        self.objects.push(object);
         self.refresh();
         return self;
     };
@@ -24,18 +21,20 @@ define(['CanvasLayer'],function(CanvasLayer){
         var index = self.objects.indexOf(object);
         if(index != -1){
             self.objects.splice(index,1);
+            var size = self.objects.length;
+            for(var i = index; i < size;i++){
+                self.objects[index].layer = index;
+            }
             object.parent = null;
+            self.refresh();
         }
         return self;
     };
 
     ObjectLayer.prototype.refresh = function(){
         var self = this;
-        self.clear();
-        self.objects.forEach(function(layer){
-            layer.forEach(function(imageSet){
-                self.drawImageSet(imageSet);
-            });
+        self.clear().objects.forEach(function(object){
+            self.drawImageSet(object);
         });
     };
     return ObjectLayer;

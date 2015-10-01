@@ -105,6 +105,7 @@ define(
                         <div className="btn-group col-md-12">
                             <button className="btn btn-primary" onClick={self.addFrame}>+ Quadro</button>
                             <button className="btn btn-primary" onClick={self.addObject}>+ Objeto</button>
+                            <button className="btn btn-primary" onClick={self.showFrames}>+ Mostrar Quadros</button>
                             <button className="btn btn-success" onClick={self.export}>+ Export Json</button>
                             <button className="btn btn-danger" onClick={self.removeFrames}>- Remover Quadros</button>
                         </div>
@@ -126,6 +127,24 @@ define(
                     }
                 });
 
+
+                self.getAnimationCanvas().getKeyReader().onSequence([KeyReader.Keys.KEY_DEL],function(){
+                    console.log('delete...');
+                    if(self.selectedObject != null && self.selectedObject.parent != null){
+                        var object = self.selectedObject;
+                        var parent = object.parent;
+                        parent.remove(self.selectedObject);
+                        self.selectedObject = null;
+                        self.getAnimation().frames.forEach(function(frame){
+                            var index = frame.imageSets.indexOf(object);
+                            if(index != -1){
+                                frame.removeImageSet(object);
+                                return false;
+                            }
+                        });
+                    }
+                });
+
                 self.getAnimationCanvas().getMouseReader().onmousedown(1,function(){
                     var reader = this;
                     var p = reader.lastDown.left;
@@ -140,19 +159,17 @@ define(
                             self.selectedObject = null;
                         }
 
-                        layers.forEach(function(tmp_layer){
-                            tmp_layer.forEach(function(object_tmp){
-                                if(Overlap.rectPoint(object_tmp.getBounds(),p)){
-                                    object = object_tmp;
-                                    object.selected = true;
-                                    object.oldX = object.x;
-                                    object.oldY = object.y;
-                                    self.selectedObject = object;
-                                    found = true;
-                                    layer.refresh();
-                                    return false;
-                                }
-                            });
+                        layers.forEach(function(object_tmp){
+                            if(Overlap.rectPoint(object_tmp.getBounds(),p)){
+                                object = object_tmp;
+                                object.selected = true;
+                                object.oldX = object.x;
+                                object.oldY = object.y;
+                                self.selectedObject = object;
+                                found = true;
+                                layer.refresh();
+                                return false;
+                            }
                             if(found){
                                 return false;
                             }
@@ -462,8 +479,9 @@ define(
                     var layer = self.getAnimationCanvas().getLayer(self.currentFrame);
                     if(layer != null){
                         var frame = self.getAnimation().frames[self.currentFrame];
-                        layer.add(self.croppedImage);
-                        frame.imageSets.push(self.croppedImage);
+                        var cropped = self.croppedImage.clone();
+                        layer.add(cropped);
+                        frame.imageSets.push(cropped);
                     }
                 }
             },
@@ -551,7 +569,14 @@ define(
                 return self.frameList;
             },
             export:function(){
-                 console.log(AnimationEditor.getAnimation().toJSON());
+                console.log(AnimationEditor.getAnimation().toJSON());
+            },
+            showFrames:function(){
+                AnimationEditor.frameLayers.forEach(function(layer){
+                    layer.set({
+                        opacity:0.5
+                    });
+                });
             }
         };
         return AnimationEditor;
