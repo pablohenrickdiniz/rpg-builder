@@ -113,8 +113,7 @@ define(
                     </div>,
                     document.getElementById('actions-container')
                 );
-                var canvasImage = self.getAnimationImage();
-
+                /*
                 canvasImage.getMouseReader().onmousedown(3,function(e){
                     if(self.image != null){
                         var reader = this;
@@ -125,8 +124,9 @@ define(
                             self.getAnimationImage().getLayer(0).clear().drawImage(self.image,0,0);
                         });
                     }
-                });
+                });*/
 
+                var canvasImage = self.getAnimationImage();
                 var animationCanvas = self.getAnimationCanvas();
                 var animationMouseReader = animationCanvas.getMouseReader();
                 var animationKeyReader = animationCanvas.getKeyReader();
@@ -213,14 +213,39 @@ define(
                     var reader = this;
                     var object =  self.selectedObject;
                     if(reader.left && object != null){
-
                         var p = reader.lastDown.left;
                         var move = reader.lastMove;
                         var dif = Math.vmv(move,p);
-                        object.set({
+
+                        var pos = {
                             x:dif.x+object.oldX,
                             y:dif.y+object.oldY
-                        });
+                        };
+
+                        var width = animationCanvas.getGrid().width;
+                        var height = animationCanvas.getGrid().height;
+
+                        var gnx_1 = Math.floor(pos.x/32)*32;
+                        var gny_1 = Math.floor(pos.y/32)*32;
+                        var gnx_2 = gnx_1+32;
+                        var gny_2 = gny_1+32;
+
+
+                        if((pos.x - gnx_1) <= 10){
+                            pos.x = gnx_1;
+                        }
+                        else if((gnx_2 - (pos.x+object.width)) <= 10){
+                            pos.x = gnx_2;
+                        }
+
+                        if((pos.y - gny_1) <= 10){
+                            pos.y = gny_1;
+                        }
+                        else if((gny_2 - (pos.y+object.height)) <= 10){
+                            pos.y = gny_2;
+                        }
+
+                        object.set(pos);
                         if(object.parent != null){
                             object.parent.refresh();
                         }
@@ -479,8 +504,8 @@ define(
                     AnimationEditor.getAnimationImage().updateGrid({
                         width:img.width,
                         height:img.height,
-                        sw:img.width/AnimationEditor.cols,
-                        sh:img.height/AnimationEditor.rows
+                        sw:img.width,
+                        sh:img.height
                     });
                 });
             },
