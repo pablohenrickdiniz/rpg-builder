@@ -175,13 +175,12 @@ define(
                     }
                 });
 
-
                 animationMouseReader.onmousedown(1,function(){
                     var reader = this;
                     var p = reader.lastDown.left;
                     var layer = self.frameLayers[self.currentFrame];
                     if(layer != undefined){
-                        var layers = layer.objects;
+                        var objects = layer.objects;
                         var object = null;
                         var found = false;
                         if(self.selectedObject != null){
@@ -190,8 +189,10 @@ define(
                             self.selectedObject = null;
                         }
 
-                        layers.forEach(function(object_tmp){
-                            if(Overlap.rectPoint(object_tmp.getBounds(),p)){
+                        objects.forEach(function(object_tmp){
+                            var x = p.x -object_tmp.x;
+                            var y = p.y - object_tmp.y;
+                            if(!object_tmp.isTransparent(x,y)){
                                 object = object_tmp;
                                 object.selected = true;
                                 object.oldX = object.x;
@@ -353,10 +354,12 @@ define(
                                     url:self.image.src,
                                     sx:newRect.x,
                                     sy:newRect.y,
-                                    x:(canvas.getWidth()/2)-(newRect.width/2),
-                                    y:(canvas.getHeight()/2)-(newRect.height/2),
                                     width:newRect.width,
                                     height:newRect.height
+                                });
+                                self.croppedImage.set({
+                                    x:(canvas.getWidth()/2)-(newRect.width/2),
+                                    y:(canvas.getHeight()/2)-(newRect.height/2)
                                 });
                             }
                         }
@@ -431,10 +434,12 @@ define(
                                 url:self.image.src,
                                 sx:rect.x,
                                 sy:rect.y,
-                                x:(canvas.getWidth()/2)-(rect.width/2),
-                                y:(canvas.getHeight()/2)-(rect.height/2),
                                 width:rect.width,
                                 height:rect.height
+                            });
+                            self.croppedImage.set({
+                                x:(canvas.getWidth()/2)-(rect.width/2),
+                                y:(canvas.getHeight()/2)-(rect.height/2)
                             });
                         }
                     });

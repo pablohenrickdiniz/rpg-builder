@@ -16,11 +16,11 @@ define(['Color'],function(Color) {
                 self.canvas.height = h;
             }
             else{
-                if(self.canvas.width != w){
+                if(w != undefined && self.canvas.width != w){
                     self.canvas.width = w;
                 }
 
-                if(self.canvas.height != h){
+                if(h != undefined && self.canvas.height != h){
                     self.canvas.height = h;
                 }
             }
@@ -81,6 +81,49 @@ define(['Color'],function(Color) {
                 }
             }
             return imageData;
+        },
+        trim:function(imageData){
+            var self = this;
+            var data = imageData.data;
+            var size =data.length;
+            var top = null;
+            var left = null;
+            var right = null;
+            var bottom = null;
+            var x = 0;
+            var y = 0;
+
+            for (var i = 0; i < size; i += 4) {
+                if (data[i+3] !== 0) {
+                    x = (i / 4) % imageData.width;
+                    y = ~~((i / 4) / imageData.width);
+
+                    if (top === null) {
+                        top = y;
+                    }
+
+                    if (left === null) {
+                        left = x;
+                    } else if (x < left) {
+                        left = x;
+                    }
+
+                    if (right === null) {
+                        right = x;
+                    } else if (right < x) {
+                        right = x;
+                    }
+
+                    if (bottom === null) {
+                        bottom = y;
+                    } else if (bottom < y) {
+                        bottom = y;
+                    }
+                }
+            }
+            var height = bottom - top;
+            var width  = right - left;
+            return {x:left,y:top,width:width,height:height};
         },
         convolute : function(pixels, weights, opaque) {
             var side = Math.round(Math.sqrt(weights.length));

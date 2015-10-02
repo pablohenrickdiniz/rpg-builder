@@ -14,7 +14,7 @@
         sHeight:32 //altura da área de corte
     });
  */
-define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
+define(['PropsParser','ImageLoader','Filter'],function(Parser,ImageLoader,Filter){
     var ImageSet = function(options){
         var self = this;
         self.loads = [];
@@ -100,7 +100,11 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
         return self;
     };
 
-
+    /*
+       Object: toJSON()
+       Exporta para o formato JSON para
+       ser usado por outras aplicações
+     */
     ImageSet.prototype.toJSON = function(){
         var self = this;
         return {
@@ -124,6 +128,46 @@ define(['PropsParser','ImageLoader'],function(Parser,ImageLoader){
     ImageSet.prototype.isLoaded = function(){
         return this.loaded;
     };
+
+    ImageSet.prototype.isTransparent = function(x,y){
+        var self = this;
+        if(self.image != null && x < self.width && y < self.height && x >= 0 && y >= 0){
+            var canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(self.image,self.sx+x,self.sy+y,1,1,0,0,1,1);
+            var p = ctx.getImageData(0,0,1,1).data;
+            return p[3] == undefined || p[3] == 0;
+        }
+
+        return true;
+    };
+
+
+    /*
+        ImageSet: trim()
+        corta a imagem de acordo com os pixels transparentes
+
+    ImageSet.prototype.trim = function(){
+        var self = this;
+        if(self.image != null){
+            var canvas = document.createElement('canvas');
+            canvas.width = self.width;
+            canvas.height = self.height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(self.image,self.sx,self.sy,self.sWidth,self.sHeight,self.x,self.y,self.width,self.height);
+            var imageData = ctx.getImageData(0,0,self.width,self.height);
+            var bounds = Filter.trim(imageData);
+            self.sx += bounds.x;
+            self.sy += bounds.y;
+            self.width = bounds.width;
+            self.height = bounds.height;
+            self.sWidth = bounds.width;
+            self.sHeight = bounds.sHeight;
+        }
+        return self;
+    }; */
 
     return ImageSet;
 });

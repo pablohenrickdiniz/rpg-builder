@@ -443,8 +443,7 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
             if(self.layers[index] != undefined){
                 self.layers[index].destroy();
                 self.layers.splice(index,1);
-                var size = self.layers.length;
-                for(var i = index;i < size;i++){
+                for(var i = index;i < self.layers.length;i++){
                     self.layers[index].set({
                         zIndex:index
                     });
