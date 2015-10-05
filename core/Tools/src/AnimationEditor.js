@@ -53,12 +53,33 @@ define(
             cols:1,
             maxLayer:0,
             selectedObject:null,
+            reset:function(){
+                var self = this;
+                self.animationCanvas = null;
+                self.animationImage = null;
+                self.accordion = null;
+                self.frameList = null;
+                self.graphicLayer = null;
+                self.graphicGrid = null;
+                self.frameLayers = [];
+                self.currentFrame=0;
+                self.graphics=[];
+                self.image=null;
+                self.croppedImage=null;
+                self.animation=null;
+                self.playing=false;
+                self.rows=1;
+                self.cols=1;
+                self.maxLayer=0;
+                self.selectedObject=null;
+            },
             /*
              void:initialize()
              inicializa o editor de animação
              */
             initialize:function(){
                 var self = this;
+                self.reset();
                 self.getAnimationCanvas();
                 var canvasImage = self.getAnimationImage();
                 self.getFrameList();
@@ -88,11 +109,11 @@ define(
                     <div className="row">
                         <div className="col-sm-6">
                             <label>Linhas</label>
-                            <InputNumberVertical min={1} max={1000} onChange={self.rowsChange} value={1}/>,
+                            <InputNumberVertical min={1} max={1000} onChange={self.rowsChange} value={1}/>
                         </div>
                         <div className="col-sm-6">
                             <label>Colunas</label>
-                            <InputNumberVertical min={1} max={1000} onChange={self.colsChange} value={1}/>,
+                            <InputNumberVertical min={1} max={1000} onChange={self.colsChange} value={1}/>
                         </div>
                     </div>,
                     document.getElementById('size-container')
@@ -102,7 +123,6 @@ define(
                     <div className="form-group">
                         <br/>
                         <div className="btn-group col-md-12">
-                            <button className="btn btn-primary" onClick={self.addFrame}>+ Quadro</button>
                             <button className="btn btn-primary" onClick={self.addObject}>+ Objeto</button>
                             <button className="btn btn-primary" onClick={self.showFrames}>+ Mostrar Quadros</button>
                             <button className="btn btn-success" onClick={self.export}>+ Export Json</button>
@@ -656,8 +676,9 @@ define(
                         onItemSelect:self.frameSelect,
                         onItemRemove:self.removeFrame,
                         title:"Frames",
-                        onChangePosition:self.changeFramePosition
-                    }
+                        onChangePosition:self.changeFramePosition,
+                        addon:<button className="btn btn-default pull-right" onClick={self.addFrame}><span className="fa fa-plus"></span></button>
+                    };
 
 
                     React.render(

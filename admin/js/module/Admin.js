@@ -1,16 +1,21 @@
 (function(){
-    var app = angular.module('rpgAdmin',['ngRoute']);
+    var app = angular.module('rpgAdmin',['ngRoute','ngAnimate']);
 
     app.config(['$routeProvider',function($routeProvider){
         $routeProvider.when('/panel',{
             templateUrl:'templates/Panel/index.html',
-            controller:'PanelController'
+            controller:'PanelController',
+            controllerAs:'Panel'
         }).when('/',{
             redirectTo:'/panel'
         }).when('/map-editor',{
-            templateUrl:'templates/Pages/map-editor.html'
+            templateUrl:'templates/Pages/map-editor.html',
+            controller:'MapEditorController',
+            controllerAs:'MapEditorCtrl'
         }).when('/animation-editor',{
-            templateUrl:'templates/Pages/animation-editor.html'
+            templateUrl:'templates/Pages/animation-editor.html',
+            controller:'AnimationEditorController',
+            controllerAs:'AnimEditorCtrl'
         }).otherwise({
             redirectTo:'/'
         });
@@ -26,6 +31,10 @@
             }
 
             return path == url;
+        };
+
+        $rootScope.page = {
+            title :'Bem Vindo Ao Painel Administrativo do Rpg Builder!'
         };
     });
 
@@ -43,19 +52,31 @@
         }
     });
 
-    app.controller('PanelController',[function(){
-
+    app.controller('PanelController',['$rootScope',function($scope){
+        var self = this;
+        self.init = function(){
+            $scope.page.title = 'Bem Vindo Ao Painel Administrativo do Rpg Builder!'
+        };
     }]);
 
     app.controller('MapEditorController',['$location','$rootScope',function($location,$scope){
         this.init = function(){
-           require(['MapEditor'],function(MapEditor){
+            require(['MapEditor'],function(MapEditor){
                 MapEditor.initialize();
-           });
+            });
+            $scope.page.title = 'Editor de Mapas';
         };
     }]);
 
 
-
+    app.controller('AnimationEditorController',['$rootScope',function($scope){
+        var self = this;
+        self.init = function(){
+            require(['AnimationEditor'],function(AnimationEditor){
+                AnimationEditor.initialize();
+            });
+            $scope.page.title = 'Editor de Animações';
+        };
+    }]);
 })();
 

@@ -1,5 +1,5 @@
-define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math','AbstractGrid','ImageSet'],
-    function(CE,Grid,Map,$,ImageLoader,InputNumber,React,Math,AbstractGrid,ImageSet){
+define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumberVertical','React','Math','AbstractGrid','ImageSet'],
+    function(CE,Grid,Map,$,ImageLoader,InputNumberVertical,React,Math,AbstractGrid,ImageSet){
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -92,11 +92,11 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     <div className="row">
                         <div className="col-md-6">
                             <label>Largura(px)</label>
-                            <InputNumber min={32} value={32} max={1000} onChange={self.widthGridChange}/>
+                            <InputNumberVertical min={32} value={32} max={1000} onChange={self.widthGridChange}/>
                         </div>
                         <div className="col-md-6">
                             <label>Altura(px)</label>
-                            <InputNumber min={32} value={32} max={1000} onChange={self.heightGridChange}/>
+                            <InputNumberVertical min={32} value={32} max={1000} onChange={self.heightGridChange}/>
                         </div>
                     </div>,
                     document.getElementById('input-container')
@@ -107,11 +107,11 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                         <div className="col-md-6">
                             <div className="col-md-6">
                                 <label>Largura(steps)</label>
-                                <InputNumber min={5} value={5} max={1000} onChange={self.widthMapChange}/>
+                                <InputNumberVertical min={5} value={5} max={1000} onChange={self.widthMapChange}/>
                             </div>
                             <div className="col-md-6">
                                 <label>Altura(steps)</label>
-                                <InputNumber min={5} value={5} max={1000} onChange={self.heightMapChange}/>
+                                <InputNumberVertical min={5} value={5} max={1000} onChange={self.heightMapChange}/>
                             </div>
                         </div>
                         <div className="col-md-6">

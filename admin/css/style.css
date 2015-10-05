@@ -1,0 +1,9 @@
+.effect.ng-enter {
+    transition:0.8s linear all;
+    opacity:0;
+}
+
+/* The finishing CSS styles for the enter animation */
+.effect.ng-enter.ng-enter-active {
+    opacity:1;
+}

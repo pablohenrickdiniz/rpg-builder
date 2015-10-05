@@ -14,10 +14,13 @@
     <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/datepicker/datepicker3.css"/>
     <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css"/>
     <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css"/>
+    <link rel="stylesheet" href="../bower_components/ReactElements/src/css/player.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
     <script type="text/javascript" src="../bower_components/requirejs/require.js"></script>
     <script type="text/javascript" src="paths.js"></script>
     <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="../bower_components/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.min.js"></script>
     <script type="text/javascript" src="js/module/Admin.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -26,9 +29,9 @@
     <admin-sidebar></admin-sidebar>
     <div class="content-wrapper">
         <div class="content-header">
-            <h1>Bem Vindo ao RpgBuilder!</h1>
+            <h1>{{page.title}}</h1>
         </div>
-        <div class="content-body" ng-view>
+        <div class="content-body effect" ng-view>
 
         </div>
     </div>

@@ -5,6 +5,7 @@ requirejs.config({
         "jquery":"../bower_components/jquery/dist/jquery.min",
         "Jquery-Conflict":'src/jquery-conflict',
         "MapEditor":'../core/Tools/build/MapEditor',
+        "AnimationEditor":'../core/Tools/build/AnimationEditor',
         "CE":'../core/Graphics/CanvasEngine',
         "Map":'../core/Graphics/Map',
         "Grid":'../core/Graphics/Grid',
@@ -23,7 +24,20 @@ requirejs.config({
         "Overlap":'../bower_components/MathLib/src/Overlap',
         "Color":'../core/Graphics/Color',
         "ObjectLayer":"../core/Graphics/ObjectLayer",
-        "Filter":"../core/Graphics/Filter"
+        "Filter":"../core/Graphics/Filter",
+        "Animation":"../core/Graphics/Animation",
+        "Frame":"../core/Graphics/Frame",
+        "FrameSync":'../core/Graphics/FrameSync',
+        "InputNumberVertical":"../bower_components/ReactElements/build/InputNumberVertical",
+        "MapLoader":"../core/Resources/MapLoader",
+        "MaterialsLoader":"../core/Resources/MaterialsLoader",
+        "AccordionItem":"../bower_components/ReactElements/build/AccordionItem",
+        "Accordion":"../bower_components/ReactElements/build/Accordion",
+        "IdGenerator":"../bower_components/ReactElements/build/custom/IdGenerator",
+        "InputImage":"../bower_components/ReactElements/build/InputImage",
+        "InputControls":"../bower_components/ReactElements/build/InputControls",
+        "SequenceList":"../bower_components/ReactElements/build/SequenceList",
+        "Select":"../bower_components/ReactElements/build/Select",
     },
     "shim":{
         "Jquery-conflict":{
@@ -73,6 +87,39 @@ requirejs.config({
         },
         "Filter":{
             deps:["Color"]
+        },
+        "Animation":{
+            deps:['PropsParser','FrameSync','CanvasLayer']
+        },
+        "Frame":{
+            deps:['PropsParser','IdGenerator']
+        },
+        "InputNumberVertical":{
+            deps:['React','InputNumberMixin']
+        },
+        "MapLoader":{
+            deps:['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader']
+        },
+        "MaterialsLoader":{
+            deps:['Jquery-Conflict']
+        },
+        "AccordionItem":{
+            deps:['React','IdGenerator']
+        },
+        "Accordion":{
+            deps:['React','IdGenerator','AccordionItem']
+        },
+        "InputImage":{
+            deps:["React"]
+        },
+        "InputControls":{
+            deps:["React"]
+        },
+        "SequenceList":{
+            deps:["React"]
+        },
+        "Select":{
+            deps:["React"]
         }
     }
 });
