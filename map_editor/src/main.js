@@ -1,5 +1,5 @@
 require(['paths'],function(){
-    require(['bootstrap','MapEditor','Jquery-Conflict'],function(boot,MapEditor,$){
+    require(['bootstrap','MapEditor','jquery-conflict'],function(boot,MapEditor,$){
         $(document).ready(function(){
             MapEditor.initialize();
         });

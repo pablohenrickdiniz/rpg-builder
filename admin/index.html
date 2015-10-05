@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-br" ng-app="rpgAdmin">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/dist/css/AdminLTE.min.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/dist/css/skins/_all-skins.min.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/iCheck/flat/blue.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/morris/morris.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/jvectormap/jquery-jvectormap-1.2.2.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/datepicker/datepicker3.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/daterangepicker/daterangepicker-bs3.css"/>
+    <link rel="stylesheet" href="../bower_components/AdminLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css"/>
+    <script type="text/javascript" src="../bower_components/requirejs/require.js"></script>
+    <script type="text/javascript" src="paths.js"></script>
+    <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="js/module/Admin.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <admin-header></admin-header>
+    <admin-sidebar></admin-sidebar>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <h1>Bem Vindo ao RpgBuilder!</h1>
+        </div>
+        <div class="content-body" ng-view>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<div class="container" ng-controller="MapEditorController as editor" ng-init="editor.init()">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row">
+                <div class="col-md-12">
+                    <select name="" id="layer" class="form-control">
+                        <option value="0">Camada 1</option>
+                        <option value="1">Camada 2</option>
+                        <option value="2">Camada 3</option>
+                        <option value="3">Camada 4</option>
+                        <option value="4">Camada 5</option>
+                        <option value="5">Camada 6</option>
+                        <option value="6">Camada 7</option>
+                        <option value="7">Camada 8</option>
+                        <option value="8">Camada 9</option>
+                        <option value="9">Camada 10</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div id="canvas-container">
+
+                </div>
+            </div>
+            <div class="row" id="canvas-input">
+
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="col-md-12">
+                <select name="" id="tileset" class="form-control">
+                    <option value="../core/Graphics/Tilesets/tile_custom01.png">A</option>
+                    <option value="../core/Graphics/Tilesets/tilea2.png">B</option>
+                    <option value="http://i47.photobucket.com/albums/f172/FatYogiX4/Sprite%20Stuffs/SasukeS.png">sasuke</option>
+                    <option value="">C</option>
+                    <option value="">D</option>
+                    <option value="">E</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <div id="tileset-grid"></div>
+                <div class="col-md-12" id="input-container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

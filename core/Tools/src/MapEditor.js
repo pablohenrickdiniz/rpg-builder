@@ -12,11 +12,25 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             selectedInterval:[],
             activeLayer:0,
             /*
-                Inicializa o editor de mapas
+             Inicializa o editor de mapas
              */
+            reset:function(){
+                var self = this;
+                self.currentLayer=0;
+                self.gameEngine=null;
+                self.tilesetEngine=null;
+                self.tilesetImageLayer=null;
+                self.mapAbstractGrid=null;
+                self.abstractGridLayer=null;
+                self.map=null;
+                self.tilesetImage=null;
+                self.selectedInterval=[];
+                self.activeLayer=0;
+            },
             initialize:function(){
                 console.log('MapEditor initialize...');
                 var self = this;
+                self.reset();
                 var sw = 32;
                 var sh = 32;
                 var width = 0;
@@ -119,8 +133,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 });
             },
             /*
-                void: showLayers()
-                mostra todas as camadas
+             void: showLayers()
+             mostra todas as camadas
              */
             showLayers:function(){
                 MapEditor.getGameEngine().applyToLayers({
@@ -162,7 +176,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
             },
             /*
-                void: show grid(Event e) mostra ou esconde a grade do mapa
+             void: show grid(Event e) mostra ou esconde a grade do mapa
              */
             showGrid:function(e){
                 console.log('MapEditor show grid...');
@@ -175,9 +189,9 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             },
 
             /*
-                AbstractGrid : getAbstractGrid() Obtém instância da grade que
-                cobre o mapa
-            */
+             AbstractGrid : getAbstractGrid() Obtém instância da grade que
+             cobre o mapa
+             */
             getAbstractGridLayer:function(){
                 console.log('MapEditor get abstract grid layer...');
                 var self = this;
@@ -185,15 +199,15 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     var map = self.getMap();
                     self.abstractGridLayer = self.getGameEngine().getLayer(10);
                     self.abstractGridLayer.set({
-                            width:map.width*map.tile_w,
-                            height:map.height*map.tile_h
+                        width:map.width*map.tile_w,
+                        height:map.height*map.tile_h
                     }).drawAbstractGrid(self.getMapAbstractGrid());
                 }
                 return self.abstractGridLayer;
             },
             /*
-                void: widthGridChange(int value) altera a largura da
-                grade que cobre os tilesets
+             void: widthGridChange(int value) altera a largura da
+             grade que cobre os tilesets
              */
             widthGridChange:function(value){
                 var self = this;
@@ -202,8 +216,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 });
             },
             /*
-                void: heightGridChange(int value) altera a altura da
-                grade que cobre os tilesets
+             void: heightGridChange(int value) altera a altura da
+             grade que cobre os tilesets
              */
             heightGridChange:function(value){
                 var self = this;
@@ -212,7 +226,7 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                 });
             },
             /*
-                obtém a instância de uma grade Abstrata
+             obtém a instância de uma grade Abstrata
              */
             getMapAbstractGrid:function(){
                 console.log('MapEditor get map abstract grid...');
@@ -247,8 +261,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
                     });
 
                     /*
-                        Prepara o callback de tileset Engine para
-                        leitura e visualização da área selecionada
+                     Prepara o callback de tileset Engine para
+                     leitura e visualização da área selecionada
                      */
                     self.tilesetEngine.onAreaSelect(function(area,grid){
                         var reader = this.getMouseReader();
@@ -287,8 +301,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React',
             },
 
             /*
-                instanciação e configuração do objeto Game Engine, que renderiza
-                os elementos canvas do mapa
+             instanciação e configuração do objeto Game Engine, que renderiza
+             os elementos canvas do mapa
              */
             getGameEngine:function(){
                 console.log('MapEditor get game engine...');

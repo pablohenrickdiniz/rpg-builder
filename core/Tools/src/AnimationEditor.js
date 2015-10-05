@@ -9,6 +9,7 @@ define(
         'ImageLoader',
         'Jquery-Conflict',
         'InputNumber',
+        'InputNumberVertical',
         'Frame',
         'ImageSet',
         'Animation',
@@ -26,6 +27,7 @@ define(
         ImageLoader,
         $,
         InputNumber,
+        InputNumberVertical,
         Frame,
         ImageSet,
         Animation,
@@ -75,25 +77,22 @@ define(
                     document.getElementById('input-image-container')
                 );
                 React.render(
-                    <div className="form-group">
-                        <div className="col-md-8">
+                    <div className="form-group row">
+                        <div className="col-md-12">
                             <InputControls skin="black-skin" onPlay={self.playAnimation} onPause={self.pauseAnimation} onStop={self.stopAnimation}/>
-                        </div>
-                        <div className="col-md-4">
-                            <input type="range" min="1" max="20" onChange={self.changeSpeed}/>
                         </div>
                     </div>,
                     document.getElementById('controls-container')
                 );
                 React.render(
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-sm-6">
                             <label>Linhas</label>
-                            <InputNumber min={1} max={1000} onChange={self.rowsChange} value={1}/>,
+                            <InputNumberVertical min={1} max={1000} onChange={self.rowsChange} value={1}/>,
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-sm-6">
                             <label>Colunas</label>
-                            <InputNumber min={1} max={1000} onChange={self.colsChange} value={1}/>,
+                            <InputNumberVertical min={1} max={1000} onChange={self.colsChange} value={1}/>,
                         </div>
                     </div>,
                     document.getElementById('size-container')
@@ -231,17 +230,18 @@ define(
                         var gny_2 = gny_1+32;
 
 
-                        if((pos.x - gnx_1) <= 10){
+
+                        if((pos.x - gnx_1) < (gnx_2 - (pos.x+object.width))){
                             pos.x = gnx_1;
                         }
-                        else if((gnx_2 - (pos.x+object.width)) <= 10){
+                        else{
                             pos.x = gnx_2;
                         }
 
-                        if((pos.y - gny_1) <= 10){
+                        if((pos.y - gny_1) <= (gny_2 - (pos.y+object.height))){
                             pos.y = gny_1;
                         }
-                        else if((gny_2 - (pos.y+object.height)) <= 10){
+                        else{
                             pos.y = gny_2;
                         }
 
@@ -329,8 +329,8 @@ define(
                 if(self.animationCanvas == null){
                     self.animationCanvas = CE.createEngine({
                         container:'#canvas-container',
-                        width:'100%',
-                        height:600
+                        width:450,
+                        height:400
                     });
                 }
                 return self.animationCanvas;
@@ -346,8 +346,8 @@ define(
                 if(self.animationImage == null){
                     self.animationImage = CE.createEngine({
                         container:'#animations',
-                        width:'100%',
-                        height:600,
+                        width:450,
+                        height:400,
                         selectable:true,
                         draggable:true,
                         scalable:true
@@ -416,8 +416,12 @@ define(
                         moveCallback(0,1);
                     });
 
-                    reader.onSequence([KeyReader.Keys.KEY_SPACE],function(){
+                    reader.onSequence([KeyReader.Keys.KEY_F],function(){
                         self.addFrame();
+                    });
+
+                    reader.onSequence([KeyReader.Keys.KEY_O],function(){
+                        self.addObject();
                     });
 
 
@@ -616,6 +620,27 @@ define(
                 }
                 return self.animation;
             },
+            changeFramePosition:function(indexA,indexB){
+                var self = AnimationEditor;
+                var animation = self.getAnimation();
+                var layers = self.frameLayers;
+                if(animation.frames[indexA] != undefined && animation.frames[indexB] != undefined && layers[indexA] != undefined && layers[indexB] != undefined){
+                    var aux_frame = animation.frames[indexA];
+                    animation.frames[indexA] = animation.frames[indexB];
+                    animation.frames[indexB] = aux_frame;
+                    var aux_layer = layers[indexA];
+                    layers[indexA] = layers[indexB];
+                    layers[indexB] = aux_layer;
+
+                    layers[indexA].set({
+                        zIndex:indexA
+                    });
+                    layers[indexB].set({
+                        zIndex:indexB
+                    });
+                    self.getFrameList().itemSelect(indexB);
+                }
+            },
             /*
              FrameList: getFrameList()
              obtém o objeto React responsável pela
@@ -624,12 +649,19 @@ define(
             getFrameList:function(){
                 var self = this;
                 if(self.frameList == null){
-                    var getList = function(list){
-                        self.frameList = list;
-                    };
+                    var props = {
+                        callback:function(list){
+                            self.frameList = list;
+                        },
+                        onItemSelect:self.frameSelect,
+                        onItemRemove:self.removeFrame,
+                        title:"Frames",
+                        onChangePosition:self.changeFramePosition
+                    }
+
 
                     React.render(
-                        <SequenceList callback={getList} onItemSelect={self.frameSelect} onItemRemove={self.removeFrame}title="Frames"/>,
+                        <SequenceList {...props}/>,
                         document.getElementById('list-container')
                     );
                 }

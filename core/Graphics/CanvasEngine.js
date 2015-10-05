@@ -444,8 +444,8 @@ define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math
                 self.layers[index].destroy();
                 self.layers.splice(index,1);
                 for(var i = index;i < self.layers.length;i++){
-                    self.layers[index].set({
-                        zIndex:index
+                    self.layers[i].set({
+                        zIndex:i
                     });
                 }
             }

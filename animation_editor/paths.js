@@ -13,6 +13,7 @@ requirejs.config({
         "ImageLoader":"../core/Resources/ImageLoader",
         "ImageSet":"../core/Graphics/ImageSet",
         "InputNumber":"../bower_components/ReactElements/build/InputNumber",
+        "InputNumberVertical":"../bower_components/ReactElements/build/InputNumberVertical",
         "Jquery-Conflict":'jquery-conflict',
         "Map":"../core/Graphics/Map",
         "MapLoader":"../core/Resources/MapLoader",
@@ -26,6 +27,7 @@ requirejs.config({
         "React":'../bower_components/react/react',
         "RectSet":"../core/Graphics/RectSet",
         "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin",
+        "InputNumberMixin":"../bower_components/ReactElements/build/mixins/inputNumberMixin",
         "bootstrap":'../bower_components/bootstrap/dist/js/bootstrap',
         "jquery":"../bower_components/jquery/dist/jquery.min",
         "AccordionItem":"../bower_components/ReactElements/build/AccordionItem",
@@ -49,6 +51,12 @@ requirejs.config({
             deps:["jquery"]
         },
         "InputNumber":{
+            deps:["InputNumberMixin"]
+        },
+        "InputNumberVertical":{
+            deps:["InputNumberMixin"]
+        },
+        "InputNumberMixin":{
             deps:["SetIntervalMixin"]
         },
         "Grid":{
