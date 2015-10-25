@@ -1,3 +1,6 @@
 bower_components
+node_modules
 .idea
 .module-cache
+*.min.min.js
+*.min.min.css

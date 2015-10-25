@@ -24,7 +24,7 @@ requirejs.config({
         "Overlap":"../bower_components/MathLib/src/Overlap",
         "PropsParser":"../custom/PropsParser",
         "RL":"../core/Resources/ResourcesLoader",
-        "React":'../bower_components/react/react',
+        "react":'../bower_components/react/react',
         "RectSet":"../core/Graphics/RectSet",
         "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin",
         "InputNumberMixin":"../bower_components/ReactElements/build/mixins/inputNumberMixin",
@@ -42,10 +42,10 @@ requirejs.config({
     },
     "shim":{
         "Accordion":{
-            deps:["React","IdGenerator","AccordionItem"]
+            deps:['react',"IdGenerator","AccordionItem"]
         },
         "AccordionItem":{
-            deps:["React","IdGenerator"]
+            deps:["react","IdGenerator"]
         },
         "bootstrap":{
             deps:["jquery"]

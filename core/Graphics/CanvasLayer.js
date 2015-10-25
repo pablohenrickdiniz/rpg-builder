@@ -173,6 +173,7 @@ define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],functio
     CanvasLayer.prototype.set = function(options){
         //console.log('Canvas layer set...');
         var self = this;
+        options = options == undefined?{}:options;
         var width = Parser.parseNumber(options.width,self.width);
         var height = Parser.parseNumber(options.height,self.height);
         self.name = options.name == undefined?self.name:options.name;

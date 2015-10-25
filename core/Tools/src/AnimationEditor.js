@@ -2,6 +2,7 @@ define(
     [
         'CE',
         'React',
+        'reactDom',
         'InputImage',
         'InputControls',
         'SequenceList',
@@ -20,6 +21,7 @@ define(
     function(
         CE,
         React,
+        ReactDom,
         InputImage,
         InputControls,
         SequenceList,
@@ -93,11 +95,11 @@ define(
                     });
                     canvas.redrawGrid();
                 });
-                React.render(
+                ReactDom.render(
                     <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
                     document.getElementById('input-image-container')
                 );
-                React.render(
+                ReactDom.render(
                     <div className="form-group row">
                         <div className="col-md-12">
                             <InputControls skin="black-skin" onPlay={self.playAnimation} onPause={self.pauseAnimation} onStop={self.stopAnimation}/>
@@ -105,7 +107,7 @@ define(
                     </div>,
                     document.getElementById('controls-container')
                 );
-                React.render(
+                ReactDom.render(
                     <div className="row">
                         <div className="col-sm-6">
                             <label>Linhas</label>
@@ -119,14 +121,26 @@ define(
                     document.getElementById('size-container')
                 );
 
-                React.render(
+                ReactDom.render(
                     <div className="form-group">
-                        <br/>
                         <div className="btn-group col-md-12">
-                            <button className="btn btn-primary" onClick={self.addObject}>+ Objeto</button>
-                            <button className="btn btn-primary" onClick={self.showFrames}>+ Mostrar Quadros</button>
-                            <button className="btn btn-success" onClick={self.export}>+ Export Json</button>
-                            <button className="btn btn-danger" onClick={self.removeFrames}>- Remover Quadros</button>
+                            <a className="btn btn-app" onClick={self.addObject}>
+                                <i className="fa fa-plus"></i>
+                                Objeto
+                            </a>
+                            <a className="btn btn-app" onClick={self.showFrames}>
+                                <i className="fa fa-eye"></i>
+                                Mostrar Quadros
+                            </a>
+                            <a className="btn btn-app" onClick={self.export}>
+                                <i className="fa fa-download"></i>
+                                Exportar Json
+                            </a>
+                            <a className="btn btn-app btn-danger" onClick={self.removeFrames}>
+                                <i className="fa fa-remove">
+                                </i>
+                                Remover Quadros
+                            </a>
                         </div>
                         <div className="clearfix"></div>
                     </div>,
@@ -145,7 +159,6 @@ define(
                     }
                 });*/
 
-                var canvasImage = self.getAnimationImage();
                 var animationCanvas = self.getAnimationCanvas();
                 var animationMouseReader = animationCanvas.getMouseReader();
                 var animationKeyReader = animationCanvas.getKeyReader();
@@ -286,7 +299,6 @@ define(
              */
             playAnimation:function(){
                 console.log('Playing animation...');
-                var self = AnimationEditor;
                 self.frameLayers.forEach(function(layer){
                     layer.unselectObjects();
                 });
@@ -349,7 +361,7 @@ define(
                 if(self.animationCanvas == null){
                     self.animationCanvas = CE.createEngine({
                         container:'#canvas-container',
-                        width:450,
+                        width:560,
                         height:400
                     });
                 }
@@ -366,7 +378,7 @@ define(
                 if(self.animationImage == null){
                     self.animationImage = CE.createEngine({
                         container:'#animations',
-                        width:450,
+                        width:560,
                         height:400,
                         selectable:true,
                         draggable:true,
@@ -508,7 +520,7 @@ define(
                         value:url.url
                     };
                 });
-                React.render(
+                ReactDom.render(
                     <Select options={self.graphics} onChange={self.changeGraphic} label="Imagens"/>,
                     document.getElementById('images-container')
                 );
@@ -663,7 +675,7 @@ define(
             },
             /*
              FrameList: getFrameList()
-             obtém o objeto React responsável pela
+             obtém o objeto ReactDom responsável pela
              criação e pelos enventos da lista de frames
              */
             getFrameList:function(){
@@ -681,7 +693,7 @@ define(
                     };
 
 
-                    React.render(
+                    ReactDom.render(
                         <SequenceList {...props}/>,
                         document.getElementById('list-container')
                     );

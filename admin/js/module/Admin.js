@@ -8,6 +8,8 @@
             controllerAs:'Panel'
         }).when('/',{
             redirectTo:'/panel'
+        }).when('/resources-center',{
+            templateUrl:'templates/Pages/resources.html'
         }).when('/map-editor',{
             templateUrl:'templates/Pages/map-editor.html',
             controller:'MapEditorController',
@@ -62,6 +64,7 @@
     app.controller('MapEditorController',['$location','$rootScope',function($location,$scope){
         this.init = function(){
             require(['MapEditor'],function(MapEditor){
+                console.log('MapEditor module loaded...');
                 MapEditor.initialize();
             });
             $scope.page.title = 'Editor de Mapas';
@@ -73,10 +76,13 @@
         var self = this;
         self.init = function(){
             require(['AnimationEditor'],function(AnimationEditor){
+                console.log('AnimationEditor module loaded...');
                 AnimationEditor.initialize();
             });
             $scope.page.title = 'Editor de Animações';
         };
     }]);
+
+
 })();
 

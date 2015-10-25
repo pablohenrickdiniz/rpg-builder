@@ -1,7 +1,7 @@
 requirejs.config({
     "urlArgs": "bust=" + (new Date()).getTime(),
     "paths":{
-        "React":'../bower_components/react/react',
+        'reactDom':'../node_modules/react-dom/dist/react-dom.min',
         "jquery":"../bower_components/jquery/dist/jquery.min",
         "Jquery-Conflict":'src/jquery-conflict',
         "MapEditor":'../core/Tools/build/MapEditor',
@@ -37,14 +37,20 @@ requirejs.config({
         "InputImage":"../bower_components/ReactElements/build/InputImage",
         "InputControls":"../bower_components/ReactElements/build/InputControls",
         "SequenceList":"../bower_components/ReactElements/build/SequenceList",
-        "Select":"../bower_components/ReactElements/build/Select",
+        "Select":"../bower_components/ReactElements/build/Select"
+    },
+    map:{
+        "*":{
+            "React":'../bower_components/react/react',
+            "react":'../bower_components/react/react'
+        }
     },
     "shim":{
         "Jquery-conflict":{
             deps:["jquery"]
         },
         "MapEditor":{
-            deps:['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','React','Math','AbstractGrid','ImageSet']
+            deps:['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','react','Math','AbstractGrid','ImageSet']
         },
         "CE":{
             deps:['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math','ObjectLayer','KeyReader']
@@ -59,7 +65,7 @@ requirejs.config({
             deps:['Jquery-Conflict']
         },
         "InputNumber":{
-            deps:['React','InputNumberMixin']
+            deps:['react','InputNumberMixin']
         },
         "AbstractGrid":{
             deps:["PropsParser"]
@@ -95,7 +101,7 @@ requirejs.config({
             deps:['PropsParser','IdGenerator']
         },
         "InputNumberVertical":{
-            deps:['React','InputNumberMixin']
+            deps:['react','InputNumberMixin']
         },
         "MapLoader":{
             deps:['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader']
@@ -104,22 +110,25 @@ requirejs.config({
             deps:['Jquery-Conflict']
         },
         "AccordionItem":{
-            deps:['React','IdGenerator']
+            deps:['react','IdGenerator']
         },
         "Accordion":{
-            deps:['React','IdGenerator','AccordionItem']
+            deps:['react','IdGenerator','AccordionItem']
         },
         "InputImage":{
-            deps:["React"]
+            deps:["react"]
         },
         "InputControls":{
-            deps:["React"]
+            deps:["react"]
         },
         "SequenceList":{
-            deps:["React"]
+            deps:["react"]
         },
         "Select":{
-            deps:["React"]
+            deps:["react"]
+        },
+        "reactDom":{
+            deps:['React']
         }
     }
 });

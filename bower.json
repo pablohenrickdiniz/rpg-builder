@@ -1,21 +1,19 @@
 {
-  "name": "RPG-JS-MOD",
-  "version": "0.2",
-  "homepage": "https://github.com/pablohenrickdiniz/RPG-BUILDER",
+  "name": "rpg-builder",
+  "description": "rpg engine to develop html5 games",
+  "main": "index.js",
   "authors": [
-    "Pablo Henrick <phydokz@hotmail.com>"
-  ],
-  "description": "Rpg Engine to create rpg games",
-  "main": "",
-  "moduleType": [],
-  "keywords": [
-    "RpgMaker",
-    "Engine",
-    "sprites",
-    "html5",
-    "canvas"
+    "Pablo Henrick Diniz"
   ],
   "license": "MIT",
+  "keywords": [
+    "creator",
+    "rpg",
+    "builder",
+    "game"
+  ],
+  "homepage": "https://github.com/pablohenrickdiniz/RPG-BUILDER",
+  "moduleType": [],
   "private": true,
   "ignore": [
     "**/.*",
@@ -26,11 +24,16 @@
   ],
   "dependencies": {
     "MathLib": "https://github.com/pablohenrickdiniz/MathLib.git",
-    "jquery": "~2.1.4",
-    "react": "~0.13.3",
-    "requirejs": "~2.1.20",
-    "bootstrap": "~3.3.5",
+    "Ionicons": "ionicons#~2.0.1",
+    "AdminLTE": "admin-lte#~2.3.2",
     "ReactElements": "https://github.com/pablohenrickdiniz/ReactElements.git",
-    "font-awesome": "~4.4.0"
+    "angular-animate": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "bootstrap": "~3.3.5",
+    "angular": "angularjs#~1.4.7",
+    "font-awesome": "~4.4.0",
+    "jquery": "~2.1.4",
+    "react": "~0.14.0",
+    "requirejs": "~2.1.20"
   }
 }

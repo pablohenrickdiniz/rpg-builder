@@ -1,5 +1,30 @@
-define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumberVertical','React','Math','AbstractGrid','ImageSet'],
-    function(CE,Grid,Map,$,ImageLoader,InputNumberVertical,React,Math,AbstractGrid,ImageSet){
+define(
+    [
+        'CE',
+        'Grid',
+        'Map',
+        'Jquery-Conflict',
+        'ImageLoader',
+        'InputNumberVertical',
+        'react',
+        'reactDom',
+        'Math',
+        'AbstractGrid',
+        'ImageSet'
+    ],
+    function(
+        CE,
+        Grid,
+        Map,
+        $,
+        ImageLoader,
+        InputNumberVertical,
+        React,
+        reactDom,
+        Math,
+        AbstractGrid,
+        ImageSet
+    ){
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -71,24 +96,8 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumberVertical',
                     });
                 });
 
-                $("#layer").change(function(){
-                    self.activeLayer = $(this).val();
-                    var gameEngine = self.getGameEngine();
-                    var layer = self.gameEngine.getLayer(self.activeLayer);
-                    layer.set({
-                        opacity:1
-                    });
-                    self.gameEngine.applyToLayers({
-                        opacity:0.5
-                    },function(){
-                        return this.zIndex != self.activeLayer
-                    });
-                });
-
                 $("#tileset").change();
-                $("#layer").change();
-
-                React.render(
+                reactDom.render(
                     <div className="row">
                         <div className="col-md-6">
                             <label>Largura(px)</label>
@@ -102,34 +111,72 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumberVertical',
                     document.getElementById('input-container')
                 );
 
-                React.render(
+                var map_width = Math.ceil(gameEngine.getWidth()/32);
+                var map_height = Math.ceil(gameEngine.getHeight()/32);
+
+                reactDom.render(
                     <div className="row">
-                        <div className="col-md-6">
-                            <div className="col-md-6">
+                        <div className="col-md-12">
+                            <div className="col-md-4">
                                 <label>Largura(steps)</label>
-                                <InputNumberVertical min={5} value={5} max={1000} onChange={self.widthMapChange}/>
+                                <InputNumberVertical min={5} value={map_width} max={1000} onChange={self.widthMapChange}/>
                             </div>
-                            <div className="col-md-6">
+                            <div className="col-md-4">
                                 <label>Altura(steps)</label>
-                                <InputNumberVertical min={5} value={5} max={1000} onChange={self.heightMapChange}/>
+                                <InputNumberVertical min={5} value={map_height} max={1000} onChange={self.heightMapChange}/>
+                            </div>
+                            <div className="col-md-4">
+                                <label>Camada</label>
+                                <InputNumberVertical min={1} value={1} max={10} onChange={self.changeLayer}/>
                             </div>
                         </div>
-                        <div className="col-md-6">
-                            <div className="col-md-6">
-                                <label>Mostrar Grade</label>
-                                <input type="checkbox" className="form-control" onChange={self.showGrid}/>
-                            </div>
-                            <div className="col-md-6">
-                                <button className="btn btn-default" onClick={self.showLayers}>Mostrar Camadas</button>
+                        <div className="col-md-12">
+                            <div className="col-md-4">
+                                <div className="checkbox">
+                                    <label>
+                                        <input type="checkbox" onChange={self.showGrid}/>Mostrar Grade
+                                    </label>
+                                </div>
+                                <div className="checkbox">
+                                    <label>
+                                        <input type="checkbox" onChange={self.showLayers}/>Mostrar Camadas
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>,
                     document.getElementById('canvas-input')
                 );
 
-                self.getGameEngine().renderMap(self.getMap());
+                gameEngine.renderMap(self.getMap());
                 $(window).resize(function(){
                     self.fixPos();
+                });
+
+                gameEngine.updateGrid({
+                    sw:32,
+                    sh:32,
+                    width:gameEngine.getWidth(),
+                    height:gameEngine.getHeight(),
+                    opacity:0.1
+                });
+            },
+            /*
+             void: changeLayer
+             Altera a camada de edição
+             */
+            changeLayer:function(value){
+                var self = MapEditor;
+                self.activeLayer = value;
+                var gameEngine = self.getGameEngine();
+                var layer = self.gameEngine.getLayer(value);
+                layer.set({
+                    opacity:1
+                });
+                self.gameEngine.applyToLayers({
+                    opacity:0.5
+                },function(){
+                    return this.zIndex != self.activeLayer
                 });
             },
             /*
@@ -405,7 +452,13 @@ define(['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumberVertical',
                 console.log('MapEditor get map...');
                 var self = this;
                 if(self.map == null){
-                    self.map = new Map();
+                    var gameEngine = self.getGameEngine();
+                    self.map = new Map({
+                        sw:32,
+                        sh:32,
+                        width:gameEngine.getWidth()/32,
+                        height:gameEngine.getHeight()/32
+                    });
                 }
                 return self.map;
             }

@@ -125,6 +125,7 @@ define(['PropsParser','RectSet','AbstractGrid','Color'],function(Parser,RectSet,
      */
     Grid.prototype.set = function(options){
         var self = this;
+        options = options == undefined?{}:options;
         var aux_width = self.width;
         var aux_height = self.height;
         var aux_x = self.x;
