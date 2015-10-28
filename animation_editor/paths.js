@@ -14,7 +14,6 @@ requirejs.config({
         "ImageSet":"../core/Graphics/ImageSet",
         "InputNumber":"../bower_components/ReactElements/build/InputNumber",
         "InputNumberVertical":"../bower_components/ReactElements/build/InputNumberVertical",
-        "Jquery-Conflict":'jquery-conflict',
         "Map":"../core/Graphics/Map",
         "MapLoader":"../core/Resources/MapLoader",
         "MaterialsLoader":"../core/Resources/MaterialsLoader",
@@ -69,10 +68,10 @@ requirejs.config({
             deps:["PropsParser"]
         },
         "CE":{
-            deps:["CanvasLayer","PropsParser","Jquery-Conflict","MouseReader"]
+            deps:["CanvasLayer","PropsParser","jquery","MouseReader"]
         },
         "CanvasLayer":{
-            deps:["Jquery-Conflict","PropsParser","MouseReader","Overlap","Color"]
+            deps:["jquery","PropsParser","MouseReader","Overlap","Color"]
         },
         "Color": {
             deps: ["PropsParser"]
@@ -93,16 +92,16 @@ requirejs.config({
             deps:["PropsParser","Color"]
         },
         "ImageLoader":{
-            deps:["Jquery-Conflict"]
+            deps:["jquery"]
         },
         "MapLoader":{
-            deps:["Map","Jquery-Conflict","MaterialsLoader","ImageSet","ImageLoader"]
+            deps:["Map","jquery","MaterialsLoader","ImageSet","ImageLoader"]
         },
         "MaterialsLoader":{
-            deps:["Jquery-Conflict"]
+            deps:["jquery"]
         },
         "MouseReader": {
-            deps: ["Jquery-Conflict"]
+            deps: ["jquery"]
         },
         "ObjectLayer":{
             deps:["CanvasLayer"]

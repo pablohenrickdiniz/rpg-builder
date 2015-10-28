@@ -1,4 +1,4 @@
-define(['Jquery-Conflict'],function($){
+define(['jquery'],function($){
     return {
         materials:[],
         load:function(url,callback){

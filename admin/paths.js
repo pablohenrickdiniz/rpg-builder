@@ -1,134 +1,54 @@
 requirejs.config({
     "urlArgs": "bust=" + (new Date()).getTime(),
     "paths":{
-        'reactDom':'../node_modules/react-dom/dist/react-dom.min',
-        "jquery":"../bower_components/jquery/dist/jquery.min",
-        "Jquery-Conflict":'src/jquery-conflict',
-        "MapEditor":'../core/Tools/build/MapEditor',
-        "AnimationEditor":'../core/Tools/build/AnimationEditor',
-        "CE":'../core/Graphics/CanvasEngine',
-        "Map":'../core/Graphics/Map',
-        "Grid":'../core/Graphics/Grid',
-        "ImageLoader":'../core/Resources/ImageLoader',
-        "InputNumber":'../bower_components/ReactElements/build/InputNumber',
-        "Math":'../bower_components/MathLib/src/Math',
-        "AbstractGrid":'../core/Graphics/AbstractGrid',
-        "ImageSet":'../core/Graphics/ImageSet',
-        "CanvasLayer":'../core/Graphics/CanvasLayer',
-        "SetIntervalMixin":'../bower_components/ReactElements/build/mixins/setIntervalMixin',
-        "InputNumberMixin":"../bower_components/ReactElements/build/mixins/inputNumberMixin",
-        "PropsParser":'../custom/PropsParser' ,
-        "MouseReader":'../core/Reader/MouseReader',
-        "KeyReader":'../core/Reader/KeyReader',
-        "RectSet":'../core/Graphics/RectSet',
-        "Overlap":'../bower_components/MathLib/src/Overlap',
-        "Color":'../core/Graphics/Color',
-        "ObjectLayer":"../core/Graphics/ObjectLayer",
-        "Filter":"../core/Graphics/Filter",
-        "Animation":"../core/Graphics/Animation",
-        "Frame":"../core/Graphics/Frame",
-        "FrameSync":'../core/Graphics/FrameSync',
+        "CE":"../bower_components/CanvasEngine/src/core/CanvasEngine.min",
+        "CanvasLayer":"../bower_components/CanvasEngine/src/core/CanvasLayer",
+        "AppObject":"../bower_components/CanvasEngine/src/core/AppObject",
+        "Math":"../bower_components/MathLib/src/Math",
+        "MouseReader":"../bower_components/CanvasEngine/src/Reader/MouseReader",
+        "KeyReader":"../bower_components/CanvasEngine/src/Reader/KeyReader",
+        "jquery":"../bower_components/CanvasEngine/src/utils/jquery",
+        "jquery-tmp":"../bower_components/jquery/dist/jquery",
+        "Grid":"../bower_components/CanvasEngine/src/core/Grid",
+        "Map":"../bower_components/CanvasEngine/src/core/Map",
+        "ImageLoader":"../core/Resources/ImageLoader",
         "InputNumberVertical":"../bower_components/ReactElements/build/InputNumberVertical",
-        "MapLoader":"../core/Resources/MapLoader",
-        "MaterialsLoader":"../core/Resources/MaterialsLoader",
-        "AccordionItem":"../bower_components/ReactElements/build/AccordionItem",
-        "Accordion":"../bower_components/ReactElements/build/Accordion",
-        "IdGenerator":"../bower_components/ReactElements/build/custom/IdGenerator",
+        "InputNumber":"../bower_components/ReactElements/build/InputNumber",
+        "reactDom":"../bower_components/react/react-dom",
+        "InputNumberMixin":"../bower_components/ReactElements/build/mixins/inputNumberMixin",
+        "SetIntervalMixin":"../bower_components/ReactElements/build/mixins/setIntervalMixin",
+        "MapEditor":"../core/Tools/build/MapEditor",
+        "AbstractGrid":"../bower_components/CanvasEngine/src/core/AbstractGrid",
+        "ImageSet":"../bower_components/CanvasEngine/src/core/ImageSet",
+        "RectSet":"../bower_components/CanvasEngine/src/core/RectSet",
+        "lodash":"../bower_components/lodash/lodash",
+        "Color":"../bower_components/CanvasEngine/src/core/Color",
+        "AnimationEditor":"../core/Tools/build/AnimationEditor",
         "InputImage":"../bower_components/ReactElements/build/InputImage",
         "InputControls":"../bower_components/ReactElements/build/InputControls",
         "SequenceList":"../bower_components/ReactElements/build/SequenceList",
-        "Select":"../bower_components/ReactElements/build/Select"
+        "Select":"../bower_components/ReactElements/build/Select",
+        "Frame":"../bower_components/CanvasEngine/src/core/Frame",
+        "Animation":"../bower_components/CanvasEngine/src/core/Animation",
+        "Overlap":"../bower_components/MathLib/src/Overlap",
+        "Filter":"../bower_components/CanvasEngine/src/core/Filter",
+        "FrameSync":"../bower_components/CanvasEngine/src/core/FrameSync",
+        "IdGenerator":"../bower_components/ReactElements/src/custom/IdGenerator",
+        "Validator":"../bower_components/CanvasEngine/src/utils/Validator",
+        "Parser":"../bower_components/CanvasEngine/src/utils/Parser"
     },
-    map:{
+    "map":{
         "*":{
-            "React":'../bower_components/react/react',
-            "react":'../bower_components/react/react'
+            "react":"../bower_components/react/react",
+            "React":"../bower_components/react/react"
         }
     },
     "shim":{
-        "Jquery-conflict":{
-            deps:["jquery"]
+        'jquery':{
+            deps:['jquery-tmp']
         },
-        "MapEditor":{
-            deps:['CE','Grid','Map','Jquery-Conflict','ImageLoader','InputNumber','react','Math','AbstractGrid','ImageSet']
-        },
-        "CE":{
-            deps:['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math','ObjectLayer','KeyReader']
-        },
-        "Map":{
-            deps:["PropsParser"]
-        },
-        "Grid":{
-            deps:['PropsParser','RectSet','AbstractGrid','Color']
-        },
-        "ImageLoader":{
-            deps:['Jquery-Conflict']
-        },
-        "InputNumber":{
-            deps:['react','InputNumberMixin']
-        },
-        "AbstractGrid":{
-            deps:["PropsParser"]
-        },
-        "ImageSet":{
-            deps:['PropsParser','ImageLoader','Filter']
-        },
-        "CanvasLayer":{
-            deps:['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color']
-        },
-        "PropsParser":{
-            deps:['Jquery-Conflict']
-        },
-        "MouseReader":{
-            deps:['Jquery-Conflict']
-        },
-        "RectSet":{
-            deps:['PropsParser','Color']
-        },
-        "Color":{
-            deps:["PropsParser"]
-        },
-        "ObjectLayer":{
-            deps:["CanvasLayer"]
-        },
-        "Filter":{
-            deps:["Color"]
-        },
-        "Animation":{
-            deps:['PropsParser','FrameSync','CanvasLayer']
-        },
-        "Frame":{
-            deps:['PropsParser','IdGenerator']
-        },
-        "InputNumberVertical":{
-            deps:['react','InputNumberMixin']
-        },
-        "MapLoader":{
-            deps:['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader']
-        },
-        "MaterialsLoader":{
-            deps:['Jquery-Conflict']
-        },
-        "AccordionItem":{
-            deps:['react','IdGenerator']
-        },
-        "Accordion":{
-            deps:['react','IdGenerator','AccordionItem']
-        },
-        "InputImage":{
-            deps:["react"]
-        },
-        "InputControls":{
-            deps:["react"]
-        },
-        "SequenceList":{
-            deps:["react"]
-        },
-        "Select":{
-            deps:["react"]
-        },
-        "reactDom":{
-            deps:['React']
+        'CE':{
+            deps:['AppObject','Math','MouseReader','CanvasLayer','KeyReader']
         }
     }
 });

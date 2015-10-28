@@ -1,4 +1,4 @@
-define(['Jquery-Conflict'],function($){
+define(['jquery'],function($){
     var MouseReader = function(element) {
         var self = this;
         self.element = element;

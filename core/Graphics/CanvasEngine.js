@@ -1,4 +1,4 @@
-define(['CanvasLayer','PropsParser','Jquery-Conflict','MouseReader','Grid','Math','ObjectLayer','KeyReader'],
+define(['CanvasLayer','PropsParser','jquery','MouseReader','Grid','Math','ObjectLayer','KeyReader'],
     function(CanvasLayer,Parser,$,MouseReader,Grid,Math,ObjectLayer,KeyReader){
         var CanvasEngine = function(options){
             console.log('intializing canvas engine...');

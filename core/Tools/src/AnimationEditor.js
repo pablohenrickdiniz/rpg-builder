@@ -8,7 +8,7 @@ define(
         'SequenceList',
         'Select',
         'ImageLoader',
-        'Jquery-Conflict',
+        'jquery',
         'InputNumber',
         'InputNumberVertical',
         'Frame',
@@ -37,6 +37,7 @@ define(
         KeyReader,
         Filter
     ){
+
         var AnimationEditor = {
             animationCanvas:null,
             animationImage:null,
@@ -75,6 +76,7 @@ define(
                 self.maxLayer=0;
                 self.selectedObject=null;
             },
+
             /*
              void:initialize()
              inicializa o editor de animação

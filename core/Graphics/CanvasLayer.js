@@ -1,7 +1,7 @@
 /*
     CanvasLayer(Object options, CanvasEngine canvas)
  */
-define(['Jquery-Conflict','PropsParser','MouseReader','Overlap','Color'],function($,Parser,MouseReader,Overlap,Color){
+define(['jquery','PropsParser','MouseReader','Overlap','Color'],function($,Parser,MouseReader,Overlap,Color){
     var CanvasLayer = function(options,canvas){
         console.log('Canvas Layer initialize...');
         options = typeof options == 'object'?options:{};

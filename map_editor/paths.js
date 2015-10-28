@@ -4,7 +4,6 @@ requirejs.config({
         "react":'../bower_components/react/react',
         "bootstrap":'../bower_components/bootstrap/dist/js/bootstrap',
         "jquery":"../bower_components/jquery/dist/jquery.min",
-        "Jquery-Conflict":'src/jquery-conflict',
         "MapEditor":'../core/Tools/build/MapEditor',
         "CE":'../bower_components/CanvasEngine/src/core/CanvasEngine',
         "Map":'../bower_components/CanvasEngine/src/core/Map',

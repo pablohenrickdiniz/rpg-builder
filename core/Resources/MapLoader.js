@@ -1,4 +1,4 @@
-define(['Map','Jquery-Conflict','MaterialsLoader','ImageSet','ImageLoader'],function(Map,$,MaterialsLoader,ImageSet,ImageLoader){
+define(['Map','jquery','MaterialsLoader','ImageSet','ImageLoader'],function(Map,$,MaterialsLoader,ImageSet,ImageLoader){
     return {
         maps:[],
         load:function(url,callback){

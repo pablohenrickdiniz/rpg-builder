@@ -1,4 +1,4 @@
-define(['Jquery-Conflict'],function($){
+define(['jquery'],function($){
     return {
         parseNumber:function(number,defaultValue){
             if(number == undefined || isNaN(number)){

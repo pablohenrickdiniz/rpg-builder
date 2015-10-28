@@ -1,4 +1,4 @@
-define(['Jquery-Conflict'],function($){
+define(['jquery'],function($){
     return {
         loadedSounds:[],
         loadAll:function(images,loaded,callback){

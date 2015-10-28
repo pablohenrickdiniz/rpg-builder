@@ -3,7 +3,7 @@ define(
         'CE',
         'Grid',
         'Map',
-        'Jquery-Conflict',
+        'jquery',
         'ImageLoader',
         'InputNumberVertical',
         'react',
@@ -20,11 +20,12 @@ define(
         ImageLoader,
         InputNumberVertical,
         React,
-        reactDom,
+        ReactDom,
         Math,
         AbstractGrid,
         ImageSet
     ){
+
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -60,6 +61,7 @@ define(
                 var sh = 32;
                 var width = 0;
                 var height = 0;
+
                 var tilesetEngine = self.getTilesetEngine();
                 var gameEngine = self.getGameEngine();
                 self.tilesetImageLayer = tilesetEngine.createLayer({
@@ -97,7 +99,7 @@ define(
                 });
 
                 $("#tileset").change();
-                reactDom.render(
+                ReactDom.render(
                     <div className="row">
                         <div className="col-md-6">
                             <label>Largura(px)</label>
@@ -114,7 +116,7 @@ define(
                 var map_width = Math.ceil(gameEngine.getWidth()/32);
                 var map_height = Math.ceil(gameEngine.getHeight()/32);
 
-                reactDom.render(
+                ReactDom.render(
                     <div className="row">
                         <div className="col-md-12">
                             <div className="col-md-4">
