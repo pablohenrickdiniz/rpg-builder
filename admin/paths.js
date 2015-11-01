@@ -1,14 +1,14 @@
 requirejs.config({
     "urlArgs": "bust=" + (new Date()).getTime(),
     "paths":{
-        "CE":"../bower_components/CanvasEngine/src/core/CanvasEngine.min",
+        "CE":"../bower_components/CanvasEngine/src/core/CanvasEngine",
         "CanvasLayer":"../bower_components/CanvasEngine/src/core/CanvasLayer",
         "AppObject":"../bower_components/CanvasEngine/src/core/AppObject",
         "Math":"../bower_components/MathLib/src/Math",
         "MouseReader":"../bower_components/CanvasEngine/src/Reader/MouseReader",
         "KeyReader":"../bower_components/CanvasEngine/src/Reader/KeyReader",
-        "jquery":"../bower_components/CanvasEngine/src/utils/jquery",
-        "jquery-tmp":"../bower_components/jquery/dist/jquery",
+        "jquery-tmp":"../bower_components/CanvasEngine/src/utils/jquery",
+        "jquery":"../bower_components/jquery/dist/jquery",
         "Grid":"../bower_components/CanvasEngine/src/core/Grid",
         "Map":"../bower_components/CanvasEngine/src/core/Map",
         "ImageLoader":"../core/Resources/ImageLoader",
@@ -40,13 +40,12 @@ requirejs.config({
     "map":{
         "*":{
             "react":"../bower_components/react/react",
-            "React":"../bower_components/react/react"
-        }
+            "React":"../bower_components/react/react",
+            'jquery':'jquery-tmp'
+        },
+        "jquery-tmp":{'jquery':'jquery'}
     },
     "shim":{
-        'jquery':{
-            deps:['jquery-tmp']
-        },
         'CE':{
             deps:['AppObject','Math','MouseReader','CanvasLayer','KeyReader']
         }

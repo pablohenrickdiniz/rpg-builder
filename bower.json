@@ -1,6 +1,6 @@
 {
   "name": "rpg-builder",
-  "description": "rpg engine to develop html5 games",
+  "description": "",
   "main": "index.js",
   "authors": [
     "Pablo Henrick Diniz"
@@ -23,17 +23,14 @@
     "tests"
   ],
   "dependencies": {
-    "MathLib": "https://github.com/pablohenrickdiniz/MathLib.git",
-    "Ionicons": "ionicons#~2.0.1",
     "AdminLTE": "admin-lte#~2.3.2",
+    "CanvasEngine": "https://github.com/pablohenrickdiniz/CanvasEngine.git",
+    "Ionicons": "ionicons#~2.0.1",
     "ReactElements": "https://github.com/pablohenrickdiniz/ReactElements.git",
     "angular-animate": "~1.4.7",
     "angular-route": "~1.4.7",
     "bootstrap": "~3.3.5",
-    "angular": "angularjs#~1.4.7",
     "font-awesome": "~4.4.0",
-    "jquery": "~2.1.4",
-    "react": "~0.14.0",
-    "requirejs": "~2.1.20"
+    "react": "~0.14.0"
   }
 }

@@ -83,11 +83,12 @@ define(
                         tilesetEngine.clearAllLayers();
                         width = img.width;
                         height = img.height;
-
-                        self.tilesetImageLayer.set({
+                        tilesetEngine.applyToLayers({
                             width:width,
                             height:height
-                        }).drawImage(img,0,0);
+                        });
+
+                        self.tilesetImageLayer.drawImage(img,0,0);
 
                         tilesetEngine.updateGrid({
                             sw:sw,
@@ -191,35 +192,38 @@ define(
                 });
             },
             // void : widthMapChange(int width) altera a largura do mapa
-            widthMapChange:function(value){
-                console.log('MapEditor width map change...');
+            widthMapChange:function(width){
                 var self = this;
                 var map = MapEditor.getMap();
                 var grid = MapEditor.getMapAbstractGrid();
+                var gameEngine = MapEditor.getGameEngine();
+                /*
                 map.set({
-                    width:value
-                });
+                    width:width
+                });*/
 
-                grid.set({
-                    width:map.width*map.tile_w
+                gameEngine.applyToLayers({
+                    width:width*map.tile_w
                 });
 
                 MapEditor.fixPos();
-                MapEditor.getGameEngine().renderMap(map);
+                gameEngine.renderMap(map);
                 MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
             },
             //void : heightMapChange(int height) altera a altura do mapa
-            heightMapChange:function(value){
-                console.log('MapEditor height map change...');
+            heightMapChange:function(height){
                 var grid = MapEditor.getMapAbstractGrid();
                 var map =MapEditor.getMap();
+                var gameEngine = MapEditor.getGameEngine();
+                /*
                 map.set({
-                    height:value
+                    height:height
+                });*/
+
+                gameEngine.applyToLayers({
+                    height:height*map.tile_h
                 });
 
-                grid.set({
-                    height:map.height*map.tile_h
-                });
                 MapEditor.fixPos();
                 MapEditor.getGameEngine().renderMap(map);
                 MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(grid);
@@ -228,7 +232,6 @@ define(
              void: show grid(Event e) mostra ou esconde a grade do mapa
              */
             showGrid:function(e){
-                console.log('MapEditor show grid...');
                 if($(e.target).is(':checked')){
                     MapEditor.getAbstractGridLayer().show();
                 }
@@ -242,7 +245,6 @@ define(
              cobre o mapa
              */
             getAbstractGridLayer:function(){
-                console.log('MapEditor get abstract grid layer...');
                 var self = this;
                 if(self.abstractGridLayer == null){
                     var map = self.getMap();
@@ -278,7 +280,6 @@ define(
              obtém a instância de uma grade Abstrata
              */
             getMapAbstractGrid:function(){
-                console.log('MapEditor get map abstract grid...');
                 var self = this;
                 if(self.mapAbstractGrid == null){
                     var map = self.getMap();
@@ -296,9 +297,8 @@ define(
              os elementos canvas dos tilesets
              */
             getTilesetEngine:function(){
-                console.log('MapEditor get tileset engine...');
                 var self = this;
-                if(self.tilesetEngine == null){
+                if(self.tilesetEngine === null){
                     self.tilesetEngine = CE.createEngine({
                         container:"#tileset-grid",
                         width:'100%',
@@ -354,7 +354,6 @@ define(
              os elementos canvas do mapa
              */
             getGameEngine:function(){
-                console.log('MapEditor get game engine...');
                 var self = this;
                 if(self.gameEngine == null){
                     self.gameEngine = CE.createEngine({
@@ -367,13 +366,12 @@ define(
                     var engine = self.gameEngine;
                     var editor = self;
 
-
-                    engine.getMouseReader().onmousemove(function(e){
-                        var self = this;
-                        if(self.right){
+                    var mousemovecallback = function(e){
+                        var reader = this;
+                        if(reader.right){
                             MapEditor.getAbstractGridLayer().clear().drawAbstractGrid(MapEditor.getMapAbstractGrid());
                         }
-                        else if(self.left){
+                        else if(reader.left){
                             var map = MapEditor.getMap();
                             var image = MapEditor.tilesetImage;
                             var interval = MapEditor.selectedInterval;
@@ -381,10 +379,7 @@ define(
                             var area_interval = map.getAreaInterval(area);
                             var images_sets = [];
 
-
                             var layer = engine.getLayer(MapEditor.activeLayer);
-
-
 
                             for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
                                 if(images_sets[i] == undefined){
@@ -395,6 +390,8 @@ define(
                                         url:image,
                                         width:map.tile_w,
                                         height:map.tile_h,
+                                        sWidth:map.tile_w,
+                                        sHeight:map.tile_h,
                                         sx:col*map.tile_w,
                                         sy:row*map.tile_h,
                                         x:j*map.tile_w,
@@ -418,21 +415,20 @@ define(
                                 }
                             }
 
-
                             images_sets.forEach(function(row,i){
                                 row.forEach(function(imageSet,j){
                                     map.setTile(i,j,imageSet);
                                 });
                             });
                         }
-                    });
+                    };
 
+                    engine.getMouseReader().onmousemove(mousemovecallback);
                 }
                 return self.gameEngine;
             },
             //corrige a posição viewX,viewY quando o mapa é redimensionado
             fixPos:function(){
-                console.log('MapEditor fix pos...');
                 var engine = this.getGameEngine();
                 var x = engine.viewX;
                 var y = engine.viewY;
@@ -451,7 +447,6 @@ define(
             },
             //instanciação do objeto map
             getMap:function(){
-                console.log('MapEditor get map...');
                 var self = this;
                 if(self.map == null){
                     var gameEngine = self.getGameEngine();
