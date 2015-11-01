@@ -35,19 +35,29 @@ requirejs.config({
         "FrameSync":"../bower_components/CanvasEngine/src/core/FrameSync",
         "IdGenerator":"../bower_components/ReactElements/src/custom/IdGenerator",
         "Validator":"../bower_components/CanvasEngine/src/utils/Validator",
-        "Parser":"../bower_components/CanvasEngine/src/utils/Parser"
+        "Parser":"../bower_components/CanvasEngine/src/utils/Parser",
+        "jasmine-script":"../jasmine/lib/jasmine-2.3.4/jasmine",
+        "jasmine-boot":"../jasmine/lib/jasmine-2.3.4/boot",
+        "jasmine-html":"../jasmine/lib/jasmine-2.3.4/jasmine-html"
     },
     "map":{
         "*":{
             "react":"../bower_components/react/react",
             "React":"../bower_components/react/react",
-            'jquery':'jquery-tmp'
+            'jquery':'jquery-tmp',
+            "jasmine":"jasmine-boot"
         },
         "jquery-tmp":{'jquery':'jquery'}
     },
     "shim":{
         'CE':{
             deps:['AppObject','Math','MouseReader','CanvasLayer','KeyReader']
+        },
+        "jasmine-boot":{
+            deps:['jasmine-script','jasmine-html']
+        },
+        "jasmine-html":{
+            deps:['jasmine-script']
         }
     }
 });

@@ -72,9 +72,10 @@ define(
                 });
 
                 for(var i = 0; i <= 10;i++){
-                    gameEngine.createLayer();
+                    gameEngine.createLayer({
+                        name:'layer-'+i
+                    });
                 }
-
 
                 $("#tileset").change(function(){
                     var url = $(this).val();
@@ -198,9 +199,9 @@ define(
                 var grid = MapEditor.getMapAbstractGrid();
                 var gameEngine = MapEditor.getGameEngine();
                 /*
-                map.set({
-                    width:width
-                });*/
+                 map.set({
+                 width:width
+                 });*/
 
                 gameEngine.applyToLayers({
                     width:width*map.tile_w
@@ -216,9 +217,9 @@ define(
                 var map =MapEditor.getMap();
                 var gameEngine = MapEditor.getGameEngine();
                 /*
-                map.set({
-                    height:height
-                });*/
+                 map.set({
+                 height:height
+                 });*/
 
                 gameEngine.applyToLayers({
                     height:height*map.tile_h

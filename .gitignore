@@ -4,3 +4,4 @@ node_modules
 .module-cache
 *.min.min.js
 *.min.min.css
+jasmine
