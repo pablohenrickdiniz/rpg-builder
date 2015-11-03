@@ -25,7 +25,7 @@ define(
         AbstractGrid,
         ImageSet
     ){
-
+        'use strict';
         var MapEditor = {
             currentLayer:0,
             gameEngine:null,
@@ -71,7 +71,7 @@ define(
                     name:'grid'
                 });
 
-                for(var i = 0; i <= 10;i++){
+                for(var i = 0; i < 10;i++){
                     gameEngine.createLayer({
                         name:'layer-'+i
                     });
@@ -249,7 +249,7 @@ define(
                 var self = this;
                 if(self.abstractGridLayer == null){
                     var map = self.getMap();
-                    self.abstractGridLayer = self.getGameEngine().getLayer(10);
+                    self.abstractGridLayer = self.getGameEngine().getGridLayer();
                     self.abstractGridLayer.set({
                         width:map.width*map.tile_w,
                         height:map.height*map.tile_h
@@ -433,7 +433,7 @@ define(
                 var engine = this.getGameEngine();
                 var x = engine.viewX;
                 var y = engine.viewY;
-                var grid_layer = engine.getLayer(10);
+                var grid_layer = engine.getGridLayer();
                 var min_x = engine.getWidth()-grid_layer.width;
                 var min_y = engine.getHeight()-grid_layer.height;
                 min_x = min_x>0?0:min_x;

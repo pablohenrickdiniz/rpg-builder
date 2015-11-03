@@ -16,7 +16,8 @@ define(
         'Animation',
         'Overlap',
         'KeyReader',
-        'Filter'
+        'ObjectLayer',
+        'GridLayer'
     ],
     function(
         CE,
@@ -35,9 +36,10 @@ define(
         Animation,
         Overlap,
         KeyReader,
-        Filter
+        ObjectLayer,
+        GridLayer
     ){
-
+        'use strict';
         var AnimationEditor = {
             animationCanvas:null,
             animationImage:null,
@@ -87,7 +89,9 @@ define(
                 self.getAnimationCanvas();
                 var canvasImage = self.getAnimationImage();
                 self.getFrameList();
-                self.graphicLayer = canvasImage.createLayer();
+                self.graphicLayer = canvasImage.createLayer({
+                    name:'graphic-layer'
+                });
                 $('#grid-color').change(function(){
                     var color = $(this).val();
                     var canvas = self.getAnimationImage();
@@ -301,7 +305,7 @@ define(
              */
             playAnimation:function(){
                 console.log('Playing animation...');
-                self.frameLayers.forEach(function(layer){
+                AnimationEditor.frameLayers.forEach(function(layer){
                     layer.unselectObjects();
                 });
                 AnimationEditor.playing = true;
@@ -498,7 +502,9 @@ define(
                                 sx:rect.x,
                                 sy:rect.y,
                                 width:rect.width,
-                                height:rect.height
+                                height:rect.height,
+                                sWidth:rect.width,
+                                sHeight:rect.height
                             });
                             self.croppedImage.set({
                                 x:(canvas.getWidth()/2)-(rect.width/2),
@@ -555,16 +561,14 @@ define(
                 console.log('add frame...');
                 var self = AnimationEditor;
                 var index = self.frameLayers.length;
-                console.log('index');
                 var canvas = self.getAnimationCanvas();
                 var layer = canvas.createLayer({
                     width:canvas.getWidth(),
                     height:canvas.getHeight(),
-                    type:'object'
-                });
-
+                    name:'frame-'+index
+                },ObjectLayer);
                 var frame = new Frame();
-                self.getAnimation().addFrame(frame);
+                self.getAnimation().add(frame);
                 self.frameLayers.push(layer);
                 self.getFrameList().addItem('# Frame');
                 self.getFrameList().itemSelect(index);
@@ -579,11 +583,11 @@ define(
                 var self = AnimationEditor;
                 if(self.croppedImage != null){
                     var layer = self.getAnimationCanvas().getLayer(self.currentFrame);
-                    if(layer != null){
-                        var frame = self.getAnimation().frames[self.currentFrame];
+                    if(layer != null && layer instanceof ObjectLayer){
+                        var frame = self.getAnimation().get(self.currentFrame);
                         var cropped = self.croppedImage.clone();
                         layer.add(cropped);
-                        frame.imageSets.push(cropped);
+                        frame.add(cropped);
                     }
                 }
             },
@@ -594,8 +598,8 @@ define(
             removeFrame:function(index){
                 var self = AnimationEditor;
                 if(self.frameLayers[index] != undefined){
-                    self.getAnimation().frames.splice(index,1);
-                    self.getAnimationCanvas().removeLayer(index);
+                    self.getAnimation().remove(index);
+                    self.getAnimationCanvas().removeLayer(self.frameLayers[index]);
                     self.frameLayers.splice(index,1);
                     self.frameSelect(Math.max(Math.min(index,self.frameLayers.length-1),0));
                 }
@@ -606,7 +610,7 @@ define(
                     var self = AnimationEditor;
                     self.getAnimationCanvas().removeLayers(self.frameLayers);
                     self.frameLayers = [];
-                    self.getAnimation().frames = [];
+                    self.getAnimation().clearFrames();
                     self.frameSelect(-1);
                     self.getFrameList().setState({
                         items:[],
@@ -621,8 +625,8 @@ define(
             frameSelect:function(index){
                 var self = AnimationEditor;
                 self.currentFrame = index;
-                self.frameLayers.forEach(function(layer,aux){
-                    if(index == aux){
+                self.frameLayers.forEach(function(layer,i){
+                    if(i == index){
                         layer.set({
                             opacity:1
                         });
@@ -658,10 +662,8 @@ define(
                 var self = AnimationEditor;
                 var animation = self.getAnimation();
                 var layers = self.frameLayers;
-                if(animation.frames[indexA] != undefined && animation.frames[indexB] != undefined && layers[indexA] != undefined && layers[indexB] != undefined){
-                    var aux_frame = animation.frames[indexA];
-                    animation.frames[indexA] = animation.frames[indexB];
-                    animation.frames[indexB] = aux_frame;
+                if(animation.get(indexA) != undefined && animation.get(indexB) != undefined && layers[indexA] != undefined && layers[indexB] != undefined){
+                    animation.swap(indexA,indexB);
                     var aux_layer = layers[indexA];
                     layers[indexA] = layers[indexB];
                     layers[indexB] = aux_layer;
@@ -669,6 +671,7 @@ define(
                     layers[indexA].set({
                         zIndex:indexA
                     });
+
                     layers[indexB].set({
                         zIndex:indexB
                     });
@@ -703,7 +706,7 @@ define(
                 return self.frameList;
             },
             export:function(){
-                console.log(AnimationEditor.getAnimation().toJSON());
+                console.log(AnimationEditor.getAnimation()._props());
             },
             showFrames:function(){
                 AnimationEditor.frameLayers.forEach(function(layer){

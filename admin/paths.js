@@ -3,6 +3,9 @@ requirejs.config({
     "paths":{
         "CE":"../bower_components/CanvasEngine/src/core/CanvasEngine",
         "CanvasLayer":"../bower_components/CanvasEngine/src/core/CanvasLayer",
+        "ObjectLayer":"../bower_components/CanvasEngine/src/core/ObjectLayer",
+        "GridLayer":"../bower_components/CanvasEngine/src/core/GridLayer",
+        "AppIdGenerator":"../bower_components/CanvasEngine/src/utils/IdGenerator",
         "AppObject":"../bower_components/CanvasEngine/src/core/AppObject",
         "Math":"../bower_components/MathLib/src/Math",
         "MouseReader":"../bower_components/CanvasEngine/src/Reader/MouseReader",
@@ -47,7 +50,8 @@ requirejs.config({
             'jquery':'jquery-tmp',
             "jasmine":"jasmine-boot"
         },
-        "jquery-tmp":{'jquery':'jquery'}
+        "jquery-tmp":{'jquery':'jquery'},
+        "AppObject":{'IdGenerator':'AppIdGenerator'}
     },
     "shim":{
         'CE':{
