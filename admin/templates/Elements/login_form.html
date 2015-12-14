@@ -1,0 +1,43 @@
+<style type="text/css">
+    #submit-btn{
+        border-radius: 0;
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    #login-container{
+        background-color: white;
+    }
+</style>
+<div class="container" id="login-container">
+    <div class="col-md-5 col-md-offset-3">
+        <div class="box box-primary" style="margin-top:20px;">
+            <div class="box-header with-border">
+                <h1 class="box-title"><b>Efetuar Login</b></h1>
+            </div>
+            <div class="box-body">
+                <form ng-controller="UserController" ng-init="init()" novalidate name="loginForm">
+                    <div class="form-group">
+                        <input type="email" name="username" class="form-control" placeholder="email@domain.com" ng-model="username" required/>
+                        <span ng-if="loginForm.username.$dirty">
+                            <span class="text-danger" ng-if="loginForm.username.$error.required">Informe o nome de usuário</span>
+                            <span class="text-danger" ng-if="loginForm.username.$error.email">Esse endereço de e-mail é inválido</span>
+                        </span>
+
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="***********" ng-model="password" ng-minlength="8" ng-maxlength="100" required/>
+                        <span ng-if="loginForm.password.$dirty">
+                            <span class="text-danger" ng-if="loginForm.password.$error.required">Informe a senha</span>
+                            <span class="text-danger" ng-if="loginForm.password.$error.minlength || loginForm.password.$error.maxlength">A senha deve conter entre 6 e 100 caracteres</span>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block" id="submit-btn" ng-click="submit()" ng-disabled="loginForm.username.$invalid || loginForm.password.$invalid || sending">Entrar</button>
+                    </div>
+                    <span ng-if="errors.connectionError" class="text-danger">Erro de conexão!</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
