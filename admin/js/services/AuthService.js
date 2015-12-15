@@ -11,7 +11,7 @@ app.factory('AuthService',['$http','Session',function($http,Session){
                 Session.create(response.data.auth);
             }
             success(response.data.auth);
-        },error());
+        },error);
     };
 
     auth_service.isAuthorized = function(roles){
@@ -20,6 +20,14 @@ app.factory('AuthService',['$http','Session',function($http,Session){
             return true;
         }
         return false;
+    };
+
+    auth_service.logout = function(){
+        Session.destroy();
+    };
+
+    auth_service.isAuthenticated = function(){
+        return Session.userId !== null;
     };
 
 

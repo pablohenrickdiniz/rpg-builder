@@ -36,9 +36,6 @@
                         <button type="submit" class="btn btn-primary btn-block" id="submit-btn" ng-click="submit()" ng-disabled="loginForm.username.$invalid || loginForm.password.$invalid || sending">Entrar</button>
                     </div>
                     <span ng-if="errors.connectionError" class="text-danger">Erro de conexão!</span>
-                    <span>{{response}}</span>
-                    <br/>
-                    <span>{{auth}}</span>
                 </form>
             </div>
         </div>

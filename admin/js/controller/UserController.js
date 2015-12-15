@@ -1,8 +1,4 @@
 app.controller('UserController',['$location','$rootScope','AuthService',function($location,$scope,AuthService){
-    $scope.credentials = {
-        username:'',
-        password:''
-    };
     $scope.sending = false;
     $scope.errors = {};
     $scope.response = {};
@@ -14,6 +10,10 @@ app.controller('UserController',['$location','$rootScope','AuthService',function
 
     $scope.init = function(){
         $scope.page.title = 'Efetuar Login';
+        $scope.credentials = {
+            username:'',
+            password:''
+        };
     };
 
     var self = this;
@@ -21,9 +21,9 @@ app.controller('UserController',['$location','$rootScope','AuthService',function
     $scope.submit = function(){
         $scope.sending = true;
         AuthService.login($scope.credentials,function($auth){
-            $scope.credentials = {};
             $scope.sending = false;
             $scope.auth = $auth;
+            $scope.errors = {};
         },function(){
             $scope.sending = false;
             $scope.errors.connectionError = true;
