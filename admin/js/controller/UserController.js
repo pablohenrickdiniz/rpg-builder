@@ -1,8 +1,10 @@
-app.controller('UserController',['$location','$rootScope','$http',function($location,$scope,$http){
-    $scope.username = '';
-    $scope.password = '';
+app.controller('UserController',['$location','$rootScope','AuthService',function($location,$scope,AuthService){
+    var self = this;
+    self.username  ='';
+    self.password = '';
     $scope.sending = false;
     $scope.errors = {};
+    $scope.response = {};
 
     $scope.isAdmin = function(){
         return true;
@@ -14,18 +16,16 @@ app.controller('UserController',['$location','$rootScope','$http',function($loca
 
     $scope.submit = function(){
         $scope.sending = true;
-        $http({
-            method:'post',
-            url:'http://localhost:9090/users/login',
-            data:{
-                username:$scope.username,
-                password:$scope.password
-            }
-        }).then(function(response){
-            $scope.errors = {};
-        },function(response){
-            $scope.errors.connectionError = true;
+        AuthService.login({
+            username:self.username,
+            password:self.password
+        },function(){
+            self.username = '';
+            self.password = '';
             $scope.sending = false;
+        },function(){
+            $scope.sending = false;
+            $scope.errors.connectionError = true;
         });
     };
 }]);
