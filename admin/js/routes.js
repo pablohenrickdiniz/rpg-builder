@@ -39,6 +39,4 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
         url:'/',
         redirectTo:'panel'
     });
-
-
 }]);
