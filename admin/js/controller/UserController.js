@@ -24,6 +24,7 @@ app.controller('UserController',['$location','$rootScope','AuthService',function
             $scope.sending = false;
             $scope.auth = $auth;
             $scope.errors = {};
+            console.log($auth);
         },function(){
             $scope.sending = false;
             $scope.errors.connectionError = true;

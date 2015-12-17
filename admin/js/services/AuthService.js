@@ -5,7 +5,8 @@ app.factory('AuthService',['$http','Session',function($http,Session){
         $http({
             method:'POST',
             url:'http://localhost:9090/users/login',
-            data:credentials
+            data:credentials,
+            withCredentials:true
         }).then(function(response){
             if(response.data.success){
                 Session.create(response.data.auth);
