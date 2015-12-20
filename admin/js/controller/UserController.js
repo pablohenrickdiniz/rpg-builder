@@ -1,8 +1,6 @@
 app.controller('UserController',['$location','$rootScope','AuthService',function($location,$scope,AuthService){
     $scope.sending = false;
     $scope.errors = {};
-    $scope.response = {};
-    $scope.auth = {};
 
     $scope.isAdmin = function(){
         return true;
@@ -20,11 +18,10 @@ app.controller('UserController',['$location','$rootScope','AuthService',function
 
     $scope.submit = function(){
         $scope.sending = true;
-        AuthService.login($scope.credentials,function($auth){
+        AuthService.login($scope.credentials,function($user){
+            $scope.setUser($user);
             $scope.sending = false;
-            $scope.auth = $auth;
             $scope.errors = {};
-            console.log($auth);
         },function(){
             $scope.sending = false;
             $scope.errors.connectionError = true;

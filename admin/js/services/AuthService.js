@@ -9,14 +9,19 @@ app.factory('AuthService',['$http','Session',function($http,Session){
             withCredentials:true
         }).then(function(response){
             if(response.data.success){
-                Session.create(response.data.auth);
+                var auth = response.data.auth;
+                Session.create(
+                    auth.sessionId,
+                    auth.user._id,
+                    auth.user.role,
+                    auth.accessToken
+                );
             }
-            success(response.data.auth);
+            success(response.data.auth.user);
         },error);
     };
 
     auth_service.isAuthorized = function(roles){
-        console.log(roles);
         if(roles.indexOf('public') !== -1){
             return true;
         }
@@ -30,7 +35,6 @@ app.factory('AuthService',['$http','Session',function($http,Session){
     auth_service.isAuthenticated = function(){
         return Session.userId !== null;
     };
-
 
     return auth_service;
 }]);
