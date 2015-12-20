@@ -13,14 +13,26 @@ app.run(['$rootScope','$state','$location','AuthService',function($rootScope,$st
         title :'Bem Vindo Ao Painel Administrativo do Rpg Builder!'
     };
 
+
     $rootScope.$on('$stateChangeStart', function (event, next,params) {
         if(next.redirectTo){
             event.preventDefault();
             $state.go(next.redirectTo,params);
+        }
+        else if(!AuthService.loaded){
+            AuthService.loadSession(function(loaded){
+                if(!loaded){
+                    event.preventDefault();
+                    $state.go('login',params);
+                }
+            });
         }
         else if(!AuthService.isAuthorized(next.data.authorizedRoles)){
             event.preventDefault();
             $state.go('login',params);
         }
     });
+
+
+
 }]);

@@ -14,4 +14,6 @@ app.service('Session',function(){
         self.accessToken = null;
         self.sessionId = null;
     };
+
+    this.destroy();
 });

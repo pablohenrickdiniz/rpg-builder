@@ -9,7 +9,9 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-
+                <li ng-if="isLogged()">
+                    <a href="" ng-click="logout()"><span class="fa fa-sign-out"></span></a>
+                </li>
             </ul>
         </div>
     </nav>

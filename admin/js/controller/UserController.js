@@ -1,4 +1,4 @@
-app.controller('UserController',['$location','$rootScope','AuthService',function($location,$scope,AuthService){
+app.controller('UserController',['$location','$rootScope','AuthService','$state',function($location,$scope,AuthService,$state){
     $scope.sending = false;
     $scope.errors = {};
 
@@ -14,17 +14,14 @@ app.controller('UserController',['$location','$rootScope','AuthService',function
         };
     };
 
-    var self = this;
-
     $scope.submit = function(){
         $scope.sending = true;
         AuthService.login($scope.credentials,function($user){
-            $scope.setUser($user);
+            $scope.setCurrentUser($user);
+            $state.go('panel');
             $scope.sending = false;
-            $scope.errors = {};
         },function(){
             $scope.sending = false;
-            $scope.errors.connectionError = true;
         });
     };
 }]);
