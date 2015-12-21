@@ -40,6 +40,7 @@ app.factory('AuthService',['$rootScope','$http','Session','$state',function($sco
         },
         logout: function(){
             Session.destroy();
+            $scope.setCurrentUser(null);
             $http({
                 method:'GET',
                 url:'http://localhost:9090/users/logout',
