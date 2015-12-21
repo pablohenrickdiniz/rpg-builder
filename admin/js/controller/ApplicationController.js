@@ -5,6 +5,7 @@ app.controller('ApplicationController',['$rootScope','USER_ROLES','AuthService',
     $scope.isLogged = AuthService.isLogged;
 
     $scope.setCurrentUser = function(currentUser){
+        console.log(currentUser);
         $scope.currentUser = currentUser;
     };
 

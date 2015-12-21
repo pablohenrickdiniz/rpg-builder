@@ -17,7 +17,6 @@ app.controller('UserController',['$location','$rootScope','AuthService','$state'
     $scope.submit = function(){
         $scope.sending = true;
         AuthService.login($scope.credentials,function($user){
-            $scope.setCurrentUser($user);
             $state.go('panel');
             $scope.sending = false;
         },function(){

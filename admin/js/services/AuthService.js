@@ -1,4 +1,4 @@
-app.factory('AuthService',['$http','Session','$state',function($http,Session,$state){
+app.factory('AuthService',['$rootScope','$http','Session','$state',function($scope,$http,Session,$state){
     return {
         loaded:false,
         login:function(credentials,success,error){
@@ -12,11 +12,19 @@ app.factory('AuthService',['$http','Session','$state',function($http,Session,$st
                 if(response.data.success){
                     var auth = response.data.auth;
                     self.createSession(auth);
+                    $scope.setCurrentUser(auth.user);
                 }
-                success(response.data.auth.user);
+                else{
+                    error();
+                }
             },error);
         },
-        isAuthorized:function(roles){
+        isAuthorized:function(){
+            var roles = [];
+            for(var i = 0; i < arguments.length;i++){
+                roles = roles.concat(arguments[i]);
+            }
+
             if(roles.indexOf('public') !== -1 || roles.indexOf(Session.role) !== -1){
                 return true;
             }
@@ -55,7 +63,9 @@ app.factory('AuthService',['$http','Session','$state',function($http,Session,$st
                 withCredentials:true
             }).then(function(response){
                 if(response.data.success){
-                    self.createSession(response.data.auth);
+                    var auth = response.data.auth;
+                    self.createSession(auth);
+                    $scope.setCurrentUser(auth.user);
                     callback(true);
                 }
                 else{

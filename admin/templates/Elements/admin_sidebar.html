@@ -2,7 +2,7 @@
     <!-- Inner sidebar -->
     <div class="sidebar">
         <!-- Sidebar Menu -->
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" ng-if="isAuthorized('admin','user','ameixa')">
             <li class="header">Ferramentas de Edição</li>
             <li ng-class="{active: isActive('/map-editor')}"><a ng-href="#/map-editor">Editor de Mapa</a></li>
             <li ng-class="{active: isActive('/animation-editor')}"><a ng-href="#/animation-editor">Editor de Animação</a></li>
