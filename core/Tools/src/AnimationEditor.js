@@ -92,21 +92,11 @@ define(
                 self.graphicLayer = canvasImage.createLayer({
                     name:'graphic-layer'
                 });
-                $('#grid-color').change(function(){
-                    var color = $(this).val();
-                    var canvas = self.getAnimationImage();
-                    var grid = canvas.getGrid();
-                    grid.apply({
-                        strokeStyle:color
-                    });
-                    canvas.redrawGrid();
-                });
-
                 /*
-                ReactDom.render(
-                    <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
-                    document.getElementById('input-image-container')
-                );*/
+                 ReactDom.render(
+                 <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
+                 document.getElementById('input-image-container')
+                 );*/
 
 
                 ReactDom.render(
@@ -144,17 +134,17 @@ define(
                     document.getElementById('actions-container')
                 );
                 /*
-                canvasImage.getMouseReader().onmousedown(3,function(e){
-                    if(self.image != null){
-                        var reader = this;
-                        var left = Math.vpv(reader.lastDown.right,{x:Math.abs(canvasImage.viewX),y:Math.abs(canvasImage.viewY)});
-                        var color = self.getAnimationImage().getLayer(0).getPixel(left.x,left.y);
-                        Filter.applyFilter(Filter.removeColor,self.image,[color],function(img){
-                            self.image = img;
-                            self.getAnimationImage().getLayer(0).clear().drawImage(self.image,0,0);
-                        });
-                    }
-                });*/
+                 canvasImage.getMouseReader().onmousedown(3,function(e){
+                 if(self.image != null){
+                 var reader = this;
+                 var left = Math.vpv(reader.lastDown.right,{x:Math.abs(canvasImage.viewX),y:Math.abs(canvasImage.viewY)});
+                 var color = self.getAnimationImage().getLayer(0).getPixel(left.x,left.y);
+                 Filter.applyFilter(Filter.removeColor,self.image,[color],function(img){
+                 self.image = img;
+                 self.getAnimationImage().getLayer(0).clear().drawImage(self.image,0,0);
+                 });
+                 }
+                 });*/
 
                 var animationCanvas = self.getAnimationCanvas();
                 var animationMouseReader = animationCanvas.getMouseReader();
@@ -289,6 +279,15 @@ define(
             changeSpeed:function(e){
                 var val = parseInt(e.target.value);
                 AnimationEditor.getAnimation().setSpeed(val);
+            },
+            changeGridColor:function(color){
+                var self = this;
+                var canvas = self.getAnimationImage();
+                var grid = canvas.getGrid();
+                grid.apply({
+                    strokeStyle:color
+                });
+                canvas.redrawGrid();
             },
             /*
              void : playAnimation()

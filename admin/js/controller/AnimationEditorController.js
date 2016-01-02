@@ -1,31 +1,44 @@
-app.controller('AnimationEditorController',['$rootScope',function($scope){
-    $scope.AnimationEditor = null;
-    $scope.rows = 1;
-    $scope.cols = 1;
+app.controller('AnimationEditorController',['$rootScope','AnimationService',function($scope,AnimationService){
+    /*scope*/
+    $scope.init = function(){
+        $scope.page.title = 'Editor de Animações';
+    };
+
+    $scope.initAnimation = function(){
+        AnimationService.init();
+    };
 
     $scope.data = {
         images:[],
         image:null
     };
 
+    $scope.graphic = {
+        rows:1,
+        cols:1,
+        gridColor:'#000000'
+    };
 
-    $scope.init = function(){
-        require(['AnimationEditor'],function(AnimationEditor){
-            $scope.AnimationEditor = AnimationEditor;
-            $scope.$apply();
-            $scope.AnimationEditor.initialize();
-        });
-        $scope.page.title = 'Editor de Animações';
+    $scope.animation = {
+        frames:[]
+    };
+
+    $scope.layers = {
+        canvas:[],
+        width:560,
+        height:400,
+        visible:null
     };
 
     $scope.changeRows = function(val){
-        $scope.rows = val;
-        $scope.AnimationEditor.rowsChange(val);
+        $scope.graphic.rows = val;
+        AnimationService.changeRows(val);
     };
 
     $scope.changeCols = function(val){
-        $scope.cols = val;
-        $scope.AnimationEditor.colsChange(val);
+        $scope.graphic.cols = val;
+        AnimationService.changeCols(val);
+
     };
 
     $scope.addImages = function(images){
@@ -33,7 +46,25 @@ app.controller('AnimationEditorController',['$rootScope',function($scope){
     };
 
     $scope.changeGraphic = function(){
-        $scope.AnimationEditor.changeGraphic($scope.data.image.url);
+        AnimationService.changeGraphic($scope.data.image.url);
+    };
+
+    $scope.changeGridColor = function(color){
+        $scope.graphic.gridColor = color;
+        AnimationService.changeGridColor($scope.graphic.gridColor);
+    };
+
+    $scope.addFrame = function(){
+        $scope.layers.visible = $scope.layers.canvas.length;
+        $scope.layers.canvas.push({});
+    };
+
+    $scope.removeFrame = function(index){
+        $scope.layers.canvas.splice(index,1);
+    };
+
+    $scope.selectFrame = function(frame){
+        $scope.layers.visible = frame;
     };
 }]);
 

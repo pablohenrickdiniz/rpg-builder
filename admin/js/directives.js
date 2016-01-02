@@ -132,3 +132,60 @@ app.directive('inputImage',function(){
         }
     };
 });
+
+app.directive('inputColor',function(){
+    return {
+        restrict:'A',
+        templateUrl:'templates/Elements/input_color.html',
+        scope:{
+            ngChange:'&',
+            value:'@value'
+        },
+        replace:true,
+        link:function(scope, element){
+            var inputColor = element.find('input');
+            inputColor.on('change',function(e){
+                scope.value = e.target.value;
+                scope.change();
+            });
+
+            scope.change = function(){
+                console.log(scope.value);
+                scope.ngChange()(scope.value);
+            };
+        }
+    };
+});
+
+app.directive('framePlayer',function(){
+    return {
+        restrict:'E',
+        templateUrl:'templates/Elements/frame_player.html',
+        scope:{
+            title:'@title',
+            ngAdd:'&',
+            ngSelect:'&',
+            ngRemove:'&'
+        },
+        link:function(scope){
+            scope.frames = [];
+            scope.selected = null;
+            scope.add = function(){
+                var frame =  scope.ngAdd()();
+                scope.frames.push(frame);
+                scope.selected = scope.frames.length-1;
+            };
+
+            scope.remove = function(index){
+                scope.frames.splice(index,1);
+                scope.ngRemove()(index);
+            };
+
+            scope.select = function(index){
+                var frame = scope.frames[index];
+                scope.selected = index;
+                scope.ngSelect()(index);
+            };
+        }
+    };
+});

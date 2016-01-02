@@ -1,4 +1,4 @@
-define(['jquery'],function($){
+app.factory('ImageLoader',function(){
     return {
         loadedImages:[],
         loadAll:function(images,loaded,callback){
@@ -18,7 +18,7 @@ define(['jquery'],function($){
             var self = this;
             var a = document.createElement('a');
             a.href = url;
-            url = $(a).prop('href');
+            url = angular.element(a).prop('href');
             if(self.loadedImages[url] === undefined){
                 var img = new Image();
                 img.src = url;

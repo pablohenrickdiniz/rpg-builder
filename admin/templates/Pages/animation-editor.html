@@ -6,18 +6,19 @@
         <div class="row">
             <div class="col-sm-12">
                 <div id="canvas-container">
-
+                    <canvas data-type="grid-layer" data-width="{{layers.width}}" data-height="{{layers.height}}" ng-init="initAnimation()"></canvas>
+                    <canvas ng-repeat="canvas in layers.canvas track by $index" data-width="{{layers.width}}" data-height="{{layers.height}}" ng-style="{position:'absolute',opacity:layers.visible == $index?1:0}"></canvas>
                 </div>
             </div>
             <div class="col-sm-12"  id="controls-container">
 
             </div>
             <div class="col-sm-12" id="list-container">
-
+                <frame-player title="Frames" ng-add="addFrame" ng-remove="removeFrame" ng-select="selectFrame"></frame-player>
             </div>
         </div>
     </div>
-    <div class="col-sm-6" ng-if="AnimationEditor != null">
+    <div class="col-sm-6">
         <div class="row">
             <div class="col-sm-12" id="animations">
 
@@ -26,11 +27,11 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <label>Linhas</label>
-                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="animation.rows"/>
+                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="graphic.rows"/>
                     </div>
                     <div class="col-sm-6">
                         <label>Colunas</label>
-                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="animation.cols">
+                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="graphic.cols">
                     </div>
                 </div>
             </div>
@@ -44,7 +45,7 @@
             </div>
             <div class="col-sm-6">
                 <label for="">Cor da grade</label>
-                <input type="color" class="form-control" id="grid-color"/>
+                <input type="color" input-color ng-change="changeGridColor" ng-model="graphic.gridColor"/>
             </div>
         </div>
     </div>

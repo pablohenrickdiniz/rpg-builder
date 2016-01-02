@@ -1,0 +1,20 @@
+<div class="box box-primary">
+    <table class="table bring-up">
+        <thead>
+        <tr>
+            <th>{{title}}</th>
+            <th>
+                <button class="btn btn-default pull-right" ng-click="add()">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="frame in frames track by $index" ng-click="select($index)" ng-class="{active:(selected == $index)}">
+                <td>#Frame {{$index+1}}</td>
+                <td><span class="close" ng-click="remove($index)">&times;</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
