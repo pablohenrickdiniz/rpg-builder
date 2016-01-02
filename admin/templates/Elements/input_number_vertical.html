@@ -1,0 +1,15 @@
+<div class="input-group">
+    <div class="input-group number">
+        <input type="number" class="form-control" ng-change="change()"  ng-model="value" string-to-number/>
+            <span class="input-group-btn">
+                <button class="btn btn-default" ng-mousedown="decrement()" ng-mouseout="stop()">
+                    <span class="fa fa-arrow-down" ></span>
+                </button>
+            </span>
+        <span class="input-group-btn">
+            <button class="btn btn-default" ng-mousedown="increment()" ng-mouseout="stop()">
+                <span class="fa fa-arrow-up" ></span>
+            </button>
+        </span>
+    </div>
+</div>

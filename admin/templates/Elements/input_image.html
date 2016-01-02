@@ -1,0 +1,21 @@
+<div class="input-image">
+    <label>{{title}}</label>
+    <div class="input-group">
+        <input type="file" class="form-control" multiple="{{multiple}}">
+        <button type="button" ng-click="select()">Selecione as Imagens</button>
+        <span ng-if="files.length">
+            <span class="input-image-info" ng-if="files.length == 1">
+                 1 imagem selecionada
+            </span>
+             <span class="input-image-info" ng-if="files.length > 1">
+                {{files.length}} imagens selecionadas
+            </span>
+        </span>
+
+        <span class="input-group-btn">
+            <button class="btn btn-default" ng-click="addImages()">
+                <span class="fa fa-plus"></span>
+            </button>
+        </span>
+    </div>
+</div>

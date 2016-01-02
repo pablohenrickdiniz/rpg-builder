@@ -9,8 +9,15 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
             authorizedRoles:['admin']
         }
     }).state('resources', {
-        url: '/resources-center',
+        url: '/resources',
         templateUrl: 'templates/Pages/resources.html',
+        data:{
+            authorizedRoles:['admin']
+        }
+    }).state('tilesets',{
+        url:'/resources/tilesets',
+        templateUrl:'templates/Pages/tilesets.html',
+        controller:'TilesetsController',
         data:{
             authorizedRoles:['admin']
         }
@@ -24,7 +31,7 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
     }).state('animation-editor', {
         url: '/animation-editor',
         templateUrl: 'templates/Pages/animation-editor.html',
-        controller: 'AnimationEditorController as AnimEditorCtrl',
+        controller: 'AnimationEditorController',
         data:{
             authorizedRoles:['admin']
         }

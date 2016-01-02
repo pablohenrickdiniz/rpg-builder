@@ -101,10 +101,14 @@ define(
                     });
                     canvas.redrawGrid();
                 });
+
+                /*
                 ReactDom.render(
-                    React.createElement(InputImage, {title: "Adicionar Gráfico", multiple: "true", add: self.addGraphics}),
+                    <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
                     document.getElementById('input-image-container')
-                );
+                );*/
+
+
                 ReactDom.render(
                     React.createElement("div", {className: "form-group row"}, 
                         React.createElement("div", {className: "col-md-12"}, 
@@ -112,19 +116,6 @@ define(
                         )
                     ),
                     document.getElementById('controls-container')
-                );
-                ReactDom.render(
-                    React.createElement("div", {className: "row"}, 
-                        React.createElement("div", {className: "col-sm-6"}, 
-                            React.createElement("label", null, "Linhas"), 
-                            React.createElement(InputNumberVertical, {min: 1, max: 1000, onChange: self.rowsChange, value: 1})
-                        ), 
-                        React.createElement("div", {className: "col-sm-6"}, 
-                            React.createElement("label", null, "Colunas"), 
-                            React.createElement(InputNumberVertical, {min: 1, max: 1000, onChange: self.colsChange, value: 1})
-                        )
-                    ),
-                    document.getElementById('size-container')
                 );
 
                 ReactDom.render(
@@ -336,7 +327,7 @@ define(
              */
             rowsChange:function(rows){
                 var self = AnimationEditor;
-                if(self.image != null){
+                if(self.image !== null){
                     self.getAnimationImage().updateGrid({
                         sh:self.image.height/rows
                     });
@@ -350,7 +341,7 @@ define(
              */
             colsChange:function(cols){
                 var self = AnimationEditor;
-                if(self.image != null){
+                if(self.image !== null){
                     self.getAnimationImage().updateGrid({
                         sw:self.image.width/cols
                     });

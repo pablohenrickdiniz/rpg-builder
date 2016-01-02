@@ -7,3 +7,43 @@
 .effect.ng-enter.ng-enter-active {
     opacity:1;
 }
+
+.test{
+    background-color: rgba(100,100,100,0.1);
+}
+
+.input-group.number input{
+    border-radius:0;
+    border-right:none;
+}
+
+.input-group.number .input-group-btn button{
+    border-radius:0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.input-image .input-group{
+    border-radius:0;
+    border:1px solid #DDD;
+}
+
+.input-image input[type=file]{
+    display: none;
+}
+
+.input-image > .input-group > button{
+    padding: 5px;
+}
+
+.input-image .input-group-btn .btn{
+    border-radius:0;
+    border-top:none;
+    border-right:none;
+    border-bottom:none;
+}

@@ -1,4 +1,4 @@
-var app = angular.module('rpgAdmin',['ui.router']);
+var app = angular.module('rpgAdmin',['angularUtils.directives.dirPagination','ui.router']);
 
 
 

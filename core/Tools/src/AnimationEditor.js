@@ -101,10 +101,14 @@ define(
                     });
                     canvas.redrawGrid();
                 });
+
+                /*
                 ReactDom.render(
                     <InputImage title="Adicionar Gráfico" multiple="true" add={self.addGraphics}/>,
                     document.getElementById('input-image-container')
-                );
+                );*/
+
+
                 ReactDom.render(
                     <div className="form-group row">
                         <div className="col-md-12">
@@ -112,19 +116,6 @@ define(
                         </div>
                     </div>,
                     document.getElementById('controls-container')
-                );
-                ReactDom.render(
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <label>Linhas</label>
-                            <InputNumberVertical min={1} max={1000} onChange={self.rowsChange} value={1}/>
-                        </div>
-                        <div className="col-sm-6">
-                            <label>Colunas</label>
-                            <InputNumberVertical min={1} max={1000} onChange={self.colsChange} value={1}/>
-                        </div>
-                    </div>,
-                    document.getElementById('size-container')
                 );
 
                 ReactDom.render(
@@ -336,7 +327,7 @@ define(
              */
             rowsChange:function(rows){
                 var self = AnimationEditor;
-                if(self.image != null){
+                if(self.image !== null){
                     self.getAnimationImage().updateGrid({
                         sh:self.image.height/rows
                     });
@@ -350,7 +341,7 @@ define(
              */
             colsChange:function(cols){
                 var self = AnimationEditor;
-                if(self.image != null){
+                if(self.image !== null){
                     self.getAnimationImage().updateGrid({
                         sw:self.image.width/cols
                     });
