@@ -1,4 +1,4 @@
-app.controller('AnimationEditorController',['$rootScope','AnimationService',function($scope,AnimationService){
+app.controller('AnimationEditorController',['$rootScope','AnimationService','$document',function($scope,AnimationService,$document){
     /*scope*/
     $scope.init = function(){
         $scope.page.title = 'Editor de Animações';
@@ -57,6 +57,7 @@ app.controller('AnimationEditorController',['$rootScope','AnimationService',func
     $scope.addFrame = function(){
         $scope.layers.visible = $scope.layers.canvas.length;
         $scope.layers.canvas.push({});
+        AnimationService.addFrame();
     };
 
     $scope.removeFrame = function(index){
@@ -65,6 +66,11 @@ app.controller('AnimationEditorController',['$rootScope','AnimationService',func
 
     $scope.selectFrame = function(frame){
         $scope.layers.visible = frame;
+    };
+
+    $scope.addEngine = function(element){
+        console.log(element);
+       // AnimationService.addFrame(element);
     };
 }]);
 

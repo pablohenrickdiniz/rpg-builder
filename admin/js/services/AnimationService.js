@@ -359,21 +359,13 @@ app.factory('AnimationService',['ImageLoader',function(ImageLoader){
             });
             canvas.redrawGrid();
         },
-        addFrame:function(callback){
-            /*
+        addFrame:function(element){
             var self = this;
-            var index = self.frameLayers.length;
             var canvas = self.getAnimationCanvas();
             var layer = canvas.createLayer({
-                width:canvas.getWidth(),
-                height:canvas.getHeight(),
-                name:'frame-'+index
+                element:element
             },CE.ObjectLayer);
-            self.getAnimation().add({});
-            self.frameLayers.push(layer);
-            self.currentFrame = index;
             self.addObject();
-            callback();*/
         },
         getAnimation:function(){
             var self = this;
