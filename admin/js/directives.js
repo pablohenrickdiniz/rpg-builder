@@ -190,3 +190,18 @@ app.directive('framePlayer',function(){
     };
 });
 
+app.directive('animationCanvas',function(){
+    return {
+        restrict:'E',
+        templateUrl:'templates/Elements/animation_canvas.html',
+        scope:{
+            data:'=data'
+        },
+        link:function(scope, element){
+            scope.initializeCanvas = function(index){
+                var canvas = element.find('canvas[data-type=default]')[index];
+                scope.data.functions.addElement(canvas);
+            };
+        }
+    };
+});

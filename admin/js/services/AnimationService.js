@@ -1,6 +1,7 @@
 app.factory('AnimationService',['ImageLoader',function(ImageLoader){
     return {
         animationImage:null,
+        animationCanvas:null,
         accordion:null,
         frameList:null,
         graphicLayer:null,
@@ -182,7 +183,7 @@ app.factory('AnimationService',['ImageLoader',function(ImageLoader){
         },
         getAnimationImage:function(){
             var self = this;
-            if(self.animationImage == null){
+            if(self.animationImage === null){
                 self.animationImage = CE.createEngine({
                     container:'#animations',
                     width:560,
@@ -366,6 +367,11 @@ app.factory('AnimationService',['ImageLoader',function(ImageLoader){
                 element:element
             },CE.ObjectLayer);
             self.addObject();
+        },
+        removeFrame:function(index){
+            var self = this;
+            self.getAnimationCanvas().removeLayer(index);
+            self.getAnimation().remove(index);
         },
         getAnimation:function(){
             var self = this;

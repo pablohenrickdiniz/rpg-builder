@@ -5,10 +5,7 @@
     <div class="col-sm-6">
         <div class="row">
             <div class="col-sm-12">
-                <div id="canvas-container">
-                    <canvas data-type="grid-layer" data-width="{{layers.width}}" data-height="{{layers.height}}" ng-init="initAnimation()"></canvas>
-                    <canvas ng-init="addEngine(this)" ng-repeat="canvas in layers.canvas track by $index" data-width="{{layers.width}}" data-height="{{layers.height}}" ng-style="{position:'absolute',opacity:layers.visible == $index?1:0}"></canvas>
-                </div>
+                <animation-canvas data="animationData"></animation-canvas>
             </div>
             <div class="col-sm-12"  id="controls-container">
 

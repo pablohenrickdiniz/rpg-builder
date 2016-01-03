@@ -4,73 +4,70 @@ app.controller('AnimationEditorController',['$rootScope','AnimationService','$do
         $scope.page.title = 'Editor de Animações';
     };
 
-    $scope.initAnimation = function(){
-        AnimationService.init();
+    $scope.animationData = {
+        animation:{
+            frames:[]
+        },
+        layers:{
+            canvas:[],
+            width:560,
+            height:400,
+            visible:null
+        },
+        graphic:{
+            rows:1,
+            cols:1,
+            gridColor:'#000000',
+            images:[],
+            image:null
+        },
+        functions:{
+            initAnimation:function(){
+                AnimationService.init();
+            },
+            addElement:function(element){
+                AnimationService.addFrame(element);
+            }
+        }
     };
 
-    $scope.data = {
-        images:[],
-        image:null
-    };
-
-    $scope.graphic = {
-        rows:1,
-        cols:1,
-        gridColor:'#000000'
-    };
-
-    $scope.animation = {
-        frames:[]
-    };
-
-    $scope.layers = {
-        canvas:[],
-        width:560,
-        height:400,
-        visible:null
-    };
 
     $scope.changeRows = function(val){
-        $scope.graphic.rows = val;
+        $scope.animationData.graphic.rows = val;
         AnimationService.changeRows(val);
     };
 
     $scope.changeCols = function(val){
-        $scope.graphic.cols = val;
+        $scope.animationData.graphic.cols = val;
         AnimationService.changeCols(val);
 
     };
 
     $scope.addImages = function(images){
-        $scope.data.images = $scope.data.images.concat(images);
+        $scope.animationData.graphic.images = $scope.animationData.graphic.images.concat(images);
     };
 
     $scope.changeGraphic = function(){
-        AnimationService.changeGraphic($scope.data.image.url);
+        AnimationService.changeGraphic($scope.animationData.graphic.image.url);
     };
 
     $scope.changeGridColor = function(color){
         $scope.graphic.gridColor = color;
-        AnimationService.changeGridColor($scope.graphic.gridColor);
+        AnimationService.changeGridColor($scope.animationData.graphic.gridColor);
     };
 
     $scope.addFrame = function(){
-        $scope.layers.visible = $scope.layers.canvas.length;
-        $scope.layers.canvas.push({});
-        AnimationService.addFrame();
+        $scope.animationData.layers.visible = $scope.animationData.layers.canvas.length;
+        $scope.animationData.layers.canvas.push({});
     };
 
     $scope.removeFrame = function(index){
-        $scope.layers.canvas.splice(index,1);
+        $scope.animationData.layers.canvas.splice(index,1);
+        AnimationService.removeFrame(index);
     };
 
     $scope.selectFrame = function(frame){
-        $scope.layers.visible = frame;
-    };
-
-    $scope.addEngine = function(element){
-        console.log(element);
-       // AnimationService.addFrame(element);
+        $scope.animationData.layers.visible = frame;
     };
 }]);
 
