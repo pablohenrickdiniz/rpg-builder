@@ -5,7 +5,11 @@
     <div class="col-sm-6">
         <div class="row">
             <div class="col-sm-12">
-                <animation-canvas data="animationData"></animation-canvas>
+                <div id="canvas-container" ng-if="animationCanvas != null" ng-style="{width:animationCanvas.width,height:animationCanvas.height}" ng-init="initController()">
+                   <canvas ng-if="animationCanvas.gridLayer" ng-style="{position:'absolute',zIndex:animationCanvas.gridLayer}" width="{{animationCanvas.gridLayer.width}}" height="animationCanvas.gridLayer.height"></canvas>
+                   <canvas ng-repeat="layer in animationCanvas.layers track by $index" ng-style="{position:'absolute',zIndex:layer.zIndex}"  width="{{layer.width}}" height="{{layer.height}}" ng-init="setElement($index)">
+                   </canvas>
+                </div>
             </div>
             <div class="col-sm-12"  id="controls-container">
 
