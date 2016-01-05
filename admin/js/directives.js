@@ -190,12 +190,33 @@ app.directive('framePlayer',function(){
     };
 });
 
-app.directive('animationCanvas',function(){
+app.directive('canvasContainer',['$timeout',function($timeout){
     return {
         restrict:'E',
-        templateUrl:'templates/Elements/animation_canvas.html',
+        templateUrl:'templates/Elements/canvas_container.html',
+        scope:{
+            engine:'=',
+            ngInitialize:'&'
+        },
         link:function(scope, element){
+            scope.init = function(){
+                console.log('initialize canvas container directive');
+                scope.ngInitialize()();
+            };
 
+            scope.setElement = function(index){
+                var tmp = element.find('canvas')[index];
+                var layer = scope.engine.getLayer(index).set({
+                    element:tmp
+                });
+
+                layer.rect({
+                    x:0,
+                    y:0,
+                    width:100,
+                    height:100
+                });
+            };
         }
     };
-});
+}]);

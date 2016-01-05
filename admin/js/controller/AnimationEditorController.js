@@ -6,6 +6,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
         $scope.page.title = 'Editor de Animações';
     };
 
+    $scope.canvasId = 'canvas-container';
+
     $scope.animationData = {
         animation:{
             frames:[]
@@ -22,14 +24,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
             gridColor:'#000000',
             images:[],
             image:null
-        },
-        functions:{
-            initAnimation:function(){
-               self.init();
-            },
-            addElement:function(element){
-                self.addFrame(element);
-            }
         }
     };
 
@@ -116,6 +110,17 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
         self.grid = null;
     };*/
 
+
+    $scope.initGridLayer = function(){
+        $scope.animationCanvas.updateGrid({
+            width:$scope.animationCanvas.width,
+            height:$scope.animationCanvas.height,
+            sw:32,
+            sh:32,
+            opacity:0.1
+        });
+    };
+
     $scope.initController = function(){
         var canvasImage = self.getAnimationImage();
         self.graphicLayer = canvasImage.createLayer({
@@ -126,13 +131,10 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
         var animationMouseReader = animationCanvas.getMouseReader();
         var animationKeyReader = animationCanvas.getKeyReader();
 
-        animationCanvas.updateGrid({
-            width:animationCanvas.getWidth(),
-            height:animationCanvas.getHeight(),
-            sw:32,
-            sh:32,
-            opacity:0.1
-        });
+        /*
+        animationCanvas.getGridLayer({
+            append:false
+        });*/
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_DEL],function(){
             console.log('delete...');
@@ -460,6 +462,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
             }
         }
     };
+
+
 }]);
 
 
