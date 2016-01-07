@@ -1,4 +1,4 @@
-app.controller('AnimationEditorController',['$rootScope','ImageLoader',function($scope,ImageLoader){
+app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout',function($scope,ImageLoader,$timeout){
     var self = this;
 
     /*scope*/
@@ -60,10 +60,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
     };
 
 
-    $scope.removeFrame = function(index){
-        $scope.animationCanvas.removeLayer(index);
-    };
-
     $scope.selectFrame = function(frame){
         $scope.animationData.layers.visible = frame;
     };
@@ -74,6 +70,20 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
         width:560,
         height:400
     });
+
+
+    $scope.refresh = function(){
+        console.log('refreshing layers...');
+        $timeout(function(){
+            $scope.animationCanvas.updateGrid({
+                width:$scope.animationCanvas.width,
+                height:$scope.animationCanvas.height,
+                sw:32,
+                sh:32,
+                opacity:0.1
+            });
+        });
+    };
 
 
     self.animationImage = null;
@@ -91,35 +101,24 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
     self.selectedObject=null;
 
     /*
-    self.reset=function(){
-        var self = this;
-        $scope.animationCanvas = null;
-        self.animationImage = null;
-        self.graphicLayer = null;
-        self.frameLayers = [];
-        self.currentFrame=0;
-        self.graphics=[];
-        self.image=null;
-        self.croppedImage=null;
-        self.animation=null;
-        self.playing=false;
-        self.rows=1;
-        self.cols=1;
-        self.maxLayer=0;
-        self.selectedObject=null;
-        self.grid = null;
-    };*/
-
-
-    $scope.initGridLayer = function(){
-        $scope.animationCanvas.updateGrid({
-            width:$scope.animationCanvas.width,
-            height:$scope.animationCanvas.height,
-            sw:32,
-            sh:32,
-            opacity:0.1
-        });
-    };
+     self.reset=function(){
+     var self = this;
+     $scope.animationCanvas = null;
+     self.animationImage = null;
+     self.graphicLayer = null;
+     self.frameLayers = [];
+     self.currentFrame=0;
+     self.graphics=[];
+     self.image=null;
+     self.croppedImage=null;
+     self.animation=null;
+     self.playing=false;
+     self.rows=1;
+     self.cols=1;
+     self.maxLayer=0;
+     self.selectedObject=null;
+     self.grid = null;
+     };*/
 
     $scope.initController = function(){
         var canvasImage = self.getAnimationImage();
@@ -131,10 +130,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
         var animationMouseReader = animationCanvas.getMouseReader();
         var animationKeyReader = animationCanvas.getKeyReader();
 
-        /*
+
         animationCanvas.getGridLayer({
-            append:false
-        });*/
+            append:false,
+            width:animationCanvas.width,
+            height:animationCanvas.height
+        });
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_DEL],function(){
             console.log('delete...');
@@ -431,8 +432,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader',function(
     };
 
 
-    self.removeFrame= function(index){
+    $scope.removeFrame= function(index){
         $scope.animationCanvas.removeLayer(index);
+        $scope.refresh();
     };
 
     self.getAnimation = function(){

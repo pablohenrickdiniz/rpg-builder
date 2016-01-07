@@ -1,5 +1,4 @@
 <div id="canvas-container" ng-if="engine != null" ng-style="{width:engine.width,height:engine.height}" ng-init="init()">
-    <canvas ng-if="engine.gridLayer" ng-style="{position:'absolute',zIndex:engine.gridLayer}" width="{{engine.gridLayer.width}}" height="engine.gridLayer.height"></canvas>
-    <canvas class="canvas-layer-{{$index}}" ng-repeat="layer in engine.layers track by $index" ng-style="{position:'absolute',zIndex:layer.zIndex}"  width="{{layer.width}}" height="{{layer.height}}" ng-init="setElement($index)">
+    <canvas data-type="{{layer.type}}" class="canvas-layer-{{$index}}" ng-repeat="layer in engine.layers track by $index" ng-style="{position:'absolute',zIndex:layer.zIndex,opacity:layer.opacity}"  width="{{layer.width}}" height="{{layer.height}}" ng-init="refresh()">
     </canvas>
 </div>
