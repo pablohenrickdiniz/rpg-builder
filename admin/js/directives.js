@@ -190,22 +190,22 @@ app.directive('framePlayer',function(){
     };
 });
 
-app.directive('canvasContainer',function(){
+app.directive('canvasContainer',['$timeout',function($timeout){
     return {
         restrict:'E',
         templateUrl:'templates/Elements/canvas_container.html',
         scope:{
             engine:'=',
             ngInitialize:'&',
-            ngRefresh:'&'
+            refresh:'='
         },
         link:function(scope, element){
             scope.init = function(){
-                console.log('initialize canvas container directive');
                 scope.ngInitialize()();
             };
 
             scope.refresh = function(){
+                console.log('directive refresh');
                 scope.engine.clearAllLayers();
                 var canvas = element.find('canvas');
                 for(var i = 0; i < canvas.length;i++){
@@ -214,8 +214,20 @@ app.directive('canvasContainer',function(){
                     layer.element = canvas[i];
                 }
 
-                scope.ngRefresh()();
+                scope.updateGrid();
+            };
+
+            scope.updateGrid = function(){
+                $timeout(function(){
+                    scope.engine.updateGrid({
+                        width:scope.engine.width,
+                        height:scope.engine.height,
+                        sw:32,
+                        sh:32,
+                        opacity:0.1
+                    });
+                });
             };
         }
     };
-});
+}]);

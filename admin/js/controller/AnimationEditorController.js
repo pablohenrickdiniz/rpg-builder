@@ -1,6 +1,7 @@
 app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout',function($scope,ImageLoader,$timeout){
     var self = this;
 
+
     /*scope*/
     $scope.init = function(){
         $scope.page.title = 'Editor de Animações';
@@ -26,6 +27,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
             image:null
         }
     };
+
+    $scope.refreshGrid = function(){};
 
     $scope.changeRows = function(val){
         $scope.animationData.graphic.rows = val;
@@ -72,18 +75,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
     });
 
 
-    $scope.refresh = function(){
-        console.log('refreshing layers...');
-        $timeout(function(){
-            $scope.animationCanvas.updateGrid({
-                width:$scope.animationCanvas.width,
-                height:$scope.animationCanvas.height,
-                sw:32,
-                sh:32,
-                opacity:0.1
-            });
-        });
-    };
 
 
     self.animationImage = null;
@@ -434,7 +425,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
 
     $scope.removeFrame= function(index){
         $scope.animationCanvas.removeLayer(index);
-        $scope.refresh();
+        $scope.refreshGrid();
     };
 
     self.getAnimation = function(){
