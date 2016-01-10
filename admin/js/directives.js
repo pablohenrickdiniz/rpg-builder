@@ -157,7 +157,7 @@ app.directive('inputColor',function(){
     };
 });
 
-app.directive('framePlayer',function(){
+app.directive('framePlayer',['$timeout',function($timeout){
     return {
         restrict:'E',
         templateUrl:'templates/Elements/frame_player.html',
@@ -171,9 +171,11 @@ app.directive('framePlayer',function(){
             scope.frames = [];
             scope.selected = null;
             scope.add = function(){
-                var frame =  scope.ngAdd()();
-                scope.frames.push(frame);
+                scope.frames.push(scope.frames.length);
                 scope.selected = scope.frames.length-1;
+                $timeout(function(){
+                    scope.ngAdd()(scope.selected);
+                });
             };
 
             scope.remove = function(index){
@@ -188,7 +190,7 @@ app.directive('framePlayer',function(){
             };
         }
     };
-});
+}]);
 
 app.directive('canvasContainer',['$timeout',function($timeout){
     return {

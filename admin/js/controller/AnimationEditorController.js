@@ -75,22 +75,21 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         canvas.redrawGrid();
     };
 
-    $scope.addFrame = function(){
+    $scope.addFrame = function(selected){
         $scope.animationCanvas.createLayer({
             append:false,
             width:$scope.animationCanvas.width,
             height:$scope.animationCanvas.height
         },CE.ObjectLayer);
-        var frame = $scope.animationCanvas.layers.length-2;
-        self.getAnimation().indexFrame = frame;
+        self.getAnimation().indexFrame = selected;
         self.addObject();
-        $scope.animationData.currentFrame =  frame;
     };
 
 
     $scope.selectFrame = function(frame){
         console.log('selecting frame '+frame);
         self.getAnimation().indexFrame = frame;
+
         $scope.animationCanvas.layers.forEach(function(layer,index){
             if(layer.type !== 'grid'){
                 if(index === frame){
@@ -101,8 +100,13 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 }
             }
         });
-        $scope.animationData.currentFrame = frame;
+
+        $timeout(function(){
+            $scope.redrawLayer(frame);
+        });
     };
+
+
 
     $scope.redrawLayer = function(index){
         var layer = $scope.animationCanvas.getLayer(index);
@@ -112,6 +116,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 layer.image(object);
             });
         }
+        console.log('redrawing layer...');
     };
 
     /*methods*/
@@ -433,7 +438,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 indexFrame:0
             });
             animation.onStep(function(frame){
-                self.selectFrame(frame);
+                $scope.selectFrame(frame);
             });
             $scope.animation = animation;
         }
