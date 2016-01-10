@@ -200,32 +200,36 @@ app.directive('canvasContainer',['$timeout',function($timeout){
             refresh:'='
         },
         link:function(scope, element){
+            var self = this;
             scope.init = function(){
                 scope.ngInitialize()();
             };
 
+            scope.$watch('engine.layers.length',function(newValue,oldValue){
+                $timeout(function(){
+                    if(oldValue !== newValue){
+                        scope.refresh();
+                    }
+                });
+            },true);
+
+
             scope.refresh = function(){
-                console.log('directive refresh');
                 scope.engine.clearAllLayers();
                 var canvas = element.find('canvas');
+
                 for(var i = 0; i < canvas.length;i++){
                     var layer = scope.engine.getLayer(i);
                     layer.context = null;
                     layer.element = canvas[i];
                 }
 
-                scope.updateGrid();
-            };
-
-            scope.updateGrid = function(){
-                $timeout(function(){
-                    scope.engine.updateGrid({
-                        width:scope.engine.width,
-                        height:scope.engine.height,
-                        sw:32,
-                        sh:32,
-                        opacity:0.1
-                    });
+                scope.engine.updateGrid({
+                    width:scope.engine.width,
+                    height:scope.engine.height,
+                    sw:32,
+                    sh:32,
+                    opacity:0.1
                 });
             };
         }

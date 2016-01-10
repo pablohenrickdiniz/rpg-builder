@@ -1,7 +1,6 @@
 app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout',function($scope,ImageLoader,$timeout){
     var self = this;
 
-
     /*scope*/
     $scope.init = function(){
         $scope.page.title = 'Editor de Animações';
@@ -10,35 +9,39 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
     $scope.canvasId = 'canvas-container';
 
     $scope.animationData = {
-        animation:{
-            frames:[]
-        },
-        layers:{
-            canvas:[],
-            width:560,
-            height:400,
-            visible:null
-        },
         graphic:{
             rows:1,
             cols:1,
             gridColor:'#000000',
             images:[],
-            image:null
-        }
+            imageData:null,
+            image:null,
+            croppedArea:{}
+        },
+        currentFrame:0
     };
 
-    $scope.refreshGrid = function(){};
+    $scope.animation = null;
+
 
     $scope.changeRows = function(val){
         $scope.animationData.graphic.rows = val;
-        self.changeRows(val);
+        var image = $scope.animationData.graphic.image;
+        if(image !== null){
+            self.getAnimationImage().updateGrid({
+                sh:image.height/val
+            });
+        }
     };
 
     $scope.changeCols = function(val){
         $scope.animationData.graphic.cols = val;
-        self.changeCols(val);
-
+        var image = $scope.animationData.graphic.image;
+        if(image !== null){
+            self.getAnimationImage().updateGrid({
+                sw:image.width/val
+            });
+        }
     };
 
     $scope.addImages = function(images){
@@ -46,12 +49,30 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
     };
 
     $scope.changeGraphic = function(){
-        self.changeGraphic($scope.animationData.graphic.image.url);
+        var url = $scope.animationData.graphic.imageData.url;
+        ImageLoader.load(url,function(img){
+            $scope.animationData.graphic.image = img;
+            self.graphicLayer.set({
+                width:img.width,
+                height:img.height
+            }).clear().drawImage(img,0,0);
+            self.getAnimationImage().updateGrid({
+                width:img.width,
+                height:img.height,
+                sw:img.width,
+                sh:img.height
+            });
+        });
     };
 
     $scope.changeGridColor = function(color){
-        $scope.graphic.gridColor = color;
-        self.changeGridColor($scope.animationData.graphic.gridColor);
+        $scope.animationData.graphic.gridColor = color;
+        var canvas = self.getAnimationImage();
+        var grid = canvas.getGrid();
+        grid.apply({
+            strokeStyle:color
+        });
+        canvas.redrawGrid();
     };
 
     $scope.addFrame = function(){
@@ -60,17 +81,43 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
             width:$scope.animationCanvas.width,
             height:$scope.animationCanvas.height
         },CE.ObjectLayer);
+        var frame = $scope.animationCanvas.layers.length-2;
+        self.getAnimation().indexFrame = frame;
+        self.addObject();
+        $scope.animationData.currentFrame =  frame;
     };
 
 
     $scope.selectFrame = function(frame){
-        $scope.animationData.layers.visible = frame;
+        console.log('selecting frame '+frame);
+        self.getAnimation().indexFrame = frame;
+        $scope.animationCanvas.layers.forEach(function(layer,index){
+            if(layer.type !== 'grid'){
+                if(index === frame){
+                    layer.opacity = 1;
+                }
+                else{
+                    layer.opacity = 0;
+                }
+            }
+        });
+        $scope.animationData.currentFrame = frame;
+    };
+
+    $scope.redrawLayer = function(index){
+        var layer = $scope.animationCanvas.getLayer(index);
+        if(layer !== null && layer instanceof CE.ObjectLayer){
+            layer.clear();
+            layer.objects.forEach(function(object){
+                layer.image(object);
+            });
+        }
     };
 
     /*methods*/
     $scope.animationCanvas =  CE.createEngine({
         container:'#canvas-container',
-        width:560,
+        width:535,
         height:400
     });
 
@@ -79,11 +126,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
 
     self.animationImage = null;
     self.graphicLayer = null;
-    self.frameLayers = [];
-    self.currentFrame = 0;
     self.graphics = [];
-    self.image = null;
-    self.croppedImage=null;
     self.animation=null;
     self.playing=false;
     self.rows=1;
@@ -98,10 +141,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
      self.animationImage = null;
      self.graphicLayer = null;
      self.frameLayers = [];
-     self.currentFrame=0;
      self.graphics=[];
-     self.image=null;
-     self.croppedImage=null;
      self.animation=null;
      self.playing=false;
      self.rows=1;
@@ -147,8 +187,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_UP],function(){
             var object = self.selectedObject;
-            if(object != null){
-                if(object.parent != null){
+            if(object !== null){
+                if(object.parent !== null){
                     object.parent.moveUp(object);
                 }
             }
@@ -156,8 +196,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_DOWN],function(){
             var object = self.selectedObject;
-            if(object != null){
-                if(object.parent != null){
+            if(object !== null){
+                if(object.parent !== null){
                     object.parent.moveDown(object);
                 }
             }
@@ -166,8 +206,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         animationMouseReader.onmousedown(1,function(){
             var reader = this;
             var p = reader.lastDown.left;
-            var layer = self.frameLayers[self.currentFrame];
-            if(layer != undefined){
+            var layer = self.frameLayers[$scope.animation.indexFrame];
+            if(layer !== undefined){
                 var objects = layer.objects;
                 var object = null;
                 var found = false;
@@ -247,7 +287,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         if(self.animationImage === null){
             self.animationImage = CE.createEngine({
                 container:'#animations',
-                width:560,
+                width:530,
                 height:400,
                 selectable:true,
                 draggable:true,
@@ -276,17 +316,17 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                         });
                         self.animationImage.refreshGridLayer();
                         var canvas = $scope.animationCanvas;
-                        self.croppedImage = new CE.ImageSet({
-                            url:self.image.src,
+                        $scope.animationData.graphic.croppedArea = {
+                            image:$scope.animationData.graphic.image,
                             sx:newRect.x,
                             sy:newRect.y,
-                            width:newRect.width,
-                            height:newRect.height
-                        });
-                        self.croppedImage.set({
-                            x:(canvas.getWidth()/2)-(newRect.width/2),
-                            y:(canvas.getHeight()/2)-(newRect.height/2)
-                        });
+                            sWidth:newRect.width,
+                            sHeight:newRect.height,
+                            dWidth:newRect.width,
+                            dHeight:newRect.height,
+                            x:(canvas.width/2)-(newRect.width/2),
+                            y:(canvas.height/2)-(newRect.height/2)
+                        };
                     }
                 }
             };
@@ -346,7 +386,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                     grid.apply({
                         fillStyle:'transparent'
                     },function(){
-                        return this.state != 1;
+                        return this.state !== 1;
                     });
                     rects.forEach(function(rect){
                         if(rect.state !== 1){
@@ -360,103 +400,58 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 if(rects.length > 0){
                     var rect = rects[0];
                     var canvas = $scope.animationCanvas;
-                    self.croppedImage = new CE.ImageSet({
-                        url:self.image.src,
+                    $scope.animationData.graphic.croppedArea = {
+                        image:$scope.animationData.graphic.image,
                         sx:rect.x,
                         sy:rect.y,
-                        width:rect.width,
-                        height:rect.height,
+                        dWidth:rect.width,
+                        dHeight:rect.height,
                         sWidth:rect.width,
-                        sHeight:rect.height
-                    });
-                    self.croppedImage.set({
-                        x:(canvas.getWidth()/2)-(rect.width/2),
-                        y:(canvas.getHeight()/2)-(rect.height/2)
-                    });
+                        sHeight:rect.height,
+                        x:(canvas.width/2)-(rect.width/2),
+                        y:(canvas.height/2)-(rect.height/2)
+                    };
                 }
             });
         }
         return self.animationImage;
     };
-    self.changeGraphic = function(url){
-        var self = this;
-        ImageLoader.load(url,function(img){
-            self.image = img;
-            self.graphicLayer.set({
-                width:img.width,
-                height:img.height
-            }).clear().drawImage(img,0,0);
-            self.getAnimationImage().updateGrid({
-                width:img.width,
-                height:img.height,
-                sw:img.width,
-                sh:img.height
-            });
-        });
-    };
-    self.changeRows = function(rows){
-        var self = this;
-        if(self.image !== null){
-            self.getAnimationImage().updateGrid({
-                sh:self.image.height/rows
-            });
-        }
-        self.rows = rows;
-    };
-    self.changeCols = function(cols){
-        var self = this;
-        if(self.image !== null){
-            self.getAnimationImage().updateGrid({
-                sw:self.image.width/cols
-            });
-        }
-        self.cols = cols;
-    };
-    self.changeGridColor = function(color){
-        var self = this;
-        var canvas = self.getAnimationImage();
-        var grid = canvas.getGrid();
-        grid.apply({
-            strokeStyle:color
-        });
-        canvas.redrawGrid();
-    };
-
 
     $scope.removeFrame= function(index){
         $scope.animationCanvas.removeLayer(index);
-        $scope.refreshGrid();
+        $scope.selectFrame(index-1);
     };
 
     self.getAnimation = function(){
         var self = this;
         var engine =   $scope.animationCanvas;
-        if(self.animation === null){
-            self.animation = new CE.Animation({
+        if($scope.animation === null){
+            var animation = new CE.Animation({
                 speed:7,
                 width:engine.width,
-                height:engine.height
+                height:engine.height,
+                indexFrame:0
             });
-            self.animation.onStep(function(step){
-                self.getFrameList().itemSelect(step);
+            animation.onStep(function(frame){
+                self.selectFrame(frame);
             });
+            $scope.animation = animation;
         }
-        return self.animation;
+        return $scope.animation;
     };
 
     self.addObject =function(){
         var self = this;
-        if(self.croppedImage !== null){
-            var layer =   $scope.animationCanvas.getLayer(self.currentFrame);
+        if($scope.animationData.graphic.croppedArea !== null){
+            var frame = $scope.animation.indexFrame;
+            var layer =   $scope.animationCanvas.getLayer(frame);
             if(layer !== null && layer instanceof CE.ObjectLayer){
-                var cropped = self.croppedImage.clone();
+                var cropped = _.clone($scope.animationData.graphic.croppedArea);
                 layer.add(cropped);
-                self.getAnimation().frames[self.currentFrame] = cropped.getGraphic();
+                self.getAnimation().frames[frame] = cropped;
             }
         }
     };
-
-
 }]);
 
 

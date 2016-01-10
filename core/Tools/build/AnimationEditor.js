@@ -374,7 +374,7 @@ define(
                 if(self.animationImage == null){
                     self.animationImage = CE.createEngine({
                         container:'#animations',
-                        width:560,
+                        width:530,
                         height:400,
                         selectable:true,
                         draggable:true,
