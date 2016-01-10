@@ -89,7 +89,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
     $scope.selectFrame = function(frame){
         console.log('selecting frame '+frame);
         self.getAnimation().indexFrame = frame;
-
         $scope.animationCanvas.layers.forEach(function(layer,index){
             if(layer.type !== 'grid'){
                 if(index === frame){
@@ -100,23 +99,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 }
             }
         });
-
-        $timeout(function(){
-            $scope.redrawLayer(frame);
-        });
-    };
-
-
-
-    $scope.redrawLayer = function(index){
-        var layer = $scope.animationCanvas.getLayer(index);
-        if(layer !== null && layer instanceof CE.ObjectLayer){
-            layer.clear();
-            layer.objects.forEach(function(object){
-                layer.image(object);
-            });
-        }
-        console.log('redrawing layer...');
     };
 
     /*methods*/
@@ -125,8 +107,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         width:535,
         height:400
     });
-
-
 
 
     self.animationImage = null;

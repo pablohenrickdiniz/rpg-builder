@@ -233,6 +233,23 @@ app.directive('canvasContainer',['$timeout',function($timeout){
                     sh:32,
                     opacity:0.1
                 });
+
+                scope.engine.layers.forEach(function(layer,index){
+                    if(!(layer instanceof CE.GridLayer)){
+                        self.redrawLayer(index);
+                    }
+                });
+            };
+
+
+            self.redrawLayer = function(index){
+                var layer = scope.engine.getLayer(index);
+                if(layer !== null && layer instanceof CE.ObjectLayer){
+                    layer.clear();
+                    layer.objects.forEach(function(object){
+                        layer.image(object);
+                    });
+                }
             };
         }
     };
