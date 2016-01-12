@@ -54,3 +54,12 @@ input::-webkit-inner-spin-button {
     bottom: 0;
     z-index: 810;
 }
+
+.image-container{
+    border:1px solid #EEE;
+    padding: 5px;
+    display: inline-block;
+    vertical-align: top;
+    height: 200px;
+    overflow: hidden;
+}

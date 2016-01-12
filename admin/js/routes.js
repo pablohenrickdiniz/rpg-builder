@@ -21,6 +21,13 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
         data:{
             authorizedRoles:['admin']
         }
+    }).state('animations',{
+        url:'/resources/animations',
+        templateUrl:'templates/Pages/animations.html',
+        controller:'AnimationsController',
+        data:{
+            authorizedRoles:['admin']
+        }
     }).state('map-editor', {
         url: '/map-editor',
         templateUrl: 'templates/Pages/map-editor.html',

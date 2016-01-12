@@ -85,6 +85,49 @@ app.directive('inputNumberVertical',['$interval','$document',function($interval,
 }]);
 
 
+app.directive('inputImagePreview',function(){
+    return {
+        restrict:'A',
+        templateUrl:'templates/Elements/input_image_preview.html',
+        scope:{
+            title:'@title',
+            multiple:'@multiple'
+        },
+        replace:true,
+        link:function(scope, element,attrs){
+            var inputFile = element.find('input');
+            var allowedExtensions = [
+                'image/png',
+                'image/jpeg',
+                'image/gif'
+            ];
+
+            scope.files = [];
+            scope.images = [];
+            inputFile.on('change',function(e){
+                scope.files = [];
+                var files = e.target.files;
+                var imageFiles = [];
+                var URL =  window.URL || window.webkitURL;
+                for(var i = 0; i < files.length;i++){
+                    if(allowedExtensions.indexOf(files[i].type) !== -1){
+                        scope.files.push(files[i]);
+                        var url = URL.createObjectURL(files[i]);
+                        imageFiles.push({
+                            url:url,
+                            name:files[i].name
+                        });
+                    }
+                }
+                scope.images = imageFiles;
+                scope.$apply();
+            });
+        }
+    };
+});
+
+
+
 app.directive('inputImage',function(){
     return {
         restrict:'A',
@@ -254,3 +297,14 @@ app.directive('canvasContainer',['$timeout',function($timeout){
         }
     };
 }]);
+
+app.directive('progressBar',function(){
+    return {
+        restrict:'E',
+        templateUrl:'templates/Elements/progress_bar.html',
+        replace:true,
+        scope:{
+            progress:'=progress'
+        }
+    };
+});

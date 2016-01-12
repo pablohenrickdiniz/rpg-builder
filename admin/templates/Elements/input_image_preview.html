@@ -1,0 +1,21 @@
+<div class="input-image">
+    <label>{{title}}</label>
+    <div class="form-group">
+        <input type="file" class="form-control" multiple="{{multiple}}" ng-style="{display:'inline-block',width:'100%'}">
+        <span ng-if="files.length">
+            <span class="input-image-info" ng-if="images.length == 1">
+                 1 imagem selecionada
+            </span>
+             <span class="input-image-info" ng-if="images.length > 1">
+                {{images.length}} imagens selecionadas
+            </span>
+        </span>
+    </div>
+    <div class="form-group direct-chat-messages">
+        <div class="col-md-3 col-lg-3 col-xs-12" ng-repeat="image in images">
+            <img ng-src="{{image.url}}" alt="" class="img-responsive img-thumbnail" width="100%" height="auto"/>
+            <span class="img-title" ng-style="{'text-align':'center',dysplay:'block'}">{{image.name}}</span>
+            <progress-bar progress="100"></progress-bar>
+        </div>
+    </div>
+</div>
