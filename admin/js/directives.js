@@ -85,13 +85,14 @@ app.directive('inputNumberVertical',['$interval','$document',function($interval,
 }]);
 
 
-app.directive('inputImagePreview',function(){
+app.directive('inputImagePreview',['UploadService',function(UploadService){
     return {
         restrict:'A',
         templateUrl:'templates/Elements/input_image_preview.html',
         scope:{
             title:'@title',
-            multiple:'@multiple'
+            multiple:'@multiple',
+            url:'@url'
         },
         replace:true,
         link:function(scope, element,attrs){
@@ -101,9 +102,11 @@ app.directive('inputImagePreview',function(){
                 'image/jpeg',
                 'image/gif'
             ];
+            var self = this;
 
             scope.files = [];
             scope.images = [];
+            scope.sending = false;
             inputFile.on('change',function(e){
                 scope.files = [];
                 var files = e.target.files;
@@ -115,16 +118,39 @@ app.directive('inputImagePreview',function(){
                         var url = URL.createObjectURL(files[i]);
                         imageFiles.push({
                             url:url,
-                            name:files[i].name
+                            name:files[i].name,
+                            state:null
                         });
                     }
                 }
                 scope.images = imageFiles;
                 scope.$apply();
             });
+
+            scope.sendFiles = function(){
+                var files = scope.files;
+                scope.sending = true;
+                self.upload(files,0);
+            };
+
+            this.upload = function(files,pos){
+                if(pos < files.length){
+                    var file = files[pos];
+                    UploadService.uploadFile(file,scope.url,function(data){
+                        self.images[pos].state = data.data.success;
+                        self.upload(files,pos+1);
+                    },function(){
+                        self.images[pos].state = false;
+                        self.upload(files,pos+1);
+                    });
+                }
+                else{
+                    self.sending = false;
+                }
+            };
         }
     };
-});
+}]);
 
 
 
