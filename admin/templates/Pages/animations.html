@@ -27,7 +27,7 @@
         </div>
     </div>
 </div>
-<div class="modal" ng-class="{in:modalVisible}" style="display:{{modalVisible?'block':'none'}};">
+<div class="modal animation-modal" ng-class="{in:modalVisible}" style="display:{{modalVisible?'block':'none'}};">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <ng-form name="animationForm">
@@ -38,9 +38,6 @@
                 </div>
                 <div class="modal-body">
                     <input type="file" input-image-preview url="http://localhost:9090/animations/upload"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Enviar</button>
                 </div>
             </ng-form>
         </div>

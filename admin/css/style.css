@@ -55,11 +55,39 @@ input::-webkit-inner-spin-button {
     z-index: 810;
 }
 
-.image-container{
-    border:1px solid #EEE;
-    padding: 5px;
-    display: inline-block;
-    vertical-align: top;
+.input-image-preview .box-body{
     height: 200px;
-    overflow: hidden;
+    border-width: 1px 0 0 0;
+    border-color: #EEE;
+    border-style: solid;
+}
+
+.input-image-preview .box{
+    border:1px solid #EEE;
+}
+
+.input-image-preview span.error,.input-image-preview span.success{
+    color:white;
+}
+
+
+.input-image-preview .image-container{
+    position: relative;
+}
+
+.input-image-preview .image-container img{
+    margin:auto;
+    left:-100%;
+    top:-100%;
+    right:-100%;
+    bottom:-100%;
+    position: absolute;
+}
+
+.animation-modal .modal-body{
+    height:600px;
+}
+
+.animation-modal .direct-chat-messages{
+    height: 500px;
 }

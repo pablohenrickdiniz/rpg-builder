@@ -85,7 +85,7 @@ app.directive('inputNumberVertical',['$interval','$document',function($interval,
 }]);
 
 
-app.directive('inputImagePreview',['UploadService',function(UploadService){
+app.directive('inputImagePreview',['UploadService','ImageLoader',function(UploadService,ImageLoader){
     return {
         restrict:'A',
         templateUrl:'templates/Elements/input_image_preview.html',
@@ -112,19 +112,28 @@ app.directive('inputImagePreview',['UploadService',function(UploadService){
                 var files = e.target.files;
                 var imageFiles = [];
                 var URL =  window.URL || window.webkitURL;
+                var urls = [];
                 for(var i = 0; i < files.length;i++){
                     if(allowedExtensions.indexOf(files[i].type) !== -1){
                         scope.files.push(files[i]);
                         var url = URL.createObjectURL(files[i]);
-                        imageFiles.push({
-                            url:url,
-                            name:files[i].name,
-                            state:null
-                        });
+                        urls.push(url);
                     }
                 }
-                scope.images = imageFiles;
-                scope.$apply();
+
+                ImageLoader.loadAll(urls,function(loaded){
+                   loaded.forEach(function(img,index){
+                       imageFiles.push({
+                           url:img.src,
+                           name:scope.files[index].name,
+                           state:null,
+                           width:img.width,
+                           height:img.height
+                       });
+                   });
+                    scope.images = imageFiles;
+                    scope.$apply();
+                });
             });
 
             scope.sendFiles = function(){
@@ -137,10 +146,10 @@ app.directive('inputImagePreview',['UploadService',function(UploadService){
                 if(pos < files.length){
                     var file = files[pos];
                     UploadService.uploadFile(file,scope.url,function(data){
-                        self.images[pos].state = data.data.success;
+                        scope.images[pos].state = data.data.success;
                         self.upload(files,pos+1);
                     },function(){
-                        self.images[pos].state = false;
+                        scope.images[pos].state = false;
                         self.upload(files,pos+1);
                     });
                 }

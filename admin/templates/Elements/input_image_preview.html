@@ -1,4 +1,4 @@
-<div class="input-image">
+<div class="input-image input-image-preview">
     <label>{{title}}</label>
     <div class="form-group">
         <div class="input-group">
@@ -10,10 +10,18 @@
 
     </div>
     <div class="form-group direct-chat-messages">
-        <div class="col-md-3 col-lg-3 col-xs-12" ng-repeat="image in images" ng-style="{position:'relative'}">
-            <img ng-src="{{image.url}}" alt="" class="img-responsive img-thumbnail" width="100%" height="auto"/>
-            <span class="img-title" ng-style="{'text-align':'center',display:'block',position:'absolute',left:'50%'}">{{image.name}}</span>
-            <progress-bar progress="100"></progress-bar>
+        <div class="col-md-3 col-lg-3 col-xs-12" ng-repeat="image in images">
+            <div class="box">
+                <div class="box-header" ng-class="{'bg-aqua':image.state === null,'bg-green':image.state,'bg-red':!image.state}">
+                    <h4 class="box-title">{{image.name}}</h4>
+                    <div class="box-tools pull-right">
+                        <span class="box-tool" ng-if="image.state !== null" ng-class="{'fa fa-close':!image.state,'fa fa-check':image.state,'success':image.state,'error':!image.state}"></span>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <img ng-src="{{image.url}}" alt="" class="img-responsive" ng-style="{width:image.width>image.height?'100%':'auto',height:image.height>image.width?'100%':'auto'}"/>
+                </div>
+            </div>
         </div>
     </div>
 </div>

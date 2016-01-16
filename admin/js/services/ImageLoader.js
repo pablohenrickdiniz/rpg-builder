@@ -1,18 +1,8 @@
 app.factory('ImageLoader',function(){
-    return {
+    var loader = {
         loadedImages:[],
-        loadAll:function(images,loaded,callback){
-            var self = this;
-            if(images.length > 0){
-                var url = images.pop();
-                self.load(url,function(img){
-                    loaded.push(img);
-                    self.loadAll(images,loaded,callback);
-                });
-            }
-            else{
-                callback(loaded);
-            }
+        loadAll:function(images,callback){
+            loadAll(images,[],callback);
         },
         load:function(url,callback){
             var self = this;
@@ -32,4 +22,21 @@ app.factory('ImageLoader',function(){
             }
         }
     };
+
+
+    var loadAll = function(images,loaded,callback){
+        loaded = loaded === undefined?[]:loaded;
+        if(images.length > 0){
+            var url = images.shift();
+            loader.load(url,function(img){
+                loaded.push(img);
+                loadAll(images,loaded,callback);
+            });
+        }
+        else if(typeof callback === 'function'){
+            callback(loaded);
+        }
+    };
+
+    return loader;
 });
