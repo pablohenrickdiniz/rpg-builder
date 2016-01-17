@@ -1,11 +1,11 @@
-app.factory('AuthService',['$rootScope','$http','Session','$state',function($scope,$http,Session,$state){
+app.factory('AuthService',['$rootScope','$http','Session','$state','SERVERS',function($scope,$http,Session,$state,SERVERS){
     return {
         loaded:false,
         login:function(credentials,success,error){
             var self = this;
             $http({
                 method:'POST',
-                url:'http://localhost:9090/users/login',
+                url:SERVERS.builder+'users/login',
                 data:credentials,
                 withCredentials:true
             }).then(function(response){
@@ -28,7 +28,8 @@ app.factory('AuthService',['$rootScope','$http','Session','$state',function($sco
             if(roles.indexOf('public') !== -1 || roles.indexOf(Session.role) !== -1){
                 return true;
             }
-            return false;
+          //  return false;
+            return true;
         },
         createSession:function(auth){
             Session.create(
@@ -43,7 +44,7 @@ app.factory('AuthService',['$rootScope','$http','Session','$state',function($sco
             $scope.setCurrentUser(null);
             $http({
                 method:'GET',
-                url:'http://localhost:9090/users/logout',
+                url:SERVERS.builder+'users/logout',
                 withCredentials:true
             }).then(function(response){
                 if(response.data.success){
@@ -60,7 +61,7 @@ app.factory('AuthService',['$rootScope','$http','Session','$state',function($sco
             var self = this;
             $http({
                 method:'GET',
-                url:'http://localhost:9090/users/load-session',
+                url:SERVERS.builder+'users/load-session',
                 withCredentials:true
             }).then(function(response){
                 if(response.data.success){

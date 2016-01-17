@@ -350,8 +350,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
                 self.addObject();
             });
 
-
-
             self.animationImage.onAreaSelect(function(area,grid){
                 var reader = self.animationImage.getMouseReader();
                 var rects = grid.getRectsFromArea(area);

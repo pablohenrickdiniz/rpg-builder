@@ -13,7 +13,6 @@ app.run(['$rootScope','$state','$location','AuthService',function($rootScope,$st
         title :'Bem Vindo Ao Painel Administrativo do Rpg Builder!'
     };
 
-
     $rootScope.$on('$stateChangeStart', function (event, next,params) {
         if(next.redirectTo){
             event.preventDefault();

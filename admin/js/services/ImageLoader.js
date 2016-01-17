@@ -23,7 +23,6 @@ app.factory('ImageLoader',function(){
         }
     };
 
-
     var loadAll = function(images,loaded,callback){
         loaded = loaded === undefined?[]:loaded;
         if(images.length > 0){

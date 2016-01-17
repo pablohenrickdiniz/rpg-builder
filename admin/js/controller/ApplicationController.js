@@ -1,4 +1,4 @@
-app.controller('ApplicationController',['$rootScope','USER_ROLES','AuthService',function($scope,USER_ROLES,AuthService){
+app.controller('ApplicationController',['$rootScope','USER_ROLES','AuthService','SERVERS',function($scope,USER_ROLES,AuthService,SERVERS){
     $scope.currentUser = null;
     $scope.USER_ROLES = USER_ROLES;
     $scope.isAuthorized = AuthService.isAuthorized;
@@ -10,6 +10,7 @@ app.controller('ApplicationController',['$rootScope','USER_ROLES','AuthService',
     };
 
     $scope.logout = AuthService.logout;
+    $scope.baseUrl = SERVERS.builder;
 }]);
 
 

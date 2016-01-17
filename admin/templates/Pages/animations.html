@@ -1,29 +1,35 @@
-<div class="content">
+<div class="content" ng-controller="AnimationsController" ng-init="list()">
     <h1>Animations</h1>
     <div class="box">
         <div class="box-header">
             <h3 class="box-title">Animations</h3>
             <div class="box-tools pull-rigth">
-                <button class="btn btn-primary" ng-click="showModal()">
+                <button class="btn btn-box-tool" ng-click="showModal()">
                     Importar
                     <span class="fa fa-download"></span>
                 </button>
             </div>
         </div>
-        <div class="box-body table-responsive no-padding">
-            <table class="table table-condensed">
-                <tr>
-                    <th>Imagem</th>
-                    <th>Criado em</th>
-                </tr>
-                <tr  dir-paginate="animation in animations | itemsPerPage: 10" pagination-id="animations">
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
+        <div class="box-body no-padding animations-body">
+            <div class="col-lg-3 col-md-3 col-xs-12" dir-paginate="animation in animations | itemsPerPage: 8 track by $index" pagination-id="animations" current-page="page" total-items="count">
+                <div class="box box-primary box-solid">
+                    <div class="box-header">
+                        <h4 class="box-title">{{animation.created | date :'d/MM/y H:mm:s' }}</h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" ng-click="remove($index)" class="btn btn-box-tool" ng-class="{disabled:searching}"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body with-border">
+                        <img class="img-responsive" ng-src="{{baseUrl}}animations/file/{{animation.file}}"/>
+                    </div>
+                    <div class="box-footer">
+                        {{animation.width}} x {{animation.height}}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="box-footer clearfix">
-            <dir-pagination-controls pagination-id="animations" template-url="templates/Elements/paginator.html"></dir-pagination-controls>
+            <dir-pagination-controls pagination-id="animations" template-url="templates/Elements/paginator.html" on-page-change="list(newPageNumber,oldPageNumber)"></dir-pagination-controls>
         </div>
     </div>
 </div>
@@ -37,7 +43,7 @@
                     <h4 class="modal-title">Gráfico de Animação</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="file" input-image-preview url="http://localhost:9090/animations/upload"/>
+                    <input type="file" input-image-preview url="{{baseUrl}}animations/upload" on-success="list"/>
                 </div>
             </ng-form>
         </div>

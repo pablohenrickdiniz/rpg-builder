@@ -1,14 +1,16 @@
 app.directive('adminSidebar',function(){
     return {
         restrict:'E',
-        templateUrl:'templates/Elements/admin_sidebar.html'
+        templateUrl:'templates/Elements/admin_sidebar.html',
+        replace:true
     };
 });
 
 app.directive('adminHeader',function(){
     return {
         restrict:'E',
-        templateUrl:'templates/Elements/admin_header.html'
+        templateUrl:'templates/Elements/admin_header.html',
+        replace:true
     };
 });
 
@@ -92,7 +94,8 @@ app.directive('inputImagePreview',['UploadService','ImageLoader',function(Upload
         scope:{
             title:'@title',
             multiple:'@multiple',
-            url:'@url'
+            url:'@url',
+            onSuccess:'&'
         },
         replace:true,
         link:function(scope, element,attrs){
@@ -145,16 +148,19 @@ app.directive('inputImagePreview',['UploadService','ImageLoader',function(Upload
             this.upload = function(files,pos){
                 if(pos < files.length){
                     var file = files[pos];
-                    UploadService.uploadFile(file,scope.url,function(data){
+                    var img = scope.images[pos];
+                    var data = {width:img.width,height:img.height};
+                    UploadService.uploadFile(file,data,scope.url,function(data){
                         scope.images[pos].state = data.data.success;
                         self.upload(files,pos+1);
-                    },function(){
+                    },function(data){
                         scope.images[pos].state = false;
                         self.upload(files,pos+1);
                     });
                 }
                 else{
                     self.sending = false;
+                    scope.onSuccess()();
                 }
             };
         }
