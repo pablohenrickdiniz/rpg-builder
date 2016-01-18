@@ -145,7 +145,7 @@ app.directive('inputImagePreview',['UploadService','ImageLoader',function(Upload
                 self.upload(files,0);
             };
 
-            this.upload = function(files,pos){
+            self.upload = function(files,pos){
                 if(pos < files.length){
                     var file = files[pos];
                     var img = scope.images[pos];
