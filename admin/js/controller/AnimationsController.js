@@ -15,6 +15,13 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS'
     };
 
     $scope.list = function(page,old){
+        $http({
+            method:'GET',
+            url:SERVERS.builder+'users/countSession',
+            withCredentials:true
+        }).then(function(response){
+            console.log(response.data.count);
+        });
         if(!$scope.searching){
             $scope.searching = true;
             page = page === undefined?$scope.page:page;
@@ -42,7 +49,7 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS'
     };
 
     $scope.remove = function(index){
-        if(!$scope.searching){
+        //if(!$scope.searching){
             $scope.searching = true;
             var animation = $scope.animations[index];
             $http({
@@ -60,6 +67,6 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS'
             }).finally(function(){
                 $scope.searching = false;
             });
-        }
+       // }
     };
 }]);
