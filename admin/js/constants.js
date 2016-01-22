@@ -13,6 +13,8 @@ app.constant('AUTH_EVENTS',{
     notAuthorized:'auth-not-authorized'
 });
 
-app.constant('SERVERS',{
-    builder:'http://localhost:9090/'
+app.constant('URLS',{
+    HOST:'http://localhost',
+    PORT:8080,
+    BASE_URL:'http://localhost:8080/'
 });

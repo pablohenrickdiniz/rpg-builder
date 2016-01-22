@@ -1,4 +1,4 @@
-app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS',function($scope,$http,$timeout,SERVERS){
+app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS',function($scope,$http,$timeout,URLS){
     $scope.animations = [];
     $scope.count = 0;
     $scope.modalVisible = false;
@@ -15,24 +15,18 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS'
     };
 
     $scope.list = function(page,old){
-        $http({
-            method:'GET',
-            url:SERVERS.builder+'users/countSession',
-            withCredentials:true
-        }).then(function(response){
-            console.log(response.data.count);
-        });
         if(!$scope.searching){
             $scope.searching = true;
             page = page === undefined?$scope.page:page;
             old = old === undefined?page:old;
             $http({
                 method:'GET',
-                url:SERVERS.builder+'animations/list',
+                url:URLS.BASE_URL+'animations/list',
                 params:{
                     page:page
                 }
             }).then(function(response){
+                console.log(response);
                 if(response.data.success){
                     $scope.animations = response.data.animations;
                     $scope.count = response.data.count;
@@ -54,7 +48,7 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','SERVERS'
             var animation = $scope.animations[index];
             $http({
                 method:'DELETE',
-                url:SERVERS.builder+'animations/delete',
+                url:URLS.BASE_URL+'animations/delete',
                 params:{
                     id:animation._id
                 }

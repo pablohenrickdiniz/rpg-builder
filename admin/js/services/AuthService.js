@@ -1,11 +1,11 @@
-app.factory('AuthService',['$rootScope','$http','Session','$state','SERVERS',function($scope,$http,Session,$state,SERVERS){
+app.factory('AuthService',['$rootScope','$http','Session','$state','URLS',function($scope,$http,Session,$state,URLS){
     return {
         loaded:false,
         login:function(credentials,success,error){
             var self = this;
             $http({
                 method:'POST',
-                url:SERVERS.builder+'users/login',
+                url:URLS.BASE_URL+'users/login',
                 data:credentials,
                 withCredentials:true
             }).then(function(response){
@@ -44,7 +44,7 @@ app.factory('AuthService',['$rootScope','$http','Session','$state','SERVERS',fun
             $scope.setCurrentUser(null);
             $http({
                 method:'GET',
-                url:SERVERS.builder+'users/logout',
+                url:URLS.BASE_URL+'users/logout',
                 withCredentials:true
             }).then(function(response){
                 if(response.data.success){
@@ -61,7 +61,7 @@ app.factory('AuthService',['$rootScope','$http','Session','$state','SERVERS',fun
             var self = this;
             $http({
                 method:'GET',
-                url:SERVERS.builder+'users/load-session',
+                url:URLS.BASE_URL+'users/load-session',
                 withCredentials:true
             }).then(function(response){
                 if(response.data.success){
