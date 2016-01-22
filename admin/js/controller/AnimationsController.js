@@ -1,8 +1,7 @@
-app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$cacheFactory',function($scope,$http,$timeout,URLS,$cacheFactory){
-    $scope.animations = [];
+app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$localStorage',function($scope,$http,$timeout,URLS,$localStorage){
+    $scope.storage = $localStorage;
     $scope.modalVisible = false;
     $scope.page = 1;
-    $scope.searching = false;
 
     $scope.showModal = function(){
         $scope.modalVisible = true;
@@ -14,7 +13,7 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$
     };
 
     $scope.remove = function(index) {
-        $scope.animations.splice(index,1);
+        $scope.storage.animations.splice(index,1);
     };
 
     $scope.changePage = function(page){
@@ -38,5 +37,26 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$
         },function(){
             error();
         });
+    };
+
+    $scope.loadData = function(){
+        if(!$scope.storage.animations){
+            self.list(function(data){
+                $scope.storage.animations = data.animations;
+            });
+        }
+    };
+
+    $scope.loadResponse = function(responses){
+        responses.forEach(function(response){
+            if(response.success){
+                console.log(response);
+                $scope.storage.animations.push(response.animation);
+            }
+        });
+    };
+
+    $scope.changePage = function(page){
+        $scope.page = page;
     };
 }]);

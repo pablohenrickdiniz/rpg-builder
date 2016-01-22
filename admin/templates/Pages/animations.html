@@ -1,4 +1,4 @@
-<div class="content" ng-controller="AnimationsController" ng-init="loadCachedData()">
+<div class="content" ng-controller="AnimationsController" ng-init="loadData()">
     <h1>Animations</h1>
     <div class="box">
         <div class="box-header">
@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="box-body no-padding animations-body">
-            <div class="col-lg-3 col-md-3 col-xs-12" dir-paginate="animation in animations | itemsPerPage: 8" pagination-id="animations-id" current-page="page" total-items="animations.length">
+            <div class="col-lg-3 col-md-3 col-xs-12" dir-paginate="animation in storage.animations | itemsPerPage: 8 track by $index " pagination-id="animations-id" current-page="page" total-items="storage.animations.length">
                 <div class="box box-primary box-solid">
                     <div class="box-header">
                         <h4 class="box-title">{{animation.created | date :'d/MM/y HH:mm:ss' }}</h4>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="box-footer clearfix">
-            <dir-pagination-controls pagination-id="animations-id" template-url="templates/Elements/paginator.html"></dir-pagination-controls>
+            <dir-pagination-controls pagination-id="animations-id" template-url="templates/Elements/paginator.html" on-page-change="changePage(newPageNumber)"></dir-pagination-controls>
         </div>
     </div>
 </div>
@@ -43,7 +43,7 @@
                     <h4 class="modal-title">Gráfico de Animação</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="file" input-image-preview url="{{baseUrl}}animations/upload" on-success="list"/>
+                    <input type="file" input-image-preview url="{{baseUrl}}animations/upload" on-success="loadResponse"/>
                 </div>
             </ng-form>
         </div>

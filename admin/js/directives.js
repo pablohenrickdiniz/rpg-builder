@@ -145,22 +145,25 @@ app.directive('inputImagePreview',['UploadService','ImageLoader',function(Upload
                 self.upload(files,0);
             };
 
-            self.upload = function(files,pos){
+            self.upload = function(files,pos,responses){
+                responses = responses === undefined?[]:responses;
                 if(pos < files.length){
                     var file = files[pos];
                     var img = scope.images[pos];
                     var data = {width:img.width,height:img.height};
                     UploadService.uploadFile(file,data,scope.url,function(data){
                         scope.images[pos].state = data.data.success;
-                        self.upload(files,pos+1);
+                        responses.push(data.data);
+                        self.upload(files,pos+1,responses);
                     },function(data){
+                        responses.push(data.data);
                         scope.images[pos].state = false;
-                        self.upload(files,pos+1);
+                        self.upload(files,pos+1,responses);
                     });
                 }
                 else{
                     self.sending = false;
-                    scope.onSuccess()();
+                    scope.onSuccess()(responses);
                 }
             };
         }
