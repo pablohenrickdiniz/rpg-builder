@@ -1,3 +1,3 @@
-app.controller('ResourcesController',['$rootScope',function($scope){
-
+app.controller('ResourcesController',['$rootScope','$localStorage',function($scope,$localStorage){
+    $scope.store = $localStorage;
 }]);

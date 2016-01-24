@@ -1,7 +1,14 @@
-app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$localStorage',function($scope,$http,$timeout,URLS,$localStorage){
-    $scope.storage = $localStorage;
+app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','AnimationService','$localStorage','TaskService',function($scope,$http,$timeout,URLS,AnimationService,$localStorage,TaskService){
     $scope.modalVisible = false;
-    $scope.page = 1;
+    $scope.pagination = {
+        current:1
+    };
+
+    $scope.animations = [];
+    $scope.metadata = {
+        files:[],
+        images:[]
+    };
 
     $scope.showModal = function(){
         $scope.modalVisible = true;
@@ -13,50 +20,36 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','$
     };
 
     $scope.remove = function(index) {
-        $scope.storage.animations.splice(index,1);
+        index = (($scope.pagination.current-1)*8)+index;
+        AnimationService.remove(index);
+        $scope.changePage($scope.pagination.current);
     };
 
-    $scope.changePage = function(page){
-        $scope.page = page;
-    };
-
-    var self = this;
-
-    self.list = function(success,error){
-        console.log('loading from server...');
-        $http({
-            method:'GET',
-            url:URLS.BASE_URL+'animations/list'
-        }).then(function(response){
-            if(response.data.success){
-                success(response.data);
-            }
-            else{
-                error();
-            }
-        },function(){
-            error();
+    $scope.load = function(){
+        AnimationService.loadPage(1,8,function(animations){
+            $scope.animations = animations;
         });
     };
 
-    $scope.loadData = function(){
-        if(!$scope.storage.animations){
-            self.list(function(data){
-                $scope.storage.animations = data.animations;
-            });
+    $scope.changePage = function(page){
+        AnimationService.loadPage(page,8,function(animations){
+            $scope.animations = animations;
+        });
+    };
+
+    $scope.afterEach = function(data){
+        if(data.success){
+            $scope.storage.resources.animations.unshift(data.animation);
+            $scope.changePage($scope.pagination.current);
         }
     };
 
-    $scope.loadResponse = function(responses){
-        responses.forEach(function(response){
-            if(response.success){
-                console.log(response);
-                $scope.storage.animations.push(response.animation);
-            }
-        });
+    $scope.sincronize = function(){
+        var task = {
+            action:'SINCRONIZE_ANIMATIONS'
+        };
+        TaskService.add(task);
     };
 
-    $scope.changePage = function(page){
-        $scope.page = page;
-    };
+    $scope.storage = $localStorage;
 }]);

@@ -1,10 +1,35 @@
 app.service('UploadService',['$http',function($http){
-    this.uploadFile = function(file,data,url,success,error){
-        data = data == undefined?{}:data;
+    var self = this;
+    self.fileQueue = [];
+    self.uploading = false;
+
+    self.executeUploads = function(){
+        if(self.fileQueue.length > 0){
+            self.uploading = true;
+            var queue = self.fileQueue.pop();
+            self.upload(queue.fields,queue.url,function(response){
+                if(typeof queue.success === 'function'){
+                    queue.success(response.data);
+                }
+                self.executeUploads();
+            },function(response){
+                if(typeof queue.error === 'function'){
+                    queue.error(response.data);
+                }
+                self.executeUploads();
+            });
+        }
+        else{
+            self.executing = false;
+        }
+    };
+
+
+    self.upload = function(fields,url,success,error){
+        fields = fields === undefined?{}:fields;
         var fd = new FormData();
-        fd.append('file',file);
-        Object.keys(data).forEach(function(index){
-            fd.append(index,data[index]);
+        Object.keys(fields).forEach(function(index){
+            fd.append(index,fields[index]);
         });
 
         $http({
@@ -15,5 +40,12 @@ app.service('UploadService',['$http',function($http){
             transformRequest:angular.identity,
             headers:{'Content-Type':undefined}
         }).then(success,error);
+    };
+
+    self.queue = function(fileData){
+        self.fileQueue.push(fileData);
+        if(!self.executing){
+            self.executeUploads();
+        }
     };
 }]);

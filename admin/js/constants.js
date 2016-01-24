@@ -18,3 +18,7 @@ app.constant('URLS',{
     PORT:8080,
     BASE_URL:'http://localhost:8080/'
 });
+
+app.constant('TASK',{
+    RESTART_TIME:30000
+});

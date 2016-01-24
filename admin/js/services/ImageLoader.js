@@ -20,6 +20,16 @@ app.factory('ImageLoader',function(){
             else{
                 callback(self.loadedImages[url]);
             }
+        },
+        toDataURL:function(img,callback){
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context.drawImage(img,0,0);
+            var dataUrl = canvas.toDataURL();
+            callback(dataUrl);
+            canvas = null;
         }
     };
 

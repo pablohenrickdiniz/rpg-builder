@@ -1,9 +1,9 @@
-app.run(['$rootScope','$state','$location','AuthService',function($rootScope,$state,$location,AuthService){
+app.run(['$rootScope','$state','$location','AuthService','tasks','$localStorage',function($rootScope,$state,$location,AuthService,tasks,$localStorage){
     $rootScope.isActive = function(url){
         var path = $location.path();
         var index_1 = path.indexOf('/');
         var index_2 = path.lastIndexOf('/');
-        if(index_2 !== -1 && index_2 != index_1){
+        if(index_2 !== -1 && index_2 !== index_1){
             path = path.substring(0,index_2);
         }
         return path === url;
@@ -32,6 +32,5 @@ app.run(['$rootScope','$state','$location','AuthService',function($rootScope,$st
         }
     });
 
-
-
+    tasks();
 }]);
