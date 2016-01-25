@@ -14,6 +14,12 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
         data:{
             authorizedRoles:['admin']
         }
+    }).state('tasks',{
+        url:'/tasks',
+        templateUrl: 'templates/Pages/tasks.html',
+        data:{
+            authorizedRoles:['admin']
+        }
     }).state('tilesets',{
         url:'/resources/tilesets',
         templateUrl:'templates/Pages/tilesets.html',

@@ -46,7 +46,9 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','A
 
     $scope.sincronize = function(){
         var task = {
-            action:'SINCRONIZE_ANIMATIONS'
+            action:'SINCRONIZE_ANIMATIONS',
+            date:new Date(),
+            priority:2
         };
         TaskService.add(task);
     };

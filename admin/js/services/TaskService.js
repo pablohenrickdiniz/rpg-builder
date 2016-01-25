@@ -45,6 +45,7 @@ app.service('TaskService',['$localStorage','$timeout','TASK',function($localStor
 
         if(task.action){
             $localStorage.tasks.push(task);
+            $localStorage.tasks.sort(this.sort);
         }
         else{
             console.log('task action not defined!');
@@ -53,6 +54,31 @@ app.service('TaskService',['$localStorage','$timeout','TASK',function($localStor
         if(!self.executing){
             self.executeTasks();
         }
+    };
+
+    self.sort = function(a,b){
+        var cont = true;
+        if(a.priority !== undefined && b.priority !== undefined){
+            if(a.priority < b.priority){
+                return -1;
+            }
+            else if(a.priority > b.priority){
+                return 1;
+            }
+        }
+
+        if(a.date !== undefined && b.date !== undefined){
+            var timeA = a.date.getTime();
+            var timeB = b.date.getTime();
+            if(timeA < timeB){
+                return -1;
+            }
+            else if(timeA > timeB){
+                return 1;
+            }
+        }
+
+        return 0;
     };
 
     self.on = function(action,callback){

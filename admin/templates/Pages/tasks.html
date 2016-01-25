@@ -1,0 +1,25 @@
+<div class="box" ng-controller="TasksController">
+    <div class="box-header with-border">
+        <h3 class="box-title">Tarefas ({{storage.tasks.length}})</h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-condensed">
+            <tr>
+                <th>#</th>
+                <th>Ação</th>
+                <th>Data</th>
+            </tr>
+            <tr ng-repeat="task in storage.tasks track by $index;">
+                <td>
+                    .{{$index+1}}
+                </td>
+                <td>
+                    {{task.action}}
+                </td>
+                <td>
+                    {{task.date | date :'d/MM/y HH:mm:ss' }}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

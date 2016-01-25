@@ -38,7 +38,9 @@ app.service('AnimationService',['$localStorage','$http','URLS','TaskService','Im
                 data:{
                     id:animation._id
                 },
-                action:'REMOVE_ANIMATION_RESOURCE'
+                date:new Date(),
+                action:'REMOVE_ANIMATION_RESOURCE',
+                priority:1
             };
             TaskService.add(task);
         }
