@@ -1,4 +1,4 @@
-app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','AnimationService','$localStorage','TaskService',function($scope,$http,$timeout,URLS,AnimationService,$localStorage,TaskService){
+app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','ResourceService','$localStorage','TaskService',function($scope,$http,$timeout,URLS,ResourceService,$localStorage,TaskService){
     $scope.modalVisible = false;
     $scope.pagination = {
         current:1
@@ -19,36 +19,38 @@ app.controller('AnimationsController',['$rootScope','$http','$timeout','URLS','A
         $scope.modalVisible = false;
     };
 
-    $scope.remove = function(index) {
-        index = (($scope.pagination.current-1)*8)+index;
-        AnimationService.remove(index);
+    $scope.remove = function(id) {
+        ResourceService.remove('animations',id);
         $scope.changePage($scope.pagination.current);
     };
 
     $scope.load = function(){
-        AnimationService.loadPage(1,8,function(animations){
+        ResourceService.loadResourcePage('animations',1,8,function(animations){
             $scope.animations = animations;
         });
     };
 
     $scope.changePage = function(page){
-        AnimationService.loadPage(page,8,function(animations){
+        ResourceService.loadResourcePage('animations',page,8,function(animations){
             $scope.animations = animations;
         });
     };
 
     $scope.afterEach = function(data){
         if(data.success){
-            $scope.storage.resources.animations.unshift(data.animation);
+            $scope.storage.resources[data.type].unshift(data.doc);
             $scope.changePage($scope.pagination.current);
         }
     };
 
     $scope.sincronize = function(){
         var task = {
-            action:'SINCRONIZE_ANIMATIONS',
+            action:'SINCRONIZE_RESOURCES',
             date:new Date(),
-            priority:2
+            priority:2,
+            data:{
+                name:'animations'
+            }
         };
         TaskService.add(task);
     };

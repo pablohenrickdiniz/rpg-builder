@@ -1,9 +1,9 @@
 app.service('tasks',['TaskService','$http','URLS','$localStorage',function(TaskService,$http,URLS,$localStorage){
     return function(){
-        TaskService.on('REMOVE_ANIMATION_RESOURCE',function(data,success,error){
+        TaskService.on('REMOVE_RESOURCE',function(data,success,error){
             $http({
                 method:'DELETE',
-                url:URLS.BASE_URL+'animations/delete',
+                url:URLS.BASE_URL+data.name+'/delete',
                 params:{
                     id:data.id
                 }
@@ -16,13 +16,13 @@ app.service('tasks',['TaskService','$http','URLS','$localStorage',function(TaskS
             });
         });
 
-        TaskService.on('SINCRONIZE_ANIMATIONS',function(data,success,error){
+        TaskService.on('SINCRONIZE_RESOURCES',function(data,success,error){
             $http({
                 method:'GET',
-                url:URLS.BASE_URL+'animations/list'
+                url:URLS.BASE_URL+data.name+'/list'
             }).then(function(response){
                 if(response.data.success){
-                    $localStorage.resources.animations = response.data.animations;
+                    $localStorage.resources[data.name] = response.data[data.name];
                     success();
                 }
                 else{
