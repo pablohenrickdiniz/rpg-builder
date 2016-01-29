@@ -245,7 +245,9 @@ app.directive('inputColor',function(){
         templateUrl:'templates/Elements/input_color.html',
         scope:{
             ngChange:'&',
-            value:'@value'
+            value:'@value',
+            title:'@title',
+            class:'@class'
         },
         replace:true,
         link:function(scope, element){

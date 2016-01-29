@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="col-md-6 col-sm-6">
-        <div class="box box-primary">
+        <div class="box box-primary graphic-box">
             <div class="box-header with-border">
                 <h3 class="box-title">Gráfico</h3>
             </div>
@@ -26,6 +26,7 @@
                 <div class="col-sm-12" id="animations">
 
                 </div>
+                <input type="color" input-color ng-change="changeGridColor" ng-model="graphic.gridColor" class="color-square" title="Cor da Grade"/>
             </div>
             <div class="box-footer">
                 <div class="row">
@@ -39,21 +40,42 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12">
-                        <input type="file" input-image title="Adicionar Gráfico" multiple="true" ng-add="addImages"/>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <div class="image-container" ng-click="showModal()">
+                            <img ng-src="{{animationData.graphic.imageData.url}}" alt="" class="graphic-image"/>
+                        </div>
                     </div>
-                    <div class="col-lg-6 col-md-12 col-xs-12">
-                        <label for="">Imagens</label>
-                        <select name="" id="images" class="form-control" ng-change="changeGraphic()" ng-model="animationData.graphic.imageData" ng-options="image as image.name for image in animationData.graphic.images">
-                        </select>
-                    </div>
-                    <div class="col-lg-6 col-md-12 col-xs-12">
-                        <label for="">Cor da grade</label>
-                        <input type="color" input-color ng-change="changeGridColor" ng-model="graphic.gridColor"/>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="clearfix"></div>
+    <div class="modal animation-modal" ng-class="{in:modalVisible}" style="display:{{modalVisible?'block':'none'}};">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-label="Close" ng-click="hideModal()">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Selecione o Recurso</h4>
+                </div>
+                <div class="modal-body animations-body">
+                    <div class="col-lg-3 col-md-3 col-xs-12" ng-repeat="animation in storage.resources.animations track by $index ">
+                        <div class="box box-primary box-solid animation-resource">
+                            <div class="box-body with-border">
+                                <img class="img-responsive" ng-src="{{animation.file | bobUrl : baseUrl+'animations/'}}" ng-click="changeGraphic(baseUrl+'animations/'+animation.file)"/>
+                            </div>
+                            <div class="box-footer">
+                                {{animation.width}} x {{animation.height}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>

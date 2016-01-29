@@ -1,11 +1,24 @@
-app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout',function($scope,ImageLoader,$timeout){
+app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localStorage','$timeout',function($scope,ImageLoader,$localStorage,$timeout){
     var self = this;
+    self.animationImage = null;
+    self.graphicLayer = null;
+    self.graphics = [];
+    self.animation=null;
+    self.playing=false;
+    self.rows=1;
+    self.cols=1;
+    self.maxLayer=0;
+    self.selectedObject=null;
+
 
     /*scope*/
     $scope.init = function(){
         $scope.page.title = 'Editor de Animações';
+        $scope.initController();
     };
 
+    $scope.modalVisible = false;
+    $scope.storage = $localStorage;
     $scope.canvasId = 'canvas-container';
 
     $scope.animationData = {
@@ -14,7 +27,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
             cols:1,
             gridColor:'#000000',
             images:[],
-            imageData:null,
+            imageData:{
+                url:''
+            },
             image:null,
             croppedArea:{}
         },
@@ -48,21 +63,30 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         $scope.animationData.graphic.images = $scope.animationData.graphic.images.concat(images);
     };
 
-    $scope.changeGraphic = function(){
-        var url = $scope.animationData.graphic.imageData.url;
-        ImageLoader.load(url,function(img){
-            $scope.animationData.graphic.image = img;
-            self.graphicLayer.set({
-                width:img.width,
-                height:img.height
-            }).clear().drawImage(img,0,0);
-            self.getAnimationImage().updateGrid({
-                width:img.width,
-                height:img.height,
-                sw:img.width,
-                sh:img.height
-            });
+
+    $scope.$watch('animationData.graphic.imageData.url',function(newVal, oldVal){
+        $timeout(function(){
+            if(newVal !== oldVal && self.graphicLayer !== null){
+                ImageLoader.load(newVal,function(img){
+                    $scope.animationData.graphic.image = img;
+                    self.graphicLayer.set({
+                        width:img.width,
+                        height:img.height
+                    }).clear().drawImage(img,0,0);
+                    self.getAnimationImage().updateGrid({
+                        width:img.width,
+                        height:img.height,
+                        sw:img.width,
+                        sh:img.height
+                    });
+                });
+            }
         });
+    });
+
+    $scope.changeGraphic = function($url){
+        $scope.animationData.graphic.imageData.url = $url;
+        $scope.modalVisible = false;
     };
 
     $scope.changeGridColor = function(color){
@@ -101,42 +125,16 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
         });
     };
 
-    /*methods*/
-    $scope.animationCanvas =  CE.createEngine({
-        container:'#canvas-container',
-        width:535,
-        height:400
-    });
-
-
-    self.animationImage = null;
-    self.graphicLayer = null;
-    self.graphics = [];
-    self.animation=null;
-    self.playing=false;
-    self.rows=1;
-    self.cols=1;
-    self.maxLayer=0;
-    self.selectedObject=null;
-
-    /*
-     self.reset=function(){
-     var self = this;
-     $scope.animationCanvas = null;
-     self.animationImage = null;
-     self.graphicLayer = null;
-     self.frameLayers = [];
-     self.graphics=[];
-     self.animation=null;
-     self.playing=false;
-     self.rows=1;
-     self.cols=1;
-     self.maxLayer=0;
-     self.selectedObject=null;
-     self.grid = null;
-     };*/
 
     $scope.initController = function(){
+        /*methods*/
+        $scope.animationCanvas =  CE.createEngine({
+            container:'#canvas-container',
+            width:535,
+            height:400
+        });
+
+
         var canvasImage = self.getAnimationImage();
         self.graphicLayer = canvasImage.createLayer({
             name:'graphic-layer'
@@ -435,6 +433,16 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$timeout
             }
         }
     };
+
+    $scope.showModal = function(){
+        $scope.modalVisible = true;
+
+    };
+
+    $scope.hideModal = function(){
+        $scope.modalVisible = false;
+    };
+
 }]);
 
 

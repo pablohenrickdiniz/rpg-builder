@@ -63,6 +63,10 @@ input::-webkit-inner-spin-button {
     overflow: hidden;
 }
 
+.animations-body{
+    overflow-x: hidden;
+}
+
 .input-image-preview .box{
     border:1px solid #EEE;
 }
@@ -91,4 +95,59 @@ input::-webkit-inner-spin-button {
 
 .animation-modal .direct-chat-messages{
     height: 500px;
+}
+
+.color-square{
+    width:30px;
+    height:30px;
+    position: absolute;
+    left:5px;
+    bottom:5px;
+    background-color: white;
+    border-color: black;
+    padding:1px;
+    z-index:5;
+}
+
+
+.graphic-box .box-body{
+    position: relative;
+}
+
+.graphic-image{
+    max-width: 100%;
+    max-height:100%;
+    position: absolute;
+    margin:auto;
+    top:-100%;
+    left:-100%;
+    right:-100%;
+    bottom:-100%;
+}
+
+.image-container,#animations{
+    width: 240px;
+    height:240px;
+    margin:10px 0 0 0;
+    background:url(
+
+    data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAI0lEQVQYV2Pkaf5fz4AEvtQyNiLzGemgANk+EBvdSkbaKwAA0xQYPeNPf/4AAAAASUVORK5CYII=
+    ) repeat;
+    position: relative;
+}
+
+.image-container:hover{
+    cursor: pointer;
+}
+
+.animation-resource:hover{
+    cursor: pointer;
+}
+
+.animation-resource:hover img{
+    opacity: 1;
+ }
+
+.animation-resource img{
+    opacity: 0.7;
 }
