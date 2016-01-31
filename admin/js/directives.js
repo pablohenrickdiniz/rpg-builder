@@ -46,7 +46,9 @@ app.directive('inputNumberVertical',['$interval','$document',function($interval,
                 if(max !== null && max < scope.value){
                     scope.value =  max;
                 }
-                scope.ngChange()(scope.value);
+                if(typeof scope.ngChange() === 'function'){
+                    scope.ngChange()(scope.value);
+                }
             };
 
             scope.increment = function(){

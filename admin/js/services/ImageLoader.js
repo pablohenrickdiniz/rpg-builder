@@ -11,6 +11,7 @@ app.factory('ImageLoader',function(){
             url = angular.element(a).prop('href');
             if(self.loadedImages[url] === undefined){
                 var img = new Image();
+                img.crossOrigin = "Anonymous";
                 img.src = url;
                 img.onload = function(){
                     self.loadedImages[url] = img;

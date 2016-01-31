@@ -1,9 +1,20 @@
 <div class="box box-primary">
     <div class="box-header">
         <h3 class="box-title">{{title}}</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-success btn-box-tool" ng-click="add()">
-                <i class="fa fa-plus" ng-style="{color:'white'}"></i>
+        <div class="box-tools">
+            <div class="btn-group">
+                <button class="btn  btn-box-tool" ng-click="stop()">
+                    <span class="fa fa-stop"></span> Parar
+                </button>
+                <button class="btn btn-box-tool" ng-click="pause()">
+                    <span class="fa fa-pause"></span> Pausar
+                </button>
+                <button class="btn  btn-box-tool" ng-click="play()">
+                    <span class="fa fa-play"></span> Executar
+                </button>
+            </div>
+            <button type="button" class="btn btn-box-tool" ng-click="add()">
+                <span class="fa fa-plus"></span> Novo
             </button>
         </div>
     </div>
@@ -12,7 +23,7 @@
             <table class="table bring-up">
                 <tbody>
                 <tr ng-repeat="frame in frames track by $index" ng-click="select($index)" ng-class="{active:(selected == $index)}">
-                    <td>#Frame {{$index+1}}</td>
+                    <td>#Quadro {{$index+1}}</td>
                     <td><span class="close" ng-click="remove($index)">&times;</span></td>
                 </tr>
                 </tbody>

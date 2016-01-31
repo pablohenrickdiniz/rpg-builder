@@ -11,8 +11,16 @@
             </div>
             <div class="box-body">
                 <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid"></canvas-container>
+                <span>mouse:{{cursor.x}},{{cursor.y}} </span>
             </div>
             <div class="box-footer">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <label for="">Velocidade:</label>
+                        <input type="number"  input-number-vertical min="1" max="10"/>
+                    </div>
+                </div>
+                <br/>
                 <frame-player title="Quadros" ng-add="addFrame" ng-remove="removeFrame" ng-select="selectFrame"></frame-player>
             </div>
         </div>
@@ -22,7 +30,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Gráfico</h3>
             </div>
-            <div class="box-body">
+            <div class="box-body animations-graphic-body">
                 <div class="col-sm-12" id="animations">
 
                 </div>
@@ -30,29 +38,25 @@
             </div>
             <div class="box-footer">
                 <div class="row">
-                    <div class="col-lg-6 col-md-12 col-xs-12">
-                        <label>Linhas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.height/animationData.graphic.rows | number:2}}px)</span></label>
-                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="graphic.rows"/>
-                    </div>
-                    <div class="col-lg-6 col-md-12 col-xs-12">
-                        <label>Colunas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.width/animationData.graphic.cols | number:2}}px)</span></label>
-                        <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="graphic.cols">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-lg-4 col-xs-12">
+                    <div class="col-md-5 col-lg-5 col-xs-12">
                         <div class="image-container" ng-click="showModal()">
                             <img ng-src="{{animationData.graphic.imageData.url}}" alt="" class="graphic-image"/>
                         </div>
                     </div>
                     <div class="col-md-7 col-lg-7 col-xs-12">
-
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                            <label>Linhas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.height/animationData.graphic.rows | number:2}}px)</span></label>
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="graphic.rows"/>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                            <label>Colunas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.width/animationData.graphic.cols | number:2}}px)</span></label>
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="graphic.cols">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="clearfix"></div>
     <div class="modal animation-modal" ng-class="{in:modalVisible}" style="display:{{modalVisible?'block':'none'}};">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -79,3 +83,4 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+<div class="clearfix"></div>

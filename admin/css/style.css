@@ -15,14 +15,19 @@
 .input-group.number input{
     border-radius:0;
     border-right:none;
+    height: 25px;
+    font-size: 15px;
+    padding: 0 0 0 2px;
 }
 
 .input-group.number .input-group-btn button{
     border-radius:0;
+    height: 25px;
+    padding: 0 5px 0 5px;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+.input-group.number input::-webkit-outer-spin-button,
+.input-group.number input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
@@ -126,14 +131,16 @@ input::-webkit-inner-spin-button {
 }
 
 .image-container,#animations{
-    width: 240px;
-    height:240px;
-    margin:10px 0 0 0;
     background:url(
-
     data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAI0lEQVQYV2Pkaf5fz4AEvtQyNiLzGemgANk+EBvdSkbaKwAA0xQYPeNPf/4AAAAASUVORK5CYII=
     ) repeat;
     position: relative;
+}
+
+.image-container{
+    margin:10px 0 0 0;
+    width: 100%;
+    min-height: 200px;
 }
 
 .image-container:hover{
@@ -150,4 +157,8 @@ input::-webkit-inner-spin-button {
 
 .animation-resource img{
     opacity: 0.7;
+}
+
+.animations-graphic-body{
+    overflow: hidden;
 }

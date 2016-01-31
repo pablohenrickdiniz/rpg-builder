@@ -1,4 +1,4 @@
-app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localStorage','$timeout',function($scope,ImageLoader,$localStorage,$timeout){
+app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localStorage','$timeout','Utils',function($scope,ImageLoader,$localStorage,$timeout,Utils){
     var self = this;
     self.animationImage = null;
     self.graphicLayer = null;
@@ -35,6 +35,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             croppedArea:{}
         },
         currentFrame:0
+    };
+
+
+    $scope.cursor = {
+        x:0,
+        y:0
     };
 
     $scope.animation = null;
@@ -191,25 +197,26 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         animationMouseReader.onmousedown(1,function(){
             var reader = this;
             var p = reader.lastDown.left;
-            var layer = self.frameLayers[$scope.animation.indexFrame];
+            var layer = self.frameLayers[self.getAnimation().indexFrame];
             if(layer !== undefined){
                 var objects = layer.objects;
                 var object = null;
                 var found = false;
                 if(self.selectedObject !== null){
                     self.selectedObject.selected = false;
-                    self.selectedObject.parent.refresh();
+                    self.selectedObject.canvasLayer.refresh();
                     self.selectedObject = null;
                 }
 
                 objects.forEach(function(object_tmp){
-                    var x = p.x -object_tmp.x;
-                    var y = p.y - object_tmp.y;
-                    if(!object_tmp.isTransparent(x,y)){
+                    var x = (p.x -object_tmp.dx)+object_tmp.sx;
+                    var y = (p.y - object_tmp.dy)+object_tmp.sy;
+
+                    if(!Utils.isPixelTransparent(object_tmp.image,x,y)){
                         object = object_tmp;
                         object.selected = true;
-                        object.oldX = object.x;
-                        object.oldY = object.y;
+                        object.odx = object.dx;
+                        object.ody = object.dy;
                         self.selectedObject = object;
                         found = true;
                         layer.refresh();
@@ -222,46 +229,51 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             }
         });
 
+        animationMouseReader.onmouseout(function(){
+            $scope.cursor = {x:0,y:0};
+            $scope.$apply();
+        });
+
         animationMouseReader.onmousemove(function(){
             var reader = this;
             var object =  self.selectedObject;
+            var move = reader.lastMove;
+            $scope.cursor = move;
+            $scope.$apply();
+
             if(reader.left && object !== null){
                 var p = reader.lastDown.left;
-                var move = reader.lastMove;
-                var dif = Math.vmv(move,p);
-
-                var pos = {
-                    x:dif.x+object.oldX,
-                    y:dif.y+object.oldY
-                };
+                var diff = CE.Math.vmv(move,p);
+                var dx =diff.x+object.odx;
+                var dy =diff.y+object.ody;
 
                 var width = animationCanvas.getGrid().width;
                 var height = animationCanvas.getGrid().height;
 
-                var gnx_1 = Math.floor(pos.x/32)*32;
-                var gny_1 = Math.floor(pos.y/32)*32;
+                var gnx_1 = Math.floor(dx/32)*32;
+                var gny_1 = Math.floor(dy/32)*32;
                 var gnx_2 = gnx_1+32;
                 var gny_2 = gny_1+32;
 
 
-
-                if((pos.x - gnx_1) < (gnx_2 - (pos.x+object.width))){
-                    pos.x = gnx_1;
+                if((dx - gnx_1) < (gnx_2 - (dx+object.dWidth))){
+                    dx = gnx_1;
                 }
                 else{
-                    pos.x = gnx_2;
+                    dx = gnx_2;
                 }
 
-                if((pos.y - gny_1) <= (gny_2 - (pos.y+object.height))){
-                    pos.y = gny_1;
+                if((dy - gny_1) <= (gny_2 - (dy+object.dHeight))){
+                    dy = gny_1;
                 }
                 else{
-                    pos.y = gny_2;
+                    dy = gny_2;
                 }
 
-                object.set(pos);
-                if(object.parent !== null){
-                    object.parent.refresh();
+                object.dx = dx;
+                object.dy = dy;
+                if(object.canvasLayer !== null){
+                    object.canvasLayer.refresh();
                 }
             }
         });
@@ -272,8 +284,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         if(self.animationImage === null){
             self.animationImage = CE.createEngine({
                 container:'#animations',
-                width:530,
-                height:400,
+                width:500,
+                height:500,
                 selectable:true,
                 draggable:true,
                 scalable:true
@@ -309,8 +321,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                             sHeight:newRect.height,
                             dWidth:newRect.width,
                             dHeight:newRect.height,
-                            x:(canvas.width/2)-(newRect.width/2),
-                            y:(canvas.height/2)-(newRect.height/2)
+                            dx:(canvas.width/2)-(newRect.width/2),
+                            dy:(canvas.height/2)-(newRect.height/2)
                         };
                     }
                 }
@@ -391,8 +403,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         dHeight:rect.height,
                         sWidth:rect.width,
                         sHeight:rect.height,
-                        x:(canvas.width/2)-(rect.width/2),
-                        y:(canvas.height/2)-(rect.height/2)
+                        dx:(canvas.width/2)-(rect.width/2),
+                        dy:(canvas.height/2)-(rect.height/2)
                     };
                 }
             });
