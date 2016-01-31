@@ -9,6 +9,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     self.cols=1;
     self.maxLayer=0;
     self.selectedObject=null;
+    self.frameLayers = [];
 
 
     /*scope*/
@@ -100,13 +101,14 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
     $scope.addFrame = function(selected){
-        $scope.animationCanvas.createLayer({
+        var layer = $scope.animationCanvas.createLayer({
             append:false,
             width:$scope.animationCanvas.width,
             height:$scope.animationCanvas.height
         },CE.ObjectLayer);
         self.getAnimation().indexFrame = selected;
         self.addObject();
+        self.frameLayers.push(layer);
     };
 
 
@@ -400,6 +402,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.removeFrame= function(index){
         $scope.animationCanvas.removeLayer(index);
+        self.frameLayers.splice(index,1);
         $scope.selectFrame(index-1);
     };
 
@@ -427,7 +430,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var frame = $scope.animation.indexFrame;
             var layer =   $scope.animationCanvas.getLayer(frame);
             if(layer !== null && layer instanceof CE.ObjectLayer){
-                var cropped = _.clone($scope.animationData.graphic.croppedArea);
+                var cropped = new CE.ImageSet($scope.animationData.graphic.croppedArea);
                 layer.add(cropped);
                 self.getAnimation().frames[frame] = cropped;
             }
