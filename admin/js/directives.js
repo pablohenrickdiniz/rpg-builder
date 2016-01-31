@@ -275,7 +275,10 @@ app.directive('framePlayer',['$timeout',function($timeout){
             title:'@title',
             ngAdd:'&',
             ngSelect:'&',
-            ngRemove:'&'
+            ngRemove:'&',
+            playCallback:'&',
+            pauseCallback:'&',
+            stopCallback:'&'
         },
         link:function(scope){
             scope.frames = [];
@@ -297,6 +300,24 @@ app.directive('framePlayer',['$timeout',function($timeout){
                 var frame = scope.frames[index];
                 scope.selected = index;
                 scope.ngSelect()(index);
+            };
+
+            scope.play = function(){
+                if(typeof scope.playCallback() === 'function'){
+                    scope.playCallback()();
+                }
+            };
+
+            scope.pause = function(){
+                if(typeof scope.pauseCallback() === 'function'){
+                    scope.pauseCallback()();
+                }
+            };
+
+            scope.stop = function(){
+                if(typeof scope.stopCallback() === 'function'){
+                    scope.stopCallback()();
+                }
             };
         }
     };

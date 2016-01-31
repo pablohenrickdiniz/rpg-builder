@@ -4,7 +4,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     self.graphicLayer = null;
     self.graphics = [];
     self.animation=null;
-    self.playing=false;
     self.rows=1;
     self.cols=1;
     self.maxLayer=0;
@@ -44,7 +43,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
     $scope.animation = null;
-
 
     $scope.changeRows = function(val){
         $scope.animationData.graphic.rows = val;
@@ -415,6 +413,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.removeFrame= function(index){
         $scope.animationCanvas.removeLayer(index);
         self.frameLayers.splice(index,1);
+        self.getAnimation().remove(index);
         $scope.selectFrame(index-1);
     };
 
@@ -426,10 +425,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 speed:7,
                 width:engine.width,
                 height:engine.height,
-                indexFrame:0
+                indexFrame:0,
+                repeat:true
             });
             animation.onStep(function(frame){
                 $scope.selectFrame(frame);
+                $scope.$apply();
             });
             $scope.animation = animation;
         }
@@ -458,6 +459,17 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         $scope.modalVisible = false;
     };
 
+    $scope.playAnimation = function(){
+        self.getAnimation().execute();
+    };
+
+    $scope.pauseAnimation = function() {
+        self.getAnimation().pause();
+    };
+
+    $scope.stopAnimation = function(){
+        self.getAnimation().stop();
+    };
 }]);
 
 
