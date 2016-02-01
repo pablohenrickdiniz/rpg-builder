@@ -105,6 +105,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
     $scope.addFrame = function(selected){
+        $scope.stopAnimation();
         var layer = $scope.animationCanvas.createLayer({
             append:false,
             width:$scope.animationCanvas.width,
@@ -113,18 +114,19 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         self.getAnimation().indexFrame = selected;
         $scope.addObject();
         self.frameLayers.push(layer);
+        $scope.selectFrame(selected);
     };
 
 
     $scope.selectFrame = function(frame){
         console.log('selecting frame '+frame);
         self.getAnimation().indexFrame = frame;
-        $scope.animationCanvas.layers.forEach(function(layer,index){
-            if(layer.type !== 'grid'){
-                if(index === frame){
+        $scope.animationCanvas.layers.forEach(function (layer, index) {
+            if (layer.type !== 'grid') {
+                if (index === frame) {
                     layer.opacity = 1;
                 }
-                else{
+                else {
                     layer.opacity = 0;
                 }
             }
@@ -449,6 +451,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
     $scope.playAnimation = function(){
+        self.frameLayers.forEach(function(layer){
+            layer.objects.forEach(function(object){
+                object.selected = false;
+            });
+            layer.refresh();
+        });
         self.getAnimation().execute();
     };
 
@@ -458,6 +466,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.stopAnimation = function(){
         self.getAnimation().stop();
+        $scope.selectFrame(0);
     };
 }]);
 

@@ -162,3 +162,11 @@
 .animations-graphic-body{
     overflow: hidden;
 }
+
+.cross-hair{
+    cursor: crosshair;
+}
+
+.move{
+    cursor: move;
+}
