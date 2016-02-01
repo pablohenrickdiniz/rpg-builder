@@ -20,6 +20,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.modalVisible = false;
     $scope.storage = $localStorage;
     $scope.canvasId = 'canvas-container';
+    $scope.hoverObject = null;
 
     $scope.animationData = {
         graphic:{
@@ -136,12 +137,13 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.initController = function(){
         /*methods*/
+
         $scope.animationCanvas =  CE.createEngine({
             container:'#canvas-container',
             width:535,
             height:400
         });
-
+        self.getAnimation().stop();
 
         var canvasImage = self.getAnimationImage();
         self.graphicLayer = canvasImage.createLayer({
@@ -225,6 +227,23 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var move = reader.lastMove;
             $scope.cursor = move;
             $scope.$apply();
+
+
+            var layer = self.frameLayers[self.getAnimation().indexFrame];
+            if(layer !== undefined){
+                var objects = layer.objects;
+                var hover_object = null;
+                objects.forEach(function(object_tmp){
+                    var x = (move.x -object_tmp.dx)+object_tmp.sx;
+                    var y = (move.y - object_tmp.dy)+object_tmp.sy;
+
+                    if(!Utils.isPixelTransparent(object_tmp.image,x,y)){
+                        hover_object = object_tmp;
+                        return false;
+                    }
+                });
+                $scope.hoverObject = hover_object;
+            }
 
             if(reader.left && object !== null){
                 var p = reader.lastDown.left;

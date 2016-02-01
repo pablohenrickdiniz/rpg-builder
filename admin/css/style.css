@@ -170,3 +170,7 @@
 .move{
     cursor: move;
 }
+
+.hover{
+    cursor: pointer;
+}

@@ -1,4 +1,4 @@
-<div ng-controller="AnimationEditorController" ng-init="init()">
+<div ng-controller="AnimationEditorController" ng-init="init()" cache-view="false">
     <div class="col-md-6 col-sm-6">
         <div class="box box-success">
             <div class="box-header with-border">
@@ -12,7 +12,7 @@
                     </button>
                 </div>
             </div>
-            <div class="box-body">
+            <div class="box-body" ng-class="{'hover':hoverObject != null}">
                 <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid"></canvas-container>
                 <span>mouse:{{cursor.x}},{{cursor.y}} </span>
             </div>
