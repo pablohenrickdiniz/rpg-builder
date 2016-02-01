@@ -111,7 +111,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             height:$scope.animationCanvas.height
         },CE.ObjectLayer);
         self.getAnimation().indexFrame = selected;
-        self.addObject();
+        $scope.addObject();
         self.frameLayers.push(layer);
     };
 
@@ -150,6 +150,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         var animationMouseReader = animationCanvas.getMouseReader();
         var animationKeyReader = animationCanvas.getKeyReader();
 
+        $(document).on('keydown',function(e){
+            console.log(e.keyCode);
+        });
 
         animationCanvas.getGridLayer({
             append:false,
@@ -159,36 +162,23 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_DEL],function(){
             console.log('delete...');
-            if(self.selectedObject !== null && self.selectedObject.parent !== null){
-                var object = self.selectedObject;
-                var parent = object.parent;
-                parent.remove(self.selectedObject);
+            if(self.selectedObject !== null && self.selectedObject.canvasLayer !== null){
+                self.selectedObject.canvasLayer.remove(self.selectedObject);
                 self.selectedObject = null;
-                self.getAnimation().frames.forEach(function(frame){
-                    var index = frame.imageSets.indexOf(object);
-                    if(index !== -1){
-                        frame.removeImageSet(object);
-                        return false;
-                    }
-                });
             }
         });
 
-        animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_UP],function(){
+        animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_GT],function(){
             var object = self.selectedObject;
-            if(object !== null){
-                if(object.parent !== null){
-                    object.parent.moveUp(object);
-                }
+            if(object !== null && object.canvasLayer !== null){
+                object.canvasLayer.moveUp(object);
             }
         });
 
-        animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_DOWN],function(){
+        animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_LT],function(){
             var object = self.selectedObject;
-            if(object !== null){
-                if(object.parent !== null){
-                    object.parent.moveDown(object);
-                }
+            if(object !== null && object.canvasLayer !== null){
+                object.canvasLayer.moveDown(object);
             }
         });
 
@@ -199,10 +189,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             if(layer !== undefined){
                 var objects = layer.objects;
                 var object = null;
-                var found = false;
                 if(self.selectedObject !== null){
                     self.selectedObject.selected = false;
-                    self.selectedObject.canvasLayer.refresh();
                     self.selectedObject = null;
                 }
 
@@ -216,14 +204,11 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         object.odx = object.dx;
                         object.ody = object.dy;
                         self.selectedObject = object;
-                        found = true;
-                        layer.refresh();
-                        return false;
-                    }
-                    if(found){
                         return false;
                     }
                 });
+
+                layer.refresh();
             }
         });
 
@@ -357,7 +342,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             });
 
             reader.onSequence([CE.KeyReader.Keys.KEY_O],function(){
-                self.addObject();
+                $scope.addObject();
             });
 
             self.animationImage.onAreaSelect(function(area,grid){
@@ -437,15 +422,19 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         return $scope.animation;
     };
 
-    self.addObject =function(){
-        var self = this;
-        if($scope.animationData.graphic.croppedArea !== null){
+    $scope.addObject =function(){
+        if($scope.animationData.graphic.croppedArea !== null && $scope.animation !== null){
             var frame = $scope.animation.indexFrame;
             var layer =   $scope.animationCanvas.getLayer(frame);
             if(layer !== null && layer instanceof CE.ObjectLayer){
                 var cropped = new CE.ImageSet($scope.animationData.graphic.croppedArea);
+                cropped.selected = true;
+                if(self.selectedObject !== null){
+                    self.selectedObject.selected = false;
+                }
                 layer.add(cropped);
                 self.getAnimation().frames[frame] = cropped;
+                layer.refresh();
             }
         }
     };

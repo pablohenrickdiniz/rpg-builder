@@ -4,8 +4,11 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Animação</h3>
                 <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Novo Objeto" title="Novo Objetor" ng-click="addObject()">
+                        <i class="fa fa-plus"></i> Novo Objeto
+                    </button>
                     <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar">
-                        <i class="fa fa-upload"></i>
+                        <i class="fa fa-upload"></i> Exportar
                     </button>
                 </div>
             </div>
@@ -67,9 +70,9 @@
                 </div>
                 <div class="modal-body animations-body">
                     <div class="col-lg-3 col-md-3 col-xs-12" ng-repeat="animation in storage.resources.animations track by $index ">
-                        <div class="box box-primary box-solid animation-resource">
+                        <div class="box box-primary box-solid animation-resource"  ng-click="changeGraphic(baseUrl+'animations/'+animation.file)">
                             <div class="box-body with-border">
-                                <img class="img-responsive" ng-src="{{animation.file | bobUrl : baseUrl+'animations/'}}" ng-click="changeGraphic(baseUrl+'animations/'+animation.file)"/>
+                                <img class="img-responsive" ng-src="{{animation.file | bobUrl : baseUrl+'animations/'}}"/>
                             </div>
                             <div class="box-footer">
                                 {{animation.width}} x {{animation.height}}
