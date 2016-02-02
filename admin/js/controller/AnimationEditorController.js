@@ -192,18 +192,16 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var layer = self.frameLayers[self.getAnimation().indexFrame];
             if(layer !== undefined){
                 var objects = layer.objects;
-                var object = null;
                 if(self.selectedObject !== null){
                     self.selectedObject.selected = false;
                     self.selectedObject = null;
                 }
 
-                objects.forEach(function(object_tmp){
-                    var x = (p.x -object_tmp.dx)+object_tmp.sx;
-                    var y = (p.y - object_tmp.dy)+object_tmp.sy;
+                objects.forEach(function(object){
+                    var x = (p.x -object.dx)+object.sx;
+                    var y = (p.y - object.dy)+object.sy;
 
-                    if(!Utils.isPixelTransparent(object_tmp.image,x,y)){
-                        object = object_tmp;
+                    if(!Utils.isPixelTransparent(object.image,x,y)){
                         object.selected = true;
                         object.odx = object.dx;
                         object.ody = object.dy;
@@ -218,12 +216,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
         animationMouseReader.onmouseout(function(){
             $scope.cursor = {x:0,y:0};
+            $scope.hoverObject = null;
             $scope.$apply();
         });
 
         animationMouseReader.onmousemove(function(){
             var reader = this;
-            var object =  self.selectedObject;
             var move = reader.lastMove;
             $scope.cursor = move;
             $scope.$apply();
@@ -232,20 +230,21 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var layer = self.frameLayers[self.getAnimation().indexFrame];
             if(layer !== undefined){
                 var objects = layer.objects;
-                var hover_object = null;
-                objects.forEach(function(object_tmp){
-                    var x = (move.x -object_tmp.dx)+object_tmp.sx;
-                    var y = (move.y - object_tmp.dy)+object_tmp.sy;
+                $scope.hoverObject = null;
+                objects.forEach(function(object){
+                    var x = (move.x -object.dx)+object.sx;
+                    var y = (move.y - object.dy)+object.sy;
 
-                    if(!Utils.isPixelTransparent(object_tmp.image,x,y)){
-                        hover_object = object_tmp;
+                    if(!Utils.isPixelTransparent(object.image,x,y)){
+                        $scope.hoverObject = object;
                         return false;
                     }
                 });
-                $scope.hoverObject = hover_object;
+
             }
 
-            if(reader.left && object !== null){
+            if(reader.left && self.selectedObject !== null){
+                var object =  self.selectedObject;
                 var p = reader.lastDown.left;
                 var diff = CE.Math.vmv(move,p);
                 var dx =diff.x+object.odx;
