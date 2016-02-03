@@ -75,11 +75,14 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             if(newVal !== oldVal && self.graphicLayer !== null){
                 ImageLoader.load(newVal,function(img){
                     $scope.animationData.graphic.image = img;
-                    self.graphicLayer.set({
+                    var canvasImage = self.getAnimationImage();
+
+                    canvasImage.applyToLayers({
                         width:img.width,
                         height:img.height
-                    }).clear().drawImage(img,0,0);
-                    self.getAnimationImage().updateGrid({
+                    });
+                    self.graphicLayer.clear().drawImage(img,0,0);
+                    canvasImage.updateGrid({
                         width:img.width,
                         height:img.height,
                         sw:img.width,
