@@ -489,6 +489,10 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         self.getAnimation().stop();
         $scope.selectFrame(0);
     };
+
+    $scope.changeSpeed = function(speed) {
+        self.getAnimation().speed = speed;
+    };
 }]);
 
 
