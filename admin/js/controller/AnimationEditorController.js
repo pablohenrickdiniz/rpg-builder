@@ -168,7 +168,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         var animationKeyReader = animationCanvas.getKeyReader();
 
         $(document).on('keydown',function(e){
-            console.log(e.keyCode);
+            //console.log(e.keyCode);
         });
 
         animationCanvas.getGridLayer({

@@ -35,28 +35,40 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
         link:function(scope){
             scope.interval = null;
             var value = parseInt(scope.ngModel);
+
+            scope.change = function(){
+                if(min !== null && min > scope.value){
+                    scope.value = min;
+                }
+
+                if(max !== null && max < scope.value){
+                    scope.value =  max;
+                }
+
+                scope.ngModel = scope.value;
+                if(typeof scope.ngChange() === 'function'){
+                    $timeout(function(){
+                        scope.ngChange()(scope.ngModel);
+                    });
+                }
+            };
+
             if(isNaN(value)){
                 scope.value = 0;
+            }
+            else{
+                scope.value = value;
+                scope.change();
             }
 
             var min = isNaN(scope.min)?null:parseFloat(scope.min);
             var max = isNaN(scope.max)?null:parseFloat(scope.max);
 
-            scope.change = function(){
-                if(min !== null && min > scope.ngModel){
-                    scope.value = min;
-                }
-
-                if(max !== null && max < scope.ngModel){
-                    scope.value =  max;
-                }
-            };
-
             scope.increment = function(){
                 if(scope.interval === null){
                     scope.interval = $interval(function(){
-                        if(max === null || max >= scope.ngModel+1){
-                            scope.value = scope.ngModel+1;
+                        if(max === null || max >= scope.value+1){
+                            scope.value = scope.value+1;
                         }
                         scope.change();
                     },50);
@@ -83,16 +95,6 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                 scope.stop();
             });
 
-            scope.$watch('value',function(newVal, oldVal){
-                if(newVal !== oldVal){
-                    scope.ngModel = newVal;
-                    if(typeof scope.ngChange() === 'function'){
-                        $timeout(function(){
-                            scope.ngChange()(scope.ngModel);
-                        });
-                    }
-                }
-            });
 
             scope.$watch('ngModel',function(newVal, oldVal){
                 if(newVal !== oldVal){
