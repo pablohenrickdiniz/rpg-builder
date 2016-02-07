@@ -10,11 +10,14 @@
                     <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar">
                         <i class="fa fa-upload"></i> Exportar
                     </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
                 </div>
             </div>
             <div class="box-body" ng-class="{'hover':hoverObject != null}">
                 <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid"></canvas-container>
-                <span>mouse:{{cursor.x}},{{cursor.y}} </span>
+                <span>mouse:{{cursor.x}},{{cursor.y}}</span>
+                <span ng-if="currentObject !== null">current object:{{currentObject.dx}},{{currentObject.dy}}</span>
             </div>
             <div class="box-footer">
                 <div class="row">
@@ -32,6 +35,10 @@
         <div class="box box-primary graphic-box">
             <div class="box-header with-border">
                 <h3 class="box-title">Gráfico</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
             </div>
             <div class="box-body animations-graphic-body">
                 <div class="col-sm-12" id="animations">
@@ -49,13 +56,40 @@
                     <div class="col-md-7 col-lg-7 col-xs-12">
                         <div class="col-lg-12 col-md-12 col-xs-12">
                             <label>Linhas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.height/animationData.graphic.rows | number:2}}px)</span></label>
-                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="graphic.rows"/>
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="animationData.graphic.rows"/>
                         </div>
                         <div class="col-lg-12 col-md-12 col-xs-12">
                             <label>Colunas <span ng-if="animationData.graphic.image">({{animationData.graphic.image.width/animationData.graphic.cols | number:2}}px)</span></label>
-                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="graphic.cols">
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="animationData.graphic.cols">
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="box box-primary object-box collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Objeto</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body ">
+                <div class="col-md-6">
+                    <label for="">x:</label>
+                    <input type="number" input-number-vertical ng-model="currentObject.dx"/>
+                </div>
+                <div class="col-md-6">
+                    <label for="">y:</label>
+                    <input type="number" input-number-vertical ng-model="currentObject.dy"/>
+                </div>
+                <div class="col-md-6">
+                    <label for="">largura:</label>
+                    <input type="number" input-number-vertical ng-model="currentObject.dWidth"/>
+                </div>
+                <div class="col-md-6">
+                    <label for="">altura:</label>
+                    <input type="number" input-number-vertical ng-model="currentObject.dHeight"/>
                 </div>
             </div>
         </div>

@@ -7,8 +7,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     self.rows=1;
     self.cols=1;
     self.maxLayer=0;
-    self.selectedObject=null;
     self.frameLayers = [];
+
 
 
     /*scope*/
@@ -21,6 +21,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.storage = $localStorage;
     $scope.canvasId = 'canvas-container';
     $scope.hoverObject = null;
+    $scope.currentObject = null;
 
     $scope.animationData = {
         graphic:{
@@ -45,8 +46,18 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.animation = null;
 
+    $scope.$watchGroup(['currentObject.dx','currentObject.dy','currentObject.dWidth','currentObject.dHeight'],function(newValues, oldValues){
+        newValues.forEach(function(val,index){
+            if(oldValues[index] !== newValues[index]){
+                if($scope.currentObject !== null && $scope.currentObject.canvasLayer !== undefined){
+                    $scope.currentObject.canvasLayer.refresh();
+                }
+                return false;
+            }
+        });
+    });
+
     $scope.changeRows = function(val){
-        $scope.animationData.graphic.rows = val;
         var image = $scope.animationData.graphic.image;
         if(image !== null){
             self.getAnimationImage().updateGrid({
@@ -56,7 +67,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
     $scope.changeCols = function(val){
-        $scope.animationData.graphic.cols = val;
         var image = $scope.animationData.graphic.image;
         if(image !== null){
             self.getAnimationImage().updateGrid({
@@ -169,21 +179,21 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_DEL],function(){
             console.log('delete...');
-            if(self.selectedObject !== null && self.selectedObject.canvasLayer !== null){
-                self.selectedObject.canvasLayer.remove(self.selectedObject);
-                self.selectedObject = null;
+            if($scope.currentObject !== null && $scope.currentObject.canvasLayer !== null){
+                $scope.currentObject.canvasLayer.remove($scope.currentObject);
+                $scope.currentObject = null;
             }
         });
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_GT],function(){
-            var object = self.selectedObject;
+            var object = $scope.currentObject;
             if(object !== null && object.canvasLayer !== null){
                 object.canvasLayer.moveUp(object);
             }
         });
 
         animationKeyReader.onSequence([CE.KeyReader.Keys.KEY_CTRL,CE.KeyReader.Keys.KEY_LT],function(){
-            var object = self.selectedObject;
+            var object = $scope.currentObject;
             if(object !== null && object.canvasLayer !== null){
                 object.canvasLayer.moveDown(object);
             }
@@ -195,21 +205,30 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var layer = self.frameLayers[self.getAnimation().indexFrame];
             if(layer !== undefined){
                 var objects = layer.objects;
-                if(self.selectedObject !== null){
-                    self.selectedObject.selected = false;
-                    self.selectedObject = null;
+                if($scope.currentObject !== null){
+                    $scope.currentObject.selected = false;
+                    $scope.currentObject = null;
                 }
 
                 objects.forEach(function(object){
-                    var x = (p.x -object.dx)+object.sx;
-                    var y = (p.y - object.dy)+object.sy;
+                    var abs_x = p.x -object.dx;
+                    var abs_y = p.y - object.dy;
 
-                    if(!Utils.isPixelTransparent(object.image,x,y)){
-                        object.selected = true;
-                        object.odx = object.dx;
-                        object.ody = object.dy;
-                        self.selectedObject = object;
-                        return false;
+                    if(abs_x >=0 && abs_y >= 0 && abs_x  <= object.dWidth && abs_y <= object.dHeight){
+                        var prop_w = object.dWidth/object.sWidth;
+                        var prop_h = object.dHeight/object.sHeight;
+                        var prop_x = (abs_x/prop_w);
+                        var prop_y = (abs_y/prop_h);
+                        var rel_x = prop_x+object.sx;
+                        var rel_y = prop_y+object.sy;
+
+                        if(!Utils.isPixelTransparent(object.image,rel_x,rel_y)){
+                            object.selected = true;
+                            object.odx = object.dx;
+                            object.ody = object.dy;
+                            $scope.currentObject = object;
+                            return false;
+                        }
                     }
                 });
 
@@ -235,19 +254,29 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 var objects = layer.objects;
                 $scope.hoverObject = null;
                 objects.forEach(function(object){
-                    var x = (move.x -object.dx)+object.sx;
-                    var y = (move.y - object.dy)+object.sy;
+                    var abs_x = move.x -object.dx;
+                    var abs_y = move.y - object.dy;
 
-                    if(!Utils.isPixelTransparent(object.image,x,y)){
-                        $scope.hoverObject = object;
-                        return false;
+                    if(abs_x >0 && abs_y > 0 && abs_x  <= object.dWidth && abs_y <= object.dHeight){
+                        var prop_w = object.dWidth/object.sWidth;
+                        var prop_h = object.dHeight/object.sHeight;
+                        var prop_x = (abs_x/prop_w);
+                        var prop_y = (abs_y/prop_h);
+                        var rel_x = prop_x+object.sx;
+                        var rel_y = prop_y+object.sy;
+
+
+                        if(!Utils.isPixelTransparent(object.image,rel_x,rel_y)){
+                            $scope.hoverObject = object;
+                            return false;
+                        }
                     }
                 });
 
             }
 
-            if(reader.left && self.selectedObject !== null){
-                var object =  self.selectedObject;
+            if(reader.left && $scope.currentObject !== null){
+                var object =  $scope.currentObject;
                 var p = reader.lastDown.left;
                 var diff = CE.Math.vmv(move,p);
                 var dx =diff.x+object.odx;
@@ -278,9 +307,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
                 object.dx = dx;
                 object.dy = dy;
-                if(object.canvasLayer !== null){
-                    object.canvasLayer.refresh();
-                }
             }
         });
     };
@@ -452,8 +478,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             if(layer !== null && layer instanceof CE.ObjectLayer){
                 var cropped = new CE.ImageSet($scope.animationData.graphic.croppedArea);
                 cropped.selected = true;
-                if(self.selectedObject !== null){
-                    self.selectedObject.selected = false;
+                if($scope.currentObject !== null){
+                    $scope.currentObject.selected = false;
                 }
                 layer.add(cropped);
                 self.getAnimation().frames[frame] = cropped;

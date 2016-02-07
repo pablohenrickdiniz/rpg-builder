@@ -21,41 +21,42 @@ app.directive('loginForm',function(){
     };
 });
 
-app.directive('inputNumberVertical',['$interval','$document',function($interval,$document){
+app.directive('inputNumberVertical',['$interval','$document','$timeout',function($interval,$document,$timeout){
     return {
         restrict:'A',
         templateUrl:'templates/Elements/input_number_vertical.html',
         scope:{
             min:'@min',
             max:'@max',
-            ngChange:'&'
+            ngChange:'&',
+            ngModel:'='
         },
         replace:true,
         link:function(scope){
-            scope.value = 0;
             scope.interval = null;
+            var value = parseInt(scope.ngModel);
+            if(isNaN(value)){
+                scope.value = 0;
+            }
 
             var min = isNaN(scope.min)?null:parseFloat(scope.min);
             var max = isNaN(scope.max)?null:parseFloat(scope.max);
 
             scope.change = function(){
-                if(min !== null && min > scope.value){
+                if(min !== null && min > scope.ngModel){
                     scope.value = min;
                 }
 
-                if(max !== null && max < scope.value){
+                if(max !== null && max < scope.ngModel){
                     scope.value =  max;
-                }
-                if(typeof scope.ngChange() === 'function'){
-                    scope.ngChange()(scope.value);
                 }
             };
 
             scope.increment = function(){
                 if(scope.interval === null){
                     scope.interval = $interval(function(){
-                        if(max === null || max >= scope.value+1){
-                            scope.value = scope.value+1;
+                        if(max === null || max >= scope.ngModel+1){
+                            scope.value = scope.ngModel+1;
                         }
                         scope.change();
                     },50);
@@ -82,6 +83,22 @@ app.directive('inputNumberVertical',['$interval','$document',function($interval,
                 scope.stop();
             });
 
+            scope.$watch('value',function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    scope.ngModel = newVal;
+                    if(typeof scope.ngChange() === 'function'){
+                        $timeout(function(){
+                            scope.ngChange()(scope.ngModel);
+                        });
+                    }
+                }
+            });
+
+            scope.$watch('ngModel',function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    scope.value = newVal;
+                }
+            });
 
             scope.change();
         }
