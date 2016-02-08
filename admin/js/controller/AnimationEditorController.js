@@ -22,6 +22,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.canvasId = 'canvas-container';
     $scope.hoverObject = null;
     $scope.currentObject = null;
+    $scope.loadingImage = false;
 
     $scope.animationData = {
         graphic:{
@@ -80,6 +81,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
 
+
+
     $scope.$watch('animationData.graphic.imageData.url',function(newVal, oldVal){
         $timeout(function(){
             if(newVal !== oldVal && self.graphicLayer !== null){
@@ -98,7 +101,17 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         sw:img.width,
                         sh:img.height
                     });
+
+                    var colorThief = new ColorThief();
+                    var dominant = colorThief.getColor(img);
+                    var color = new CE.Color({
+                        red:dominant[0],
+                        blue:dominant[1],
+                        green:dominant[2]
+                    }).reverse();
+                    $scope.changeGridColor(color.toHEX());
                 });
+
             }
         });
     });
