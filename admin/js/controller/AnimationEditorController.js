@@ -39,6 +39,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         currentFrame:0
     };
 
+    $scope.grid = {
+        width:32,
+        height:32,
+        active:true
+    };
+
 
     $scope.cursor = {
         x:0,
@@ -295,28 +301,33 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 var dx =diff.x+object.odx;
                 var dy =diff.y+object.ody;
 
-                var width = animationCanvas.getGrid().width;
-                var height = animationCanvas.getGrid().height;
+                if($scope.grid.active){
+                    var width = animationCanvas.getGrid().width;
+                    var height = animationCanvas.getGrid().height;
+                    var g_width = $scope.grid.width;
+                    var g_height = $scope.grid.height;
 
-                var gnx_1 = Math.floor(dx/32)*32;
-                var gny_1 = Math.floor(dy/32)*32;
-                var gnx_2 = gnx_1+32;
-                var gny_2 = gny_1+32;
+                    var gnx_1 = Math.floor(dx/g_width)*g_width;
+                    var gny_1 = Math.floor(dy/g_height)*g_height;
+                    var gnx_2 = gnx_1+g_width;
+                    var gny_2 = gny_1+g_height;
 
 
-                if((dx - gnx_1) < (gnx_2 - (dx+object.dWidth))){
-                    dx = gnx_1;
-                }
-                else{
-                    dx = gnx_2;
+                    if((dx - gnx_1) < (gnx_2 - (dx+object.dWidth))){
+                        dx = gnx_1;
+                    }
+                    else{
+                        dx = gnx_2;
+                    }
+
+                    if((dy - gny_1) <= (gny_2 - (dy+object.dHeight))){
+                        dy = gny_1;
+                    }
+                    else{
+                        dy = gny_2;
+                    }
                 }
 
-                if((dy - gny_1) <= (gny_2 - (dy+object.dHeight))){
-                    dy = gny_1;
-                }
-                else{
-                    dy = gny_2;
-                }
 
                 object.dx = dx;
                 object.dy = dy;

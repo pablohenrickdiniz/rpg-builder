@@ -1,13 +1,13 @@
 <div class="input-group" ng-style="{width:'100%'}">
     <div class="input-group number">
-        <input type="number" class="form-control" ng-blur="change()"  ng-model="value" string-to-number min="{{min}}" max="{{max}}"/>
+        <input type="number" class="form-control" ng-blur="change()"  ng-model="value" ng-disabled="ngDisabled" string-to-number min="{{min}}" max="{{max}}"/>
             <span class="input-group-btn">
-                <button class="btn btn-default" ng-mousedown="decrement()" ng-mouseout="stop()">
+                <button class="btn btn-default" ng-mousedown="decrement()" ng-mouseout="stop()" ng-disabled="ngDisabled">
                     <span class="fa fa-arrow-down" ></span>
                 </button>
             </span>
         <span class="input-group-btn">
-            <button class="btn btn-default" ng-mousedown="increment()" ng-mouseout="stop()">
+            <button class="btn btn-default" ng-mousedown="increment()" ng-mouseout="stop()" ng-disabled="ngDisabled">
                 <span class="fa fa-arrow-up" ></span>
             </button>
         </span>

@@ -29,7 +29,8 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
             min:'@min',
             max:'@max',
             ngChange:'&',
-            ngModel:'='
+            ngModel:'=',
+            ngDisabled:'='
         },
         replace:true,
         link:function(scope){
@@ -70,7 +71,6 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                         if(max === null || max >= scope.value+1){
                             scope.value = scope.value+1;
                         }
-                        scope.change();
                     },50);
                 }
             };
@@ -81,7 +81,6 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                         if(min === null || min <= scope.value-1){
                             scope.value = scope.value-1;
                         }
-                        scope.change();
                     },50);
                 }
             };
@@ -89,10 +88,13 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
             scope.stop = function(){
                 $interval.cancel(scope.interval);
                 scope.interval = null;
+                scope.change();
             };
 
             $document.on('mouseup',function(){
-                scope.stop();
+                if(scope.interval !== null){
+                    scope.stop();
+                }
             });
 
 
@@ -349,10 +351,21 @@ app.directive('canvasContainer',['$timeout',function($timeout){
         scope:{
             engine:'=',
             ngInitialize:'&',
-            refresh:'='
+            refresh:'=',
+            gridWidth:'=',
+            gridHeight:'=',
+            gridActive:'='
         },
         link:function(scope, element){
             var self = this;
+            var grid_width = parseInt(scope.gridWidth);
+            var grid_height = parseInt(scope.gridHeight);
+            grid_width = isNaN(grid_width)?32:grid_width;
+            grid_height = isNaN(grid_height)?32:grid_height;
+            scope.gridWidth = grid_width;
+            scope.gridHeight = grid_height;
+
+
             scope.init = function(){
                 scope.ngInitialize()();
             };
@@ -379,9 +392,9 @@ app.directive('canvasContainer',['$timeout',function($timeout){
                 scope.engine.updateGrid({
                     width:scope.engine.width,
                     height:scope.engine.height,
-                    sw:32,
-                    sh:32,
-                    opacity:0.1
+                    sw:scope.gridWidth,
+                    sh:scope.gridHeight,
+                    opacity:scope.gridActive?0.1:0
                 });
 
                 scope.engine.layers.forEach(function(layer,index){
@@ -401,6 +414,28 @@ app.directive('canvasContainer',['$timeout',function($timeout){
                     });
                 }
             };
+
+            scope.$watchGroup(['gridWidth','gridHeight'],function(newValues, oldValues){
+                if(newValues[0] !== oldValues[0] || newValues[1] !== oldValues[1]){
+                    var sw = newValues[0];
+                    var sh = newValues[1];
+                    scope.engine.updateGrid({
+                        width:scope.engine.width,
+                        height:scope.engine.height,
+                        sw:sw,
+                        sh:sh,
+                        opacity:0.1
+                    });
+                }
+            });
+
+            scope.$watch('gridActive',function(newVal, oldVal){
+                if(newVal !== oldVal){
+                    scope.engine.updateGrid({
+                        opacity:newVal?0.1:0
+                    });
+                }
+            });
         }
     };
 }]);

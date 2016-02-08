@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="box-body" ng-class="{'hover':hoverObject != null}">
-                <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid"></canvas-container>
+                <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid" grid-width="grid.width" grid-height="grid.height" grid-active="grid.active"></canvas-container>
                 <span>mouse:{{cursor.x}},{{cursor.y}}</span>
                 <span ng-if="currentObject !== null">current object:{{currentObject.dx}},{{currentObject.dy}}</span>
             </div>
@@ -26,10 +26,9 @@
                         <input type="number"  input-number-vertical min="1" max="30" ng-change="changeSpeed" ng-model="animationData.speed"/>
                     </div>
                 </div>
-                <br/>
-                <frame-player title="Quadros" ng-add="addFrame" ng-remove="removeFrame" ng-select="selectFrame" play-callback="playAnimation" stop-callback="stopAnimation" pause-callback="pauseAnimation"></frame-player>
             </div>
         </div>
+        <frame-player title="Quadros" ng-add="addFrame" ng-remove="removeFrame" ng-select="selectFrame" play-callback="playAnimation" stop-callback="stopAnimation" pause-callback="pauseAnimation"></frame-player>
     </div>
     <div class="col-md-6 col-sm-6">
         <div class="box box-primary graphic-box">
@@ -90,6 +89,31 @@
                 <div class="col-md-6">
                     <label for="">altura:</label>
                     <input type="number" input-number-vertical ng-model="currentObject.dHeight"/>
+                </div>
+            </div>
+        </div>
+        <div class="box box-primaryx">
+            <div class="box-header with-border">
+                <h3 class="box-title">Grade</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="checkbox" ng-model="grid.active"/>
+                        <label for="">Ativar</label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <label for="">Largura:</label>
+                        <input type="number"  input-number-vertical min="10" max="100" ng-model="grid.width" ng-disabled="!grid.active"/>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <label for="">Largura:</label>
+                        <input type="number"  input-number-vertical min="10" max="100" ng-model="grid.height" ng-disabled="!grid.active"/>
+                    </div>
                 </div>
             </div>
         </div>
