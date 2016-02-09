@@ -46,7 +46,10 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                     scope.value =  max;
                 }
 
-                scope.ngModel = scope.value;
+                if(scope.ngModel !== undefined){
+                    scope.ngModel = scope.value;
+                }
+
                 if(typeof scope.ngChange() === 'function'){
                     $timeout(function(){
                         scope.ngChange()(scope.ngModel);
