@@ -453,3 +453,50 @@ app.directive('progressBar',function(){
         }
     };
 });
+
+
+app.directive('resourceMiniature',['$window','$timeout',function($window,$timeout){
+    return {
+        restrict:'E',
+        templateUrl:'templates/Elements/resource_miniature.html',
+        replace:true,
+        scope:{
+            ngAction:'&',
+            image:'=',
+            rects:'=',
+            gridColor:'='
+        },
+        link:function(scope, element){
+            scope.click = function(){
+                if(typeof scope.ngAction() === 'function'){
+                    scope.ngAction()();
+                }
+            };
+
+            scope.aligner_height = 0;
+            scope.row_width = 0;
+            scope.row_height = 0;
+            scope.col_width = 0;
+
+            scope.refresh = function(){
+                var image = element.find('img');
+                if(image !== undefined){
+                    scope.row_width = image.width();
+                    scope.aligner_height = image.height();
+                    if(scope.rects !== undefined){
+                        scope.row_height =  scope.aligner_height/scope.rects.length;
+                        if(scope.rects[0] !== undefined){
+                            scope.col_width = scope.row_width/scope.rects[0].length;
+                        }
+                        else{
+                            scope.col_width = scope.row_width;
+                        }
+                    }
+
+                }
+            };
+            angular.element($window).on('resize',scope.refresh);
+            scope.refresh();
+        }
+    };
+}]);

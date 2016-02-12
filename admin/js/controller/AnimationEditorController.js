@@ -1,6 +1,6 @@
 app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localStorage','$timeout','Utils',function($scope,ImageLoader,$localStorage,$timeout,Utils){
     var self = this;
-    self.animationImage = null;
+
     self.graphicLayer = null;
     self.graphics = [];
     self.animation=null;
@@ -9,7 +9,13 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     self.maxLayer=0;
     self.frameLayers = [];
 
-
+    $scope.modalVisible = false;
+    $scope.storage = $localStorage;
+    $scope.canvasId = 'canvas-container';
+    $scope.hoverObject = null;
+    $scope.currentObject = null;
+    $scope.loadingImage = false;
+    $scope.animationImage = null;
 
     /*scope*/
     $scope.init = function(){
@@ -17,12 +23,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         $scope.initController();
     };
 
-    $scope.modalVisible = false;
-    $scope.storage = $localStorage;
-    $scope.canvasId = 'canvas-container';
-    $scope.hoverObject = null;
-    $scope.currentObject = null;
-    $scope.loadingImage = false;
 
     $scope.animationData = {
         graphic:{
@@ -87,8 +87,6 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     };
 
 
-
-
     $scope.$watch('animationData.graphic.imageData.url',function(newVal, oldVal){
         $timeout(function(){
             if(newVal !== oldVal && self.graphicLayer !== null){
@@ -116,6 +114,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         green:dominant[2]
                     }).reverse();
                     $scope.changeGridColor(color.toHEX());
+                    $scope.changeRows(1);
+                    $scope.changeCols(1);
                 });
 
             }
@@ -337,8 +337,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     self.getAnimationImage =function(){
         var self = this;
-        if(self.animationImage === null){
-            self.animationImage = CE.createEngine({
+        if($scope.animationImage === null){
+            $scope.animationImage = CE.createEngine({
                 container:'#animations',
                 width:500,
                 height:500,
@@ -348,7 +348,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             });
 
             var moveCallback = function(ii,ij){
-                var grid = self.animationImage.getGrid();
+                var grid = $scope.animationImage.getGrid();
                 var rect = null;
                 if(grid.checkedSets.length > 0){
                     rect = grid.checkedSets[0];
@@ -367,7 +367,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                             fillStyle:'rgba(0,0,150,0.5)',
                             state:1
                         });
-                        self.animationImage.refreshGridLayer();
+                        $scope.animationImage.refreshGridLayer();
                         var canvas = $scope.animationCanvas;
                         $scope.animationData.graphic.croppedArea = {
                             image:$scope.animationData.graphic.image,
@@ -389,7 +389,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
              Muda a área selecionada com as setas do mouse
              */
 
-            var reader = self.animationImage.getKeyReader();
+            var reader = $scope.animationImage.getKeyReader();
             reader.onSequence([CE.KeyReader.Keys.KEY_DOWN],function(){
                 console.log('keydown!');
                 moveCallback(1,0);
@@ -418,8 +418,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 $scope.addObject();
             });
 
-            self.animationImage.onAreaSelect(function(area,grid){
-                var reader = self.animationImage.getMouseReader();
+            $scope.animationImage.onAreaSelect(function(area,grid){
+                var reader = $scope.animationImage.getMouseReader();
                 var rects = grid.getRectsFromArea(area);
                 grid.checkedSets = rects;
                 if(reader.left){
@@ -432,6 +432,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                             state:1
                         });
                     });
+                    $scope.$apply();
                 }
                 else{
                     grid.apply({
@@ -447,6 +448,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                             });
                         }
                     });
+                    $scope.$apply();
                 }
                 if(rects.length > 0){
                     var rect = rects[0];
@@ -465,7 +467,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 }
             });
         }
-        return self.animationImage;
+        return $scope.animationImage;
     };
 
     $scope.removeFrame= function(index){

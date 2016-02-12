@@ -1,0 +1,10 @@
+<div class="image-container" ng-click="click()">
+    <img ng-src="{{image}}" alt="" class="graphic-image"/>
+    <div class="aligner" ng-style="{width:row_width+'px', height:aligner_height+'px'}">
+        <div class="grid-row" ng-repeat="row in rects track by $index" ng-style="{height:row_height+'px',width:row_width+'px',top:(row_height*$index)+'px'}">
+            <div class="grid-set" ng-repeat="rect in row track by $index" ng-style="{height:row_height+'px',width:col_width+'px',left:(col_width*$index)+'px',border:'1px solid '+gridColor,backgroundColor:rect.fillStyle}">
+
+            </div>
+        </div>
+    </div>
+</div>

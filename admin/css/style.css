@@ -153,7 +153,7 @@
 
 .animation-resource:hover img{
     opacity: 1;
- }
+}
 
 .animation-resource img{
     opacity: 0.7;
@@ -173,4 +173,17 @@
 
 .hover{
     cursor: pointer;
+}
+
+.grid-set,.grid-row{
+    position: absolute;
+}
+
+.aligner{
+    position: absolute;
+    margin:auto;
+    left:-100%;
+    right:-100%;
+    bottom:-100%;
+    top:-100%;
 }

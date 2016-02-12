@@ -48,9 +48,7 @@
             <div class="box-footer">
                 <div class="row">
                     <div class="col-md-5 col-lg-5 col-xs-12">
-                        <div class="image-container" ng-click="showModal()">
-                            <img ng-src="{{animationData.graphic.imageData.url}}" alt="" class="graphic-image"/>
-                        </div>
+                        <resource-miniature image="animationData.graphic.imageData.url" rects="animationImage.grid.rectSets" grid-color="animationData.graphic.gridColor" ng-action="showModal" ></resource-miniature>
                     </div>
                     <div class="col-md-7 col-lg-7 col-xs-12">
                         <div class="col-lg-12 col-md-12 col-xs-12">
