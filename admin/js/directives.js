@@ -473,30 +473,29 @@ app.directive('resourceMiniature',['$window','$timeout',function($window,$timeou
                 }
             };
 
-            scope.aligner_height = 0;
-            scope.row_width = 0;
-            scope.row_height = 0;
-            scope.col_width = 0;
+            scope.image_width = 0;
+            scope.image_height = 0;
+            scope.image_element =  null;
 
             scope.refresh = function(){
-                var image = element.find('img');
-                if(image !== undefined){
-                    scope.row_width = image.width();
-                    scope.aligner_height = image.height();
-                    if(scope.rects !== undefined){
-                        scope.row_height =  scope.aligner_height/scope.rects.length;
-                        if(scope.rects[0] !== undefined){
-                            scope.col_width = scope.row_width/scope.rects[0].length;
-                        }
-                        else{
-                            scope.col_width = scope.row_width;
-                        }
+                if(scope.image_element === null){
+                    var image =  element.find('img');
+                    if(image !== undefined){
+                        scope.image_element = image;
+                        angular.element(image).on('load',function(){
+                            scope.refresh();
+                        });
                     }
-
+                }
+                else{
+                    scope.image_width = scope.image_element.width();
+                    scope.image_height = scope.image_element.height();
                 }
             };
             angular.element($window).on('resize',scope.refresh);
             scope.refresh();
+
+
         }
     };
 }]);

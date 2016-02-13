@@ -113,9 +113,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         blue:dominant[1],
                         green:dominant[2]
                     }).reverse();
-                    $scope.changeGridColor(color.toHEX());
-                    $scope.changeRows(1);
-                    $scope.changeCols(1);
+                    $timeout(function(){
+                        $scope.changeGridColor(color.toHEX());
+                        $scope.changeRows($scope.animationData.graphic.rows);
+                        $scope.changeCols($scope.animationData.graphic.cols);
+                    });
+
                 });
 
             }
@@ -380,6 +383,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                             dx:(canvas.width/2)-(newRect.width/2),
                             dy:(canvas.height/2)-(newRect.height/2)
                         };
+                        $scope.$apply();
                     }
                 }
             };
