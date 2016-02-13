@@ -16,6 +16,8 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.currentObject = null;
     $scope.loadingImage = false;
     $scope.animationImage = null;
+    $scope.objectMenu = false;
+    $scope.gridMenu = false;
 
     /*scope*/
     $scope.init = function(){
@@ -548,6 +550,22 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.changeSpeed = function(speed) {
         self.getAnimation().speed = speed;
+    };
+
+    $scope.showGridMenu = function(){
+        $scope.gridMenu = true;
+    };
+
+    $scope.hideGridMenu = function(){
+        $scope.gridMenu = false;
+    };
+
+    $scope.showObjectMenu = function(){
+        $scope.objectMenu = true;
+    };
+
+    $scope.hideObjectMenu = function(){
+        $scope.objectMenu = false;
     };
 }]);
 

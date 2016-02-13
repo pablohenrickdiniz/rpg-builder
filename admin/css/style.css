@@ -187,3 +187,29 @@
     bottom:-100%;
     top:-100%;
 }
+
+.floating-menu{
+    position: absolute;
+    display: block;
+    width:300px;
+    top:50%;
+    left:50%;
+}
+
+.with-shadow{
+    box-shadow: 8px 8px 15px #CCC;
+    -webkit-box-shadow: 8px 8px 15px #CCC;
+    -moz-box-shadow: 8px 8px 15px #CCC;
+    box-shadow: 8px 8px 15px #CCC;
+}
+
+.box-body{
+    position: relative;
+}
+
+.grid-button{
+    position: absolute;
+    left:10px;
+    bottom:35px;
+    z-index:3;
+}
