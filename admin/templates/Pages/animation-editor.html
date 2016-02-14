@@ -14,10 +14,11 @@
                     </button>
                 </div>
             </div>
-            <div class="box-body" ng-class="{'hover':hoverObject != null}">
+            <div class="box-body" ng-class="{'hover':hoverObject != null}" ng-style="{cursor:cursor.style}">
                 <canvas-container ng-initialize="initController" engine="animationCanvas" refresh="refreshGrid" grid-width="grid.width" grid-height="grid.height" grid-active="grid.active"></canvas-container>
                 <span>mouse:{{cursor.x}},{{cursor.y}}</span>
                 <button type="button" class="grid-button" ng-click="showGridMenu()"><span class="fa fa-th"></span></button>
+                <span>{{resize_active?'resize':'no-resize'}}</span>
             </div>
             <div class="box-footer">
                 <div class="row">

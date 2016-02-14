@@ -15,8 +15,8 @@ app.constant('AUTH_EVENTS',{
 
 app.constant('URLS',{
     HOST:'http://localhost',
-    PORT:8080,
-    BASE_URL:'http://localhost:8080/'
+    PORT:9090,
+    BASE_URL:'http://localhost:9090/'
 });
 
 app.constant('TASK',{

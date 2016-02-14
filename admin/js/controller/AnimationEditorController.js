@@ -1,6 +1,5 @@
 app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localStorage','$timeout','Utils',function($scope,ImageLoader,$localStorage,$timeout,Utils){
     var self = this;
-
     self.graphicLayer = null;
     self.graphics = [];
     self.animation=null;
@@ -8,6 +7,15 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     self.cols=1;
     self.maxLayer=0;
     self.frameLayers = [];
+    self.resize_active = false;
+    self.resize_vertex = null;
+    self.object_data = {
+        old_width:0,
+        old_height:0,
+        old_x:0,
+        old_y:0
+    };
+
 
     $scope.modalVisible = false;
     $scope.storage = $localStorage;
@@ -18,6 +26,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.animationImage = null;
     $scope.objectMenu = false;
     $scope.gridMenu = false;
+
 
     /*scope*/
     $scope.init = function(){
@@ -50,9 +59,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.cursor = {
         x:0,
-        y:0
+        y:0,
+        style:null
     };
-
     $scope.animation = null;
 
     $scope.$watchGroup(['currentObject.dx','currentObject.dy','currentObject.dWidth','currentObject.dHeight'],function(newValues, oldValues){
@@ -224,39 +233,41 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         });
 
         animationMouseReader.onmousedown(1,function(){
-            var reader = this;
-            var p = reader.lastDown.left;
-            var layer = self.frameLayers[self.getAnimation().indexFrame];
-            if(layer !== undefined){
-                var objects = layer.objects;
-                if($scope.currentObject !== null){
-                    $scope.currentObject.selected = false;
-                    $scope.currentObject = null;
-                }
-
-                objects.forEach(function(object){
-                    var abs_x = p.x -object.dx;
-                    var abs_y = p.y - object.dy;
-
-                    if(abs_x >=0 && abs_y >= 0 && abs_x  <= object.dWidth && abs_y <= object.dHeight){
-                        var prop_w = object.dWidth/object.sWidth;
-                        var prop_h = object.dHeight/object.sHeight;
-                        var prop_x = (abs_x/prop_w);
-                        var prop_y = (abs_y/prop_h);
-                        var rel_x = prop_x+object.sx;
-                        var rel_y = prop_y+object.sy;
-
-                        if(!Utils.isPixelTransparent(object.image,rel_x,rel_y)){
-                            object.selected = true;
-                            object.odx = object.dx;
-                            object.ody = object.dy;
-                            $scope.currentObject = object;
-                            return false;
-                        }
+            if(!self.resize_active){
+                var reader = this;
+                var p = reader.lastDown.left;
+                var layer = self.frameLayers[self.getAnimation().indexFrame];
+                if(layer !== undefined){
+                    var objects = layer.objects;
+                    if($scope.currentObject !== null){
+                        $scope.currentObject.selected = false;
+                        $scope.currentObject = null;
                     }
-                });
 
-                layer.refresh();
+                    objects.forEach(function(object){
+                        var abs_x = p.x -object.dx;
+                        var abs_y = p.y - object.dy;
+
+                        if(abs_x >=0 && abs_y >= 0 && abs_x  <= object.dWidth && abs_y <= object.dHeight){
+                            var prop_w = object.dWidth/object.sWidth;
+                            var prop_h = object.dHeight/object.sHeight;
+                            var prop_x = (abs_x/prop_w);
+                            var prop_y = (abs_y/prop_h);
+                            var rel_x = prop_x+object.sx;
+                            var rel_y = prop_y+object.sy;
+
+                            if(!Utils.isPixelTransparent(object.image,rel_x,rel_y)){
+                                object.selected = true;
+                                object.odx = object.dx;
+                                object.ody = object.dy;
+                                $scope.currentObject = object;
+                                return false;
+                            }
+                        }
+                    });
+
+                    layer.refresh();
+                }
             }
         });
 
@@ -299,44 +310,145 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
             }
 
-            if(reader.left && $scope.currentObject !== null){
+            if($scope.currentObject !== null){
                 var object =  $scope.currentObject;
-                var p = reader.lastDown.left;
-                var diff = CE.Math.vmv(move,p);
-                var dx =diff.x+object.odx;
-                var dy =diff.y+object.ody;
+                if(reader.left){
+                    var p = reader.lastDown.left;
+                    var diff = CE.Math.vmv(move,p);
+                    if(self.resize_vertex !== null){
+                        /*Redimensionamento de objeto*/
+                        /*
+                            0 - Top Left
+                            1 - Top Center
+                            2 - Top Right
+                            3 - Center Rigth
+                            4 - Bottom Rigth
+                            5 - Bottom Center
+                            6 - Bottom Left
+                            7 - Center Left
+                         */
+                        if([0,6,7].indexOf(self.resize_vertex) !== -1){
+                            var nw1  = Math.max(self.object_data.old_width-diff.x,1);
+                            var diff_width1 = nw1 -self.object_data.old_width;
+                            var dx1 = self.object_data.old_x-diff_width1;
+                            object.dWidth = nw1;
+                            object.dx = dx1;
+                        }
+                        else if([2,3,4].indexOf(self.resize_vertex) !== -1){
+                            object.dWidth = Math.max(self.object_data.old_width+diff.x,1);
+                        }
 
-                if($scope.grid.active){
-                    var width = animationCanvas.getGrid().width;
-                    var height = animationCanvas.getGrid().height;
-                    var g_width = $scope.grid.width;
-                    var g_height = $scope.grid.height;
-
-                    var gnx_1 = Math.floor(dx/g_width)*g_width;
-                    var gny_1 = Math.floor(dy/g_height)*g_height;
-                    var gnx_2 = gnx_1+g_width;
-                    var gny_2 = gny_1+g_height;
-
-
-                    if((dx - gnx_1) < (gnx_2 - (dx+object.dWidth))){
-                        dx = gnx_1;
+                        if([0,1,2].indexOf(self.resize_vertex) !== -1){
+                            var nh1  =  Math.max(self.object_data.old_height-diff.y,1);
+                            var diff_height1 = nh1 - self.object_data.old_height;
+                            var dy1 = self.object_data.old_y-diff_height1;
+                            object.dHeight = nh1;
+                            object.dy = dy1;
+                        }
+                        else if([4,5,6].indexOf(self.resize_vertex) !== -1){
+                            object.dHeight = Math.max(self.object_data.old_height+diff.y,1);
+                        }
                     }
                     else{
-                        dx = gnx_2;
-                    }
+                        var dx =diff.x+object.odx;
+                        var dy =diff.y+object.ody;
 
-                    if((dy - gny_1) <= (gny_2 - (dy+object.dHeight))){
-                        dy = gny_1;
-                    }
-                    else{
-                        dy = gny_2;
+                        if($scope.grid.active){
+                            var width = animationCanvas.getGrid().width;
+                            var height = animationCanvas.getGrid().height;
+                            var g_width = $scope.grid.width;
+                            var g_height = $scope.grid.height;
+
+                            var gnx_1 = Math.floor(dx/g_width)*g_width;
+                            var gny_1 = Math.floor(dy/g_height)*g_height;
+                            var gnx_2 = gnx_1+g_width;
+                            var gny_2 = gny_1+g_height;
+
+
+                            if((dx - gnx_1) < (gnx_2 - (dx+object.dWidth))){
+                                dx = gnx_1;
+                            }
+                            else{
+                                dx = gnx_2;
+                            }
+
+                            if((dy - gny_1) <= (gny_2 - (dy+object.dHeight))){
+                                dy = gny_1;
+                            }
+                            else{
+                                dy = gny_2;
+                            }
+                        }
+
+
+                        object.dx = dx;
+                        object.dy = dy;
                     }
                 }
+                else{
+                    var xa = object.dx-3;
+                    var xb = xa+(object.dWidth/2);
+                    var xc = xa+object.dWidth;
+                    var ya = object.dy-3;
+                    var yb = ya+(object.dHeight/2);
+                    var yc = ya+object.dHeight;
 
+                    var cursor = null;
+                    self.resize_vertex = null;
+                    if(move.x >= xa && move.x <= xa+6){
+                        if(move.y >= ya && move.y <= ya+6){
+                            cursor = 'nwse-resize';
+                            self.resize_vertex = 0;
+                        }
+                        else if(move.y >= yb &&  move.y <= yb + 6){
+                            cursor = 'ew-resize';
+                            self.resize_vertex = 7;
+                        }
+                        else if(move.y >= yc &&  move.y <= yc + 6){
+                            cursor = 'nesw-resize';
+                            self.resize_vertex = 6;
+                        }
+                    }
+                    else if(move.x >= xb && move.x <= xb+6){
+                        if(move.y >= ya && move.y <= ya+6){
+                            cursor = 'ns-resize';
+                            self.resize_vertex = 1;
+                        }
+                        else if(move.y >= yc && move.y <= yc+6){
+                            cursor = 'ns-resize';
+                            self.resize_vertex = 5;
+                        }
+                    }
+                    else if(move.x >= xc && move.x <= xc+6){
+                        if(move.y >= ya && move.y <= ya+6){
+                            self.resize_vertex = 2;
+                            cursor = 'nesw-resize';
+                        }
+                        else if(move.y >= yb && move.y <= yb+6){
+                            self.resize_vertex = 3;
+                            cursor = 'ew-resize';
+                        }
+                        else if(move.y >= yc && move.y <= yc+6){
+                            self.resize_vertex = 4;
+                            cursor = 'nwse-resize';
+                        }
+                    }
 
-                object.dx = dx;
-                object.dy = dy;
+                    if(self.resize_vertex !== null){
+                        self.object_data = {
+                            old_x:object.dx,
+                            old_y:object.dy,
+                            old_width:object.dWidth,
+                            old_height:object.dHeight
+                        };
+                    }
+
+                    self.resize_active = (cursor !== null);
+                    $scope.cursor.style = cursor;
+                    $scope.$apply();
+                }
             }
+
         });
     };
 
@@ -397,22 +509,18 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
             var reader = $scope.animationImage.getKeyReader();
             reader.onSequence([CE.KeyReader.Keys.KEY_DOWN],function(){
-                console.log('keydown!');
                 moveCallback(1,0);
             });
 
             reader.onSequence([CE.KeyReader.Keys.KEY_UP],function(){
-                console.log('keydown!');
                 moveCallback(-1,0);
             });
 
             reader.onSequence([CE.KeyReader.Keys.KEY_LEFT],function(){
-                console.log('keydown!');
                 moveCallback(0,-1);
             });
 
             reader.onSequence([CE.KeyReader.Keys.KEY_RIGHT],function(){
-                console.log('keydown!');
                 moveCallback(0,1);
             });
 
