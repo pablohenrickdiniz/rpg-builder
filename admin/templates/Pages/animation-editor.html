@@ -35,6 +35,10 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Gráfico</h3>
                 <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool radio" ng-click="selectTool('one')" ng-class="{active:tool == 'one'}"><i class="fa fa-hand-pointer-o"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool radio" ng-click="selectTool('group')" ng-class="{active:tool == 'group'}"><i class="fa fa-th"></i>
+                    </button>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                 </div>

@@ -26,6 +26,25 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.animationImage = null;
     $scope.objectMenu = false;
     $scope.gridMenu = false;
+    $scope.tool = 'one';
+
+
+    $scope.$watch('tool',function(newVal, oldVal){
+        if(newVal !== oldVal){
+            switch(newVal){
+                case 'one':
+                    self.getAnimationImage().set({
+                        multiSelect:false
+                    });
+                    break;
+                case 'group':
+                    self.getAnimationImage().set({
+                        multiSelect:true
+                    });
+                    break;
+            }
+        }
+    });
 
 
     /*scope*/
@@ -674,6 +693,10 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.hideObjectMenu = function(){
         $scope.objectMenu = false;
+    };
+
+    $scope.selectTool = function(tool){
+        $scope.tool = tool;
     };
 }]);
 

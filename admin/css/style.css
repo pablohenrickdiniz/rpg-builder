@@ -214,3 +214,21 @@
     z-index:3;
 }
 
+.btn-box-tool.radio.active{
+    outline: none;
+}
+
+.btn-box-tool.radio:focus{
+    outline: none;
+}
+
+.btn-box-tool.radio{
+    color:darkturquoise;
+    border: 1px solid darkturquoise;
+    padding: 5px;
+    margin:0;
+}
+
+.btn-box-tool{
+    vertical-align: middle;
+}
