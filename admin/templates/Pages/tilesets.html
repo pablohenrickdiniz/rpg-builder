@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="box-body with-border">
-                        <img class="img-responsive" ng-src="{{tileset.file | bobUrl : baseUrl+'tilesets/'}}"/>
+                        <img class="img-responsive" ng-src="{{baseUrl+'graphics/tilesets/'+tileset.file}}"/>
                     </div>
                     <div class="box-footer">
                         {{tileset.width}} x {{tileset.height}}
@@ -47,7 +47,7 @@
                     <h4 class="modal-title">Gráfico do Tileset</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="file" input-image-preview url="{{baseUrl}}tilesets/upload" after-each="afterEach"/>
+                    <input type="file" input-image-preview url="{{baseUrl}}graphics/upload?type=tilesets" after-each="afterEach"/>
                 </div>
             </ng-form>
         </div>

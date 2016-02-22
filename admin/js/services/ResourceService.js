@@ -11,7 +11,7 @@ app.service('ResourceService',['$localStorage','$http','URLS','TaskService','Ima
     };
 
     this.load = function(pos,callback,only){
-        if(pos < self.names.length !== undefined){
+        if(pos < self.names.length){
             var name = self.names[pos];
             if(!$localStorage.resources){
                 $localStorage.resources = {};
@@ -20,10 +20,13 @@ app.service('ResourceService',['$localStorage','$http','URLS','TaskService','Ima
             if(!$localStorage.resources[name]){
                 $http({
                     method:'GET',
-                    url:URLS.BASE_URL+name+'/list'
+                    url:URLS.BASE_URL+'graphics/list',
+                    params:{
+                        type:name
+                    }
                 }).then(function(response){
                     if(response.data.success){
-                        $localStorage.resources[name] = response.data[name];
+                        $localStorage.resources[name] = response.data.graphics;
                     }
                 }).finally(function(){
                     if(!only){
@@ -75,12 +78,9 @@ app.service('ResourceService',['$localStorage','$http','URLS','TaskService','Ima
             var resource = $localStorage.resources[name][index];
             $localStorage.resources[name].splice(index,1);
             var task = {
-                data:{
-                    id:id,
-                    name:name
-                },
+                data:{id:id},
                 date:new Date(),
-                action:'REMOVE_RESOURCE',
+                action:'REMOVE_GRAPHIC',
                 priority:1
             };
             TaskService.add(task);
@@ -95,7 +95,7 @@ app.service('ResourceService',['$localStorage','$http','URLS','TaskService','Ima
         });
         $http({
             method:'POST',
-            url:URLS.BASE_URL+name+'/upload',
+            url:URLS.BASE_URL+'graphics/upload',
             data:fd,
             withCredentials:true,
             transformRequest:angular.identity,

@@ -1,9 +1,9 @@
 app.service('tasks',['TaskService','$http','URLS','$localStorage',function(TaskService,$http,URLS,$localStorage){
     return function(){
-        TaskService.on('REMOVE_RESOURCE',function(data,success,error){
+        TaskService.on('REMOVE_GRAPHIC',function(data,success,error){
             $http({
                 method:'DELETE',
-                url:URLS.BASE_URL+data.name+'/delete',
+                url:URLS.BASE_URL+'graphics/delete',
                 params:{
                     id:data.id
                 }

@@ -31,5 +31,8 @@ app.run(['$rootScope','$state','$location','AuthService','tasks','$localStorage'
             $state.go('login',params);
         }
     });
+    
+    $localStorage.$reset();
+
     tasks();
 }]);

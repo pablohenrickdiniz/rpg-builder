@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="box-body with-border">
-                        <img class="img-responsive" ng-src="{{animation.file | bobUrl : baseUrl+'animations/'}}"/>
+                        <img class="img-responsive" ng-src="{{baseUrl+'graphics/animations/'+animation.file}}"/>
                     </div>
                     <div class="box-footer">
                         {{animation.width}} x {{animation.height}}
@@ -47,7 +47,7 @@
                     <h4 class="modal-title">Gráfico de Animação</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="file" input-image-preview url="{{baseUrl}}animations/upload" after-each="afterEach"/>
+                    <input type="file" input-image-preview url="{{baseUrl}}graphics/upload?type=animations" after-each="afterEach"/>
                 </div>
             </ng-form>
         </div>
