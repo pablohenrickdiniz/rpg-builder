@@ -78,9 +78,9 @@
                 </div>
                 <div class="modal-body animations-body">
                     <div class="col-lg-3 col-md-3 col-xs-12" ng-repeat="animation in storage.resources.animations track by $index ">
-                        <div class="box box-primary box-solid animation-resource"  ng-click="changeGraphic(baseUrl+'animations/'+animation.file)">
+                        <div class="box box-primary box-solid animation-resource"  ng-click="changeGraphic(baseUrl+'graphics/animations/'+animation.file)">
                             <div class="box-body with-border">
-                                <img class="img-responsive" ng-src="{{animation.file | bobUrl : baseUrl+'animations/'}}"/>
+                                <img class="img-responsive" ng-src="{{baseUrl+'graphics/animations/'+animation.file}}"/>
                             </div>
                             <div class="box-footer">
                                 {{animation.width}} x {{animation.height}}
