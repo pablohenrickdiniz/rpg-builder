@@ -26,6 +26,7 @@ app.service('ResourceService',['$localStorage','$http','URLS','TaskService','Ima
                     }
                 }).then(function(response){
                     if(response.data.success){
+                        console.log(response.data.graphics);
                         $localStorage.resources[name] = response.data.graphics;
                     }
                 }).finally(function(){
