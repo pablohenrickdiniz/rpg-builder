@@ -32,7 +32,7 @@ app.run(['$rootScope','$state','$location','AuthService','tasks','$localStorage'
         }
     });
     
-    $localStorage.$reset();
+    //$localStorage.$reset();
 
     tasks();
 }]);

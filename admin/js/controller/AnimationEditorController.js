@@ -241,6 +241,11 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var object = $scope.currentObject;
             if(object !== null && object.canvasLayer !== null){
                 object.canvasLayer.moveUp(object);
+                var animation = self.getAnimation();
+                var frame = animation.frames[animation.indexFrame];
+                if(frame !== null){
+                    self.moveUp(frame,object);
+                }
             }
         });
 
@@ -248,6 +253,11 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             var object = $scope.currentObject;
             if(object !== null && object.canvasLayer !== null){
                 object.canvasLayer.moveDown(object);
+                var animation = self.getAnimation();
+                var frame = animation.frames[animation.indexFrame];
+                if(frame !== null){
+                    self.moveDown(frame,object);
+                }
             }
         });
 
@@ -641,7 +651,11 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                     $scope.currentObject.selected = false;
                 }
                 layer.add(cropped);
-                self.getAnimation().frames[frame] = cropped;
+                var animation = self.getAnimation();
+                if(animation.frames[frame] === undefined){
+                    animation.frames[frame] = [];
+                }
+                animation.frames[frame].push(cropped);
                 layer.refresh();
             }
         }
@@ -697,6 +711,29 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
 
     $scope.selectTool = function(tool){
         $scope.tool = tool;
+    };
+
+    $scope.export = function(){
+        console.log(self.getAnimation().toJSON());
+    };
+
+
+    self.moveUp = function(array, object){
+        var index = array.indexOf(object);
+        if (index !== -1 && index < array.length - 1) {
+            var objectB = array[index + 1];
+            array[index + 1] = object;
+            array[index] = objectB;
+        }
+    };
+
+    self.moveDown = function(array, object){
+        var index = array.indexOf(object);
+        if (index !== -1 && index > 0) {
+            var objectB = array[index - 1];
+            array[index - 1] = object;
+            array[index] = objectB;
+        }
     };
 }]);
 
