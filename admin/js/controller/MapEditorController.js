@@ -5,9 +5,9 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
     self.tilesetLayer = null;
     self.selectedInterval = null;
     self.map = null;
-    self.layers = [];
-    self.currentLayer = 0;
 
+    $scope.currentLayer = 0;
+    $scope.layers = [];
     $scope.storage = $storage;
     $scope.grid = {
         width:32,
@@ -71,13 +71,15 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
 
         layer.refresh();
         for(var i = 0; i < 10;i++){
-            self.layers[i] = mapCanvas.createLayer();
+            $scope.layers[i] = mapCanvas.createLayer();
         }
 
         mapCanvas.getMouseReader().onmousemove(function(){
             var reader = this;
             if(reader.right){
-                mapCanvas.getGridLayer().refresh();
+                var gridLayer =  mapCanvas.getGridLayer();
+                gridLayer.refresh();
+                self.getMap().draw($scope.layers,gridLayer.getVisibleArea());
             }
         });
     };
@@ -98,6 +100,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             width:map.tile_w*width
         });
         gridLayer.refresh();
+        self.getMap().draw($scope.layers,gridLayer.getVisibleArea());
     };
 
     $scope.changeMapHeight = function(height){
@@ -112,6 +115,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             height:map.tile_h*height
         });
         gridLayer.refresh();
+        self.getMap().draw($scope.layers,gridLayer.getVisibleArea());
     };
 
     $scope.$watch('tilesetData.graphic.imageData.url',function(newVal, oldVal){
@@ -135,7 +139,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                     var tilesetGridLayer =  tilesetImage.getGridLayer();
 
 
-                   tilesetGridLayer.getGrid().set({
+                    tilesetGridLayer.getGrid().set({
                         width:img.width,
                         height:img.height,
                         sw:img.width,
@@ -182,6 +186,10 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
         }
     };
 
+    $scope.changeLayer = function(layer){
+        $scope.currentLayer = layer;
+    };
+
     /*Canvas onde o mapa é renderizado*/
     self.getMapCanvas = function(){
         if(self.mapCanvas === null){
@@ -201,7 +209,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                     var interval = self.selectedInterval;
                     var area = mapCanvas.getDrawedArea();
                     var area_interval = map.getAreaInterval(area);
-                    var layer = mapCanvas.getLayer(self.currentLayer);
+                    var layer = $scope.layers[$scope.currentLayer];
                     for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
                         for(var j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
                             var x = j*map.tile_w;
@@ -217,7 +225,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                                 sy:row*map.tile_h,
                                 dx:x,
                                 dy:y,
-                                layer:self.currentLayer
+                                layer:$scope.currentLayer
                             };
 
                             layer.clearRect({
@@ -297,7 +305,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
         var self = this;
         if(self.map === null){
             var mapCanvas = self.getMapCanvas();
-            self.map = new CE.Map({
+            self.map = new CE.EXT.Map({
                 sw:32,
                 sh:32,
                 width:mapCanvas.getWidth()/32,

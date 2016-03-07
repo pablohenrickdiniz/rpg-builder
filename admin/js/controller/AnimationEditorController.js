@@ -640,7 +640,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
         var self = this;
         var engine =   $scope.animationCanvas;
         if($scope.animation === null){
-            var animation = new CE.Animation({
+            var animation = new CE.EXT.Animation({
                 speed:7,
                 width:engine.width,
                 height:engine.height,

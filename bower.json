@@ -24,20 +24,21 @@
   ],
   "dependencies": {
     "AdminLTE": "admin-lte#~2.3.2",
-    "angular-animate": "~1.4.7",
     "angular-route": "~1.4.7",
+    "angular-animate": "~1.4.7",
     "angular-ui-router": "ui-router#~0.2.15",
-    "angularUtils-pagination": "angular-utils-pagination#~0.9.3",
     "bootstrap": "~3.3.5",
-    "CanvasEngine": "https://github.com/pablohenrickdiniz/CanvasEngine.git",
+    "angularUtils-pagination": "angular-utils-pagination#~0.9.3",
     "color-thief": "~2.0.1",
     "font-awesome": "~4.4.0",
+    "Ionicons": "ionicons#~2.0.1",
     "jasmine-core": "jasmine#~2.4.1",
     "lodash": "~3.10.1",
-    "Ionicons": "ionicons#~2.0.1",
-    "ngstorage": "~0.3.10",
     "MathLib": "https://github.com/pablohenrickdiniz/MathLib.git",
+    "ngstorage": "~0.3.10",
     "react": "~0.14.0",
-    "ReactElements": "https://github.com/pablohenrickdiniz/ReactElements.git"
+    "ReactElements": "https://github.com/pablohenrickdiniz/ReactElements.git",
+    "quadtree-js": "https://github.com/timohausmann/quadtree-js.git",
+    "requirejs": "~2.1.22"
   }
 }

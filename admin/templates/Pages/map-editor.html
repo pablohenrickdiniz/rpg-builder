@@ -11,13 +11,21 @@
                     </div>
                 </div>
                 <div class="box-footer">
+                    <div class="col-md-12">
+                        <label for="">Camada</label>
+                        <div class="box-tools pull-right">
+                            <div class="btn-group">
+                                <button class="btn btn-default" ng-repeat="layer in layers track by $index" ng-class="{active:currentLayer == $index}" ng-click="changeLayer($index)">{{$index+1}}</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <label for="">Largura</label>
-                        <input type="number" input-number-vertical ng-model="map.width" min="10" max="1000" ng-change="changeMapWidth"/>
+                        <input type="number" input-number-vertical ng-model="map.width" min="10" max="100" ng-change="changeMapWidth"/>
                     </div>
                     <div class="col-md-6">
                         <label for="">Altura</label>
-                        <input type="number" input-number-vertical ng-model="map.height" min="10" max="1000" ng-change="changeMapHeight"/>
+                        <input type="number" input-number-vertical ng-model="map.height" min="10" max="100" ng-change="changeMapHeight"/>
                     </div>
                 </div>
             </div>
