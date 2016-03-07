@@ -30,6 +30,9 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             image:null
         }
     };
+    $scope.selectedTool = 'pencil';
+
+
     $scope.modalVisible = false;
 
     $scope.showModal = function(){
@@ -92,6 +95,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
     $scope.changeMapWidth = function(width){
         var mapCanvas = self.getMapCanvas();
         var map  = self.getMap();
+        map.width = width;
         mapCanvas.applyToLayers({
             width:map.tile_w*width
         });
@@ -100,12 +104,13 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             width:map.tile_w*width
         });
         gridLayer.refresh();
-        self.getMap().draw($scope.layers,gridLayer.getVisibleArea());
+        map.draw($scope.layers,gridLayer.getVisibleArea());
     };
 
     $scope.changeMapHeight = function(height){
         var mapCanvas = self.getMapCanvas();
         var map = self.getMap();
+        map.height = height;
         mapCanvas.applyToLayers({
             height:map.tile_h*height
         });
@@ -115,7 +120,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             height:map.tile_h*height
         });
         gridLayer.refresh();
-        self.getMap().draw($scope.layers,gridLayer.getVisibleArea());
+        map.draw($scope.layers,gridLayer.getVisibleArea());
     };
 
     $scope.$watch('tilesetData.graphic.imageData.url',function(newVal, oldVal){
@@ -188,10 +193,22 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
 
     $scope.changeLayer = function(layer){
         $scope.currentLayer = layer;
+        $scope.layers.forEach(function(layer_tmp,index){
+            if(index === layer){
+                layer_tmp.set({
+                    opacity:1
+                });
+            }
+            else{
+                layer_tmp.set({
+                    opacity:0.3
+                });
+            }
+        });
     };
 
     $scope.export = function(){
-        console.log(self.getMap());
+        console.log(self.getMap().toJSON());
     };
 
     /*Canvas onde o mapa é renderizado*/
@@ -204,52 +221,118 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                 draggable:true
             },CE.EXT.CanvasEngineGrid);
 
-            self.mapCanvas.getMouseReader().onmousemove(function(){
+
+            var reader = self.mapCanvas.getMouseReader();
+
+            reader.onmousedown(CE.MouseReader.LEFT,function(){
                 var reader = this;
-                if(reader.left && self.selectedInterval !== null){
+
+                var mapCanvas = self.getMapCanvas();
+                var map = self.getMap();
+                var interval,area_interval,i,j,x,y,col,row;
+                var layer = $scope.layers[$scope.currentLayer];
+                var pos = mapCanvas.getPosition(reader.lastDown.left);
+                i = Math.floor(pos.y/map.tile_h);
+                j = Math.floor(pos.x/map.tile_w);
+                var tile = {
+                    width:map.tile_w,
+                    height:map.tile_h
+                };
+
+
+                switch($scope.selectedTool){
+                    case 'pencil':
+                        var image = $scope.tilesetData.graphic.image;
+                        tile.dx = map.tile_w*j;
+                        tile.dy = map.tile_h*i;
+                        tile.imagem = image;
+                        layer.image(tile);
+                        tile.layer = $scope.currentLayer;
+                        map.setTile(i,j,tile);
+                        break;
+                    case 'eraser':
+                        tile.x = map.tile_w*j;
+                        tile.y = map.tile_h*i;
+                        layer.clearRect(tile);
+                        map.removeTile(i,j,$scope.currentLayer);
+                }
+
+            });
+
+            reader.onmousemove(function(e){
+                var reader = this;
+                if(reader.left){
                     var mapCanvas = self.getMapCanvas();
                     var map = self.getMap();
-                    var image = $scope.tilesetData.graphic.image;
-                    var interval = self.selectedInterval;
-                    var area = mapCanvas.getDrawedArea();
-                    var area_interval = map.getAreaInterval(area);
+                    var interval,area_interval,i,j,x,y,col,row;
                     var layer = $scope.layers[$scope.currentLayer];
-                    for(var i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
-                        for(var j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
-                            var x = j*map.tile_w;
-                            var y = i*map.tile_h;
 
-                            var tile = {
-                                image:image,
-                                dWidth:map.tile_w,
-                                dHeight:map.tile_h,
-                                sWidth:map.tile_w,
-                                sHeight:map.tile_h,
-                                sx:col*map.tile_w,
-                                sy:row*map.tile_h,
-                                dx:x,
-                                dy:y,
-                                layer:$scope.currentLayer
-                            };
+                    switch($scope.selectedTool){
+                        case 'pencil':
+                            if(self.selectedInterval !== null){
+                                var image = $scope.tilesetData.graphic.image;
+                                interval = self.selectedInterval;
+                                var area = mapCanvas.getDrawedArea();
+                                area_interval = map.getAreaInterval(area);
 
-                            layer.clearRect({
-                                x:x,
-                                y:y,
-                                width:map.tile_w,
-                                height:map.tile_h
-                            });
+                                for(i = area_interval.si,row=interval.si;i <= area_interval.ei;i++){
+                                    for(j = area_interval.sj,col=interval.sj; j <= area_interval.ej;j++){
+                                        x = j*map.tile_w;
+                                        y = i*map.tile_h;
 
-                            layer.image(tile);
-                            map.setTile(i,j,tile);
-                            col++;
-                            if(col > interval.ej){
-                                col = interval.sj;
+                                        var tile = {
+                                            image:image,
+                                            dWidth:map.tile_w,
+                                            dHeight:map.tile_h,
+                                            sWidth:map.tile_w,
+                                            sHeight:map.tile_h,
+                                            sx:col*map.tile_w,
+                                            sy:row*map.tile_h,
+                                            dx:x,
+                                            dy:y,
+                                            layer:$scope.currentLayer
+                                        };
+
+                                        layer.clearRect({
+                                            x:x,
+                                            y:y,
+                                            width:map.tile_w,
+                                            height:map.tile_h
+                                        });
+
+                                        layer.image(tile);
+                                        map.setTile(i,j,tile);
+                                        col++;
+                                        if(col > interval.ej){
+                                            col = interval.sj;
+                                        }
+                                    }
+                                    row++;
+                                    if(row > interval.ei){
+                                        row = interval.si;
+                                    }
+                                }
                             }
-                        }
-                        row++;
-                        if(row > interval.ei){
-                            row = interval.si;
-                        }
+
+                            break;
+                        case 'eraser':
+                            var pos = mapCanvas.getPosition(reader.lastMove);
+                            area_interval = map.getAreaInterval({x:pos.x,y:pos.y,width:1,height:1});
+                            for(i = area_interval.si;i <= area_interval.ei;i++){
+                                for(j = area_interval.sj; j <= area_interval.ej;j++){
+                                    x = j*map.tile_w;
+                                    y = i*map.tile_h;
+
+                                    layer.clearRect({
+                                        x:x,
+                                        y:y,
+                                        width:map.tile_w,
+                                        height:map.tile_h
+                                    });
+                                    map.removeTile(i,j,$scope.currentLayer);
+                                }
+                            }
+
                     }
                 }
             });
@@ -317,5 +400,9 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
             });
         }
         return self.map;
+    };
+
+    $scope.selectTool = function(tool){
+        $scope.selectedTool = tool;
     };
 }]);

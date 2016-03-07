@@ -5,6 +5,12 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Mapa</h3>
                     <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar" ng-click="selectTool('pencil')" ng-class="{active: selectedTool == 'pencil'}">
+                            <i class="fa fa-pencil"></i> Desenhar
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar" ng-click="selectTool('eraser')" ng-class="{active: selectedTool == 'eraser'}">
+                            <i class="fa fa-eraser"></i> Borracha
+                        </button>
                         <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar" ng-click="export()">
                             <i class="fa fa-upload"></i> Exportar
                         </button>
