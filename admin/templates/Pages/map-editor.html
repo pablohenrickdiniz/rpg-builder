@@ -1,9 +1,14 @@
-<div ng-controller="MapEditorController" ng-init="init()">
+<div ng-controller="MapEditorController" ng-init="init()"  cache-view="false">
     <div class="col-md-6">
         <div class="row">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Mapa</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-toggle="tooltip" data-original-title="Exportar" title="Exportar" ng-click="export()">
+                            <i class="fa fa-upload"></i> Exportar
+                        </button>
+                    </div>
                 </div>
                 <div class="box-body animations-graphic-body">
                     <div class="col-sm-12" id="canvas-map">

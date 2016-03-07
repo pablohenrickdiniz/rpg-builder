@@ -190,6 +190,10 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
         $scope.currentLayer = layer;
     };
 
+    $scope.export = function(){
+        console.log(self.getMap());
+    };
+
     /*Canvas onde o mapa é renderizado*/
     self.getMapCanvas = function(){
         if(self.mapCanvas === null){
