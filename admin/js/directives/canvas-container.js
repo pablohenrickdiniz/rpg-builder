@@ -43,16 +43,22 @@ app.directive('canvasContainer',['$timeout',function($timeout){
                     layer.element = canvas[i];
                 }
 
-                scope.engine.updateGrid({
+                var gridLayer =   scope.engine.getGridLayer();
+
+                gridLayer.getGrid().set({
                     width:scope.engine.width,
                     height:scope.engine.height,
                     sw:scope.gridWidth,
-                    sh:scope.gridHeight,
+                    sh:scope.gridHeight
+                });
+                gridLayer.set({
                     opacity:scope.gridActive?0.1:0
                 });
 
+                gridLayer.refresh();
+
                 scope.engine.layers.forEach(function(layer,index){
-                    if(!(layer instanceof CE.GridLayer)){
+                    if(!(layer instanceof CE.EXT.GridLayer)){
                         self.redrawLayer(index);
                     }
                 });
@@ -73,21 +79,27 @@ app.directive('canvasContainer',['$timeout',function($timeout){
                 if(newValues[0] !== oldValues[0] || newValues[1] !== oldValues[1]){
                     var sw = newValues[0];
                     var sh = newValues[1];
-                    scope.engine.updateGrid({
+                    var layer = scope.engine.getGridLayer();
+                    layer.getGrid().set({
                         width:scope.engine.width,
                         height:scope.engine.height,
                         sw:sw,
-                        sh:sh,
+                        sh:sh
+                    });
+                    layer.set({
                         opacity:0.1
                     });
+                    layer.refresh();
                 }
             });
 
             scope.$watch('gridActive',function(newVal, oldVal){
                 if(newVal !== oldVal){
-                    scope.engine.updateGrid({
+                    var layer = scope.engine.getGridLayer();
+                    layer.set({
                         opacity:newVal?0.1:0
                     });
+                    layer.refresh();
                 }
             });
         }

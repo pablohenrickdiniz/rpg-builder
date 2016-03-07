@@ -9,3 +9,12 @@ app.filter('bobUrl',function(){
        }
     };
 });
+
+app.filter('maxSize',function(){
+    return function(size1,size2){
+        if(size1 >  size2 || size1 == size2){
+            return '100%';
+        }
+        return 'auto';
+    };
+});

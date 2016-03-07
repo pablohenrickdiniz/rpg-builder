@@ -97,18 +97,22 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.changeRows = function(val){
         var image = $scope.animationData.graphic.image;
         if(image !== null){
-            self.getAnimationImage().updateGrid({
+            var layer = self.getAnimationImage().getGridLayer();
+            layer.getGrid().set({
                 sh:image.height/val
             });
+            layer.refresh();
         }
     };
 
     $scope.changeCols = function(val){
         var image = $scope.animationData.graphic.image;
         if(image !== null){
-            self.getAnimationImage().updateGrid({
+            var layer = self.getAnimationImage().getGridLayer();
+            layer.getGrid().set({
                 sw:image.width/val
             });
+            layer.refresh();
         }
     };
 
@@ -129,7 +133,15 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         height:img.height
                     });
                     self.graphicLayer.clear().drawImage(img,0,0);
-                    canvasImage.updateGrid({
+                    var layer = canvasImage.getGridLayer();
+                    var grid = layer.getGrid();
+
+                    layer.set({
+                        width:img.width,
+                        height:img.height
+                    });
+
+                    grid.set({
                         width:img.width,
                         height:img.height,
                         sw:img.width,
@@ -163,11 +175,12 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
     $scope.changeGridColor = function(color){
         $scope.animationData.graphic.gridColor = color;
         var canvas = self.getAnimationImage();
-        var grid = canvas.getGrid();
+        var layer = canvas.getGridLayer();
+        var grid = layer.getGrid();
         grid.apply({
             strokeStyle:color
         });
-        canvas.redrawGrid();
+        layer.refresh();
     };
 
     $scope.addFrame = function(selected){
@@ -207,7 +220,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
             container:'#canvas-container',
             width:535,
             height:400
-        });
+        },CE.EXT.CanvasEngineGrid);
+
+
         self.getAnimation().stop();
 
         var canvasImage = self.getAnimationImage();
@@ -347,14 +362,14 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                     if(self.resize_vertex !== null){
                         /*Redimensionamento de objeto*/
                         /*
-                            0 - Top Left
-                            1 - Top Center
-                            2 - Top Right
-                            3 - Center Rigth
-                            4 - Bottom Rigth
-                            5 - Bottom Center
-                            6 - Bottom Left
-                            7 - Center Left
+                         0 - Top Left
+                         1 - Top Center
+                         2 - Top Right
+                         3 - Center Rigth
+                         4 - Bottom Rigth
+                         5 - Bottom Center
+                         6 - Bottom Left
+                         7 - Center Left
                          */
                         if([0,6,7].indexOf(self.resize_vertex) !== -1){
                             var nw1  = Math.max(self.object_data.old_width-diff.x,1);
@@ -383,8 +398,9 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                         var dy =diff.y+object.ody;
 
                         if($scope.grid.active){
-                            var width = animationCanvas.getGrid().width;
-                            var height = animationCanvas.getGrid().height;
+                            var grid = animationCanvas.getGridLayer().getGrid();
+                            var width = grid.width;
+                            var height = grid.height;
                             var g_width = $scope.grid.width;
                             var g_height = $scope.grid.height;
 
@@ -491,7 +507,7 @@ app.controller('AnimationEditorController',['$rootScope','ImageLoader','$localSt
                 selectable:true,
                 draggable:true,
                 scalable:true
-            });
+            },CE.EXT.CanvasEngineGrid);
 
             var moveCallback = function(ii,ij){
                 var grid = $scope.animationImage.getGrid();

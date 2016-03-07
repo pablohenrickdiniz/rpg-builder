@@ -60,7 +60,7 @@
     z-index: 810;
 }
 
-.input-image-preview .box-body,.animations-body .box-body{
+.input-image-preview .box-body,.animations-body .box-body,.tileset-body .box-body{
     height: 200px;
     border-width: 1px 0 0 0;
     border-color: #EEE;
@@ -68,7 +68,7 @@
     overflow: hidden;
 }
 
-.animations-body{
+.animations-body,.tileset-body{
     overflow-x: hidden;
 }
 
@@ -94,11 +94,11 @@
     position: absolute;
 }
 
-.animation-modal .modal-body{
+.animation-modal .modal-body,.tileset-modal .modal-body{
     height:600px;
 }
 
-.animation-modal .direct-chat-messages{
+.animation-modal .direct-chat-messages,.tileset-modal .direct-chat-messages{
     height: 500px;
 }
 
@@ -147,15 +147,15 @@
     cursor: pointer;
 }
 
-.animation-resource:hover{
+.animation-resource:hover,.tileset-resource:hover{
     cursor: pointer;
 }
 
-.animation-resource:hover img{
+.animation-resource:hover img,.tileset-resource:hover img{
     opacity: 1;
 }
 
-.animation-resource img{
+.animation-resource img,.tileset-resource img{
     opacity: 0.7;
 }
 

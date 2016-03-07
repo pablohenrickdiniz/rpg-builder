@@ -76,7 +76,6 @@ app.directive('inputImagePreview',['ImageLoader','UploadService',function(ImageL
                         fields:fields,
                         url:scope.url,
                         success:function(data){
-                            console.log(data);
                             scope.images[index].state = true;
                             scope.afterEach()(data);
                             scope.count++;

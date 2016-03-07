@@ -18,7 +18,7 @@
             <div class="col-lg-3 col-md-3 col-xs-12" dir-paginate="animation in animations | itemsPerPage: 8 track by $index " pagination-id="animations-id" current-page="pagination.current" total-items="storage.resources.animations.length">
                 <div class="box box-primary box-solid">
                     <div class="box-header">
-                        <h4 class="box-title">{{animation.created | date :'d/MM/y HH:mm:ss' }}</h4>
+                        <h4 class="box-title">{{animation.created | date :'dd/MM/y HH:mm:ss' }}</h4>
                         <div class="box-tools pull-right">
                             <button type="button" ng-click="remove(animation._id)" class="btn btn-box-tool" ng-class="{disabled:searching}"><i class="fa fa-times"></i></button>
                         </div>

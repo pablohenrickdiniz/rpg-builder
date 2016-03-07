@@ -19,10 +19,13 @@ app.service('tasks',['TaskService','$http','URLS','$localStorage',function(TaskS
         TaskService.on('SINCRONIZE_RESOURCES',function(data,success,error){
             $http({
                 method:'GET',
-                url:URLS.BASE_URL+data.name+'/list'
+                url:URLS.BASE_URL+'graphics/list',
+                params:{
+                    type:data.name
+                }
             }).then(function(response){
                 if(response.data.success){
-                    $localStorage.resources[data.name] = response.data[data.name];
+                    $localStorage.resources[data.name] = response.data.graphics;
                     success();
                 }
                 else{

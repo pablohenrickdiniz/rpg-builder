@@ -10,11 +10,16 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
             ngDisabled:'='
         },
         replace:true,
-        link:function(scope){
+        link:function(scope,element){
             scope.interval = null;
-            var value = parseInt(scope.ngModel);
+            scope.value = parseInt(scope.ngModel);
 
             scope.change = function(){
+                if(isNaN(scope.value)){
+                    scope.value = 0;
+                }
+
+
                 if(min !== null && min > scope.value){
                     scope.value = min;
                 }
@@ -23,9 +28,8 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                     scope.value =  max;
                 }
 
-                if(scope.ngModel !== undefined){
                     scope.ngModel = scope.value;
-                }
+
 
                 if(typeof scope.ngChange() === 'function'){
                     $timeout(function(){
@@ -34,13 +38,6 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
                 }
             };
 
-            if(isNaN(value)){
-                scope.value = 0;
-            }
-            else{
-                scope.value = value;
-                scope.change();
-            }
 
             var min = isNaN(scope.min)?null:parseFloat(scope.min);
             var max = isNaN(scope.max)?null:parseFloat(scope.max);
@@ -85,6 +82,12 @@ app.directive('inputNumberVertical',['$interval','$document','$timeout',function
             });
 
             scope.change();
+
+
+            element.find('input').on('change',function(){
+                scope.value = parseInt(this.value);
+                scope.change();
+            });
         }
     };
 }]);

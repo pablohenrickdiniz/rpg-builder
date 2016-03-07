@@ -1,30 +1,84 @@
-<div class="box box-solid container main-map-editor"  ng-init="MapEditorCtrl.init()">
-        <div class="col-md-6">
-            <div class="row">
-                <div id="canvas-container">
-
+<div ng-controller="MapEditorController" ng-init="init()">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Mapa</h3>
                 </div>
-            </div>
-            <div class="row" id="canvas-input">
+                <div class="box-body animations-graphic-body">
+                    <div class="col-sm-12" id="canvas-map">
 
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="col-md-12">
-                <select name="" id="tileset" class="form-control">
-                    <option value="../core/Graphics/Tilesets/tile_custom01.png">A</option>
-                    <option value="../core/Graphics/Tilesets/tilea2.png">B</option>
-                    <option value="http://i47.photobucket.com/albums/f172/FatYogiX4/Sprite%20Stuffs/SasukeS.png">sasuke</option>
-                    <option value="">C</option>
-                    <option value="">D</option>
-                    <option value="">E</option>
-                </select>
-            </div>
-            <div class="col-md-12">
-                <div id="tileset-grid"></div>
-                <div class="col-md-12" id="input-container">
-
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="col-md-6">
+                        <label for="">Largura</label>
+                        <input type="number" input-number-vertical ng-model="map.width" min="10" max="1000" ng-change="changeMapWidth"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">Altura</label>
+                        <input type="number" input-number-vertical ng-model="map.height" min="10" max="1000" ng-change="changeMapHeight"/>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-primary graphic-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Gráfico</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body animations-graphic-body">
+                <div class="col-sm-12" id="tileset">
+
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-md-5 col-lg-5 col-xs-12">
+                        <resource-miniature image="tilesetData.graphic.imageData.url" rects="animationImage.grid.rectSets" grid-color="tilesetData.graphic.gridColor" ng-action="showModal" ></resource-miniature>
+                    </div>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                            <label>Linhas <span ng-if="tilesetData.graphic.image">({{tilesetData.graphic.image.height/tilesetData.graphic.rows | number:2}}px)</span></label>
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeRows" ng-model="tilesetData.graphic.rows"/>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                            <label>Colunas <span ng-if="tilesetData.graphic.image">({{tilesetData.graphic.image.width/tilesetData.graphic.cols | number:2}}px)</span></label>
+                            <input type="number" input-number-vertical min="1" max="1000" ng-change="changeCols" ng-model="tilesetData.graphic.cols">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal tileset-modal" ng-class="{in:modalVisible}" style="display:{{modalVisible?'block':'none'}};">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-label="Close" ng-click="hideModal()">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Selecione o Tileset</h4>
+                </div>
+                <div class="modal-body tileset-body">
+                    <div class="col-lg-3 col-md-3 col-xs-12" ng-repeat="tileset in storage.resources.tilesets track by $index ">
+                        <div class="box box-primary box-solid tileset-resource"  ng-click="changeGraphic(tileset.url)">
+                            <div class="box-body with-border">
+                                <img class="img-responsive" ng-src="{{tileset.url}}" width="{{tileset.width | maxSize : tileset.height}}" height="{{tileset.height | maxSize : tileset.width}}"/>
+                            </div>
+                            <div class="box-footer">
+                                {{tileset.width}} x {{tileset.height}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
