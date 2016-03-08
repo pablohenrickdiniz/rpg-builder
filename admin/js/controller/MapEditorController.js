@@ -229,7 +229,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
 
                 var mapCanvas = self.getMapCanvas();
                 var map = self.getMap();
-                var interval,area_interval,i,j,x,y,col,row;
+                var i,j,x,y;
                 var layer = $scope.layers[$scope.currentLayer];
                 var pos = mapCanvas.getPosition(reader.lastDown.left);
                 i = Math.floor(pos.y/map.tile_h);
@@ -243,6 +243,9 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                 switch($scope.selectedTool){
                     case 'pencil':
                         var image = $scope.tilesetData.graphic.image;
+                        var interval = self.selectedInterval;
+                        tile.sx = map.tile_w*interval.sj;
+                        tile.sy = map.tile_h*interval.si;
                         tile.dx = map.tile_w*j;
                         tile.dy = map.tile_h*i;
                         tile.imagem = image;
@@ -351,6 +354,7 @@ app.controller('MapEditorController',['$location','$rootScope','$localStorage','
                 draggable:true,
                 multiSelect:true
             },CE.EXT.CanvasEngineGrid);
+
 
             self.tilesetCanvas.onAreaSelect(function(area,grid){
                 var reader = this.getMouseReader();
